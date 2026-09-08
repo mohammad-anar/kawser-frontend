@@ -62,7 +62,7 @@ function TrackContent() {
     } catch (err: any) {
       setErrorMessage(
         err?.data?.message ||
-          "কোনো অর্ডার পাওয়া যায়নি। দয়া করে সঠিক অর্ডার আইডি বা ফোন নম্বর লিখুন।"
+        "কোনো অর্ডার পাওয়া যায়নি। দয়া করে সঠিক অর্ডার আইডি বা ফোন নম্বর লিখুন।"
       );
     }
   };
@@ -181,12 +181,12 @@ function TrackContent() {
                           order.status === "Pending"
                             ? "10%"
                             : order.status === "Confirmed"
-                            ? "35%"
-                            : order.status === "Processing"
-                            ? "60%"
-                            : order.status === "Shipped"
-                            ? "85%"
-                            : "100%",
+                              ? "35%"
+                              : order.status === "Processing"
+                                ? "60%"
+                                : order.status === "Shipped"
+                                  ? "85%"
+                                  : "100%",
                       }}
                     />
                   </div>
@@ -202,23 +202,21 @@ function TrackContent() {
                           className="flex sm:flex-col items-center gap-4 sm:gap-2 text-left sm:text-center relative z-10"
                         >
                           <div
-                            className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-lg ${
-                              state === "completed"
+                            className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-lg ${state === "completed"
                                 ? "bg-gradient-to-br from-yellow-500 to-yellow-600 text-black shadow-yellow-500/30 scale-105"
                                 : state === "current"
-                                ? "bg-yellow-400 text-black shadow-yellow-400/50 ring-4 ring-yellow-400/20 animate-pulse scale-110"
-                                : "bg-white/5 border border-white/10 text-gray-500"
-                            }`}
+                                  ? "bg-yellow-400 text-black shadow-yellow-400/50 ring-4 ring-yellow-400/20 animate-pulse scale-110"
+                                  : "bg-white/5 border border-white/10 text-gray-500"
+                              }`}
                           >
                             <Icon size={22} />
                           </div>
                           <div className="flex-1 sm:flex-initial">
                             <p
-                              className={`text-sm font-bold ${
-                                state === "completed" || state === "current"
+                              className={`text-sm font-bold ${state === "completed" || state === "current"
                                   ? "text-yellow-400"
                                   : "text-gray-500"
-                              }`}
+                                }`}
                             >
                               {step.label}
                             </p>
@@ -322,7 +320,7 @@ function TrackContent() {
               </div>
               <div className="flex gap-2">
                 <a
-                  href="https://wa.me/8801519601128?text=Hello%20Personal%20Care%20BD%2C%20I%20have%20a%20query%20about%20my%20order"
+                  href="https://wa.me/8801932787942?text=Hello%20Personal%20Care%20BD%2C%20I%20have%20a%20query%20about%20my%20order"
                   target="_blank"
                   rel="noreferrer"
                   className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition-colors"

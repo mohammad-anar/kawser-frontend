@@ -421,7 +421,7 @@ export default function AdminDashboardPage() {
               অর্ডার বিবরণ — <span className="font-mono text-yellow-400">{selectedOrder.orderId}</span>
             </h3>
 
-            <div className="space-y-3.5 text-xs sm:text-sm">
+            <div className="space-y-3.5 text-xs sm:text-sm max-h-[70vh] overflow-y-auto pr-1">
               <div className="grid grid-cols-2 gap-2 bg-white/5 p-3 rounded-xl">
                 <div>
                   <span className="text-gray-400 block text-[11px]">গ্রাহকের নাম:</span>
@@ -431,6 +431,12 @@ export default function AdminDashboardPage() {
                   <span className="text-gray-400 block text-[11px]">ফোন নম্বর:</span>
                   <span className="font-mono font-semibold text-white">{selectedOrder.phoneNumber}</span>
                 </div>
+                {selectedOrder.email && (
+                  <div className="col-span-2">
+                    <span className="text-gray-400 block text-[11px]">ইমেইল:</span>
+                    <span className="font-semibold text-white">{selectedOrder.email}</span>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -439,6 +445,9 @@ export default function AdminDashboardPage() {
                 {selectedOrder.district && (
                   <p className="text-gray-400 text-xs">জেলা: {selectedOrder.district}</p>
                 )}
+                {selectedOrder.thana && (
+                  <p className="text-gray-400 text-xs">থানা: {selectedOrder.thana}</p>
+                )}
               </div>
 
               {selectedOrder.gpsCoordinates && selectedOrder.gpsCoordinates.lat && (
@@ -446,7 +455,7 @@ export default function AdminDashboardPage() {
                   <div className="flex items-center gap-2 text-cyan-300 text-xs">
                     <MapPin size={15} />
                     <span>
-                      GPS লোকেশন: {selectedOrder.gpsCoordinates.lat.toFixed(5)},{" "}
+                      GPS: {selectedOrder.gpsCoordinates.lat.toFixed(5)},{" "}
                       {selectedOrder.gpsCoordinates.lng.toFixed(5)}
                     </span>
                   </div>
@@ -460,6 +469,21 @@ export default function AdminDashboardPage() {
                   </a>
                 </div>
               )}
+
+              <div className="grid grid-cols-3 gap-2 bg-white/5 p-3 rounded-xl text-center">
+                <div>
+                  <span className="text-gray-400 block text-[11px]">পণ্য</span>
+                  <span className="font-semibold text-white text-xs">{selectedOrder.quantity} টি</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block text-[11px]">সাইজ</span>
+                  <span className="font-semibold text-white text-xs">{selectedOrder.size || "স্ট্যান্ডার্ড"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block text-[11px]">পেমেন্ট</span>
+                  <span className="font-semibold text-green-400 text-xs">{selectedOrder.paymentMethod}</span>
+                </div>
+              </div>
 
               <div className="border-t border-white/10 pt-3 flex items-center justify-between">
                 <div>
@@ -480,6 +504,33 @@ export default function AdminDashboardPage() {
                 <div className="p-2.5 rounded-lg bg-white/5 text-gray-300 text-xs">
                   <span className="text-gray-400 font-semibold block mb-0.5">নোট:</span>
                   {selectedOrder.orderNotes}
+                </div>
+              )}
+
+              {/* Status History Timeline */}
+              {selectedOrder.statusHistory && selectedOrder.statusHistory.length > 0 && (
+                <div>
+                  <span className="text-gray-400 text-[11px] font-semibold block mb-2">স্ট্যাটাস ইতিহাস:</span>
+                  <div className="space-y-1.5">
+                    {[...selectedOrder.statusHistory].reverse().map((h, i) => (
+                      <div key={i} className="flex items-center gap-2.5 text-xs">
+                        <div className="w-2 h-2 rounded-full bg-yellow-500 shrink-0" />
+                        <span className={`font-semibold ${
+                          STATUS_COLORS[h.status]?.includes("amber") ? "text-amber-400" :
+                          STATUS_COLORS[h.status]?.includes("blue") ? "text-blue-400" :
+                          STATUS_COLORS[h.status]?.includes("purple") ? "text-purple-400" :
+                          STATUS_COLORS[h.status]?.includes("cyan") ? "text-cyan-400" :
+                          STATUS_COLORS[h.status]?.includes("emerald") ? "text-emerald-400" :
+                          STATUS_COLORS[h.status]?.includes("red") ? "text-red-400" :
+                          "text-gray-300"
+                        }`}>{h.status}</span>
+                        <span className="text-gray-500">
+                          {h.changedAt ? new Date(h.changedAt).toLocaleString("bn-BD") : ""}
+                        </span>
+                        {h.changedBy && <span className="text-gray-600">— {h.changedBy}</span>}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

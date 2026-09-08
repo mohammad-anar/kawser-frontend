@@ -115,7 +115,13 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 flex flex-col items-center gap-3 text-center">
+          <Link
+            href="/admin/forgot-password"
+            className="text-yellow-400 hover:text-yellow-300 text-xs font-semibold transition-colors"
+          >
+            পাসওয়ার্ড ভুলে গেছেন?
+          </Link>
           <Link
             href="/"
             className="text-gray-400 hover:text-white text-xs inline-flex items-center gap-1 transition-colors"

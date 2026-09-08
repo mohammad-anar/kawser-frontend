@@ -16,6 +16,7 @@ import {
   ExternalLink,
   Clock,
   Check,
+  KeyRound,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { logout } from "@/lib/redux/slices/authSlice";
@@ -156,6 +157,7 @@ export default function AdminNav() {
   const navItems = [
     { label: "ড্যাশবোর্ড", href: "/admin", icon: LayoutDashboard },
     { label: "সকল অর্ডার", href: "/admin/orders", icon: ShoppingCart },
+    { label: "পাসওয়ার্ড", href: "/admin/change-password", icon: KeyRound },
   ];
 
   return (
@@ -365,6 +367,14 @@ export default function AdminNav() {
           <span className="text-xs text-gray-300 font-medium hidden sm:block">
             {user?.name || "এডমিন"}
           </span>
+          <Link
+            href="/admin/change-password"
+            title="পাসওয়ার্ড পরিবর্তন"
+            className="hidden sm:flex items-center gap-1 text-xs text-yellow-400 hover:text-yellow-300 bg-yellow-500/10 hover:bg-yellow-500/20 px-2.5 py-1.5 rounded-lg border border-yellow-500/20 transition-all"
+          >
+            <KeyRound size={13} />
+            <span className="hidden md:inline">পাসওয়ার্ড</span>
+          </Link>
           <button
             onClick={handleLogout}
             title="লগআউট"

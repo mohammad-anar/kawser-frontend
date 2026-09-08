@@ -92,6 +92,68 @@ export const authApi = apiSlice.injectEndpoints({
       query: () => "/auth/me",
       providesTags: ["User"],
     }),
+
+    // ── Forgot Password Flow (public) ────────────────────────────────────────
+    forgotPassword: builder.mutation<{ success: boolean; message: string }, { email: string }>({
+      query: (body) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body,
+      }),
+    }),
+    verifyForgotOtp: builder.mutation<
+      { success: boolean; message: string; resetToken: string },
+      { email: string; otp: string }
+    >({
+      query: (body) => ({
+        url: "/auth/verify-forgot-otp",
+        method: "POST",
+        body,
+      }),
+    }),
+    resetPassword: builder.mutation<
+      { success: boolean; message: string },
+      { newPassword: string; resetToken: string }
+    >({
+      query: ({ newPassword, resetToken }) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: { newPassword },
+        headers: { Authorization: `Bearer ${resetToken}` },
+      }),
+    }),
+
+    // ── Change Password Flow (admin logged in) ───────────────────────────────
+    sendChangeOtp: builder.mutation<
+      { success: boolean; message: string; email: string },
+      void
+    >({
+      query: () => ({
+        url: "/auth/send-change-otp",
+        method: "POST",
+      }),
+    }),
+    verifyChangeOtp: builder.mutation<
+      { success: boolean; message: string; resetToken: string },
+      { otp: string }
+    >({
+      query: (body) => ({
+        url: "/auth/verify-change-otp",
+        method: "POST",
+        body,
+      }),
+    }),
+    changePassword: builder.mutation<
+      { success: boolean; message: string },
+      { newPassword: string; resetToken: string }
+    >({
+      query: ({ newPassword, resetToken }) => ({
+        url: "/auth/change-password",
+        method: "POST",
+        body: { newPassword },
+        headers: { "X-Reset-Token": resetToken },
+      }),
+    }),
   }),
 });
 
@@ -100,4 +162,10 @@ export const {
   useLoginMutation,
   useAdminLoginMutation,
   useGetMeQuery,
+  useForgotPasswordMutation,
+  useVerifyForgotOtpMutation,
+  useResetPasswordMutation,
+  useSendChangeOtpMutation,
+  useVerifyChangeOtpMutation,
+  useChangePasswordMutation,
 } = authApi;
