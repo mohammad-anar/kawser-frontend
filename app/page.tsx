@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import OrderModal from "@/components/OrderModal";
 import FloatingBuyBar from "@/components/FloatingBuyBar";
 import OfferPopup from "@/components/OfferPopup";
+import CustomVideoPlayer from "@/components/CustomVideoPlayer";
 import {
   CheckCircle2,
   Star,
@@ -266,13 +267,10 @@ export default function Home() {
       <section className="relative min-h-[92vh] flex items-center pt-24 sm:pt-28 pb-12 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <Image
-            src="/images/hero-banner.jpg"
-            alt="Personal Care BD Hero Banner"
-            fill
-            className="object-cover opacity-50"
-            priority
-          />
+          <video className="w-full h-full object-cover" autoPlay loop muted playsInline>
+            <source src="/images/video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
           <div className="absolute inset-0 bg-gradient-to-r from-[#06060e] via-[#06060e]/85 to-[#06060e]/50" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#06060e] via-transparent to-[#06060e]/40" />
         </div>
@@ -366,6 +364,52 @@ export default function Home() {
               <span className="flex items-center gap-1.5 text-cyan-400 font-semibold">
                 <Lock size={15} /> ১০০% গোপনীয় প্যাকেজিং
               </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          VIDEO SHOWCASE SECTION (Custom React Video Player with Aspect-Video & Audio)
+      ========================================================================= */}
+      <section id="product" className="py-12 sm:py-16 bg-[#080817] relative overflow-hidden border-t border-yellow-500/15">
+        {/* Background glow effects */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto px-4 relative z-10">
+          <div className="text-center max-w-xl mx-auto mb-8">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/25 text-yellow-400 text-xs font-bold mb-3 shadow-inner">
+              <Sparkles size={14} className="text-yellow-400" /> সরাসরি পণ্যের ভিডিও দেখুন
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
+              ভিডিওতে দেখুন আসল <span className="text-gradient-gold">প্রোডাক্ট প্রিভিউ</span>
+            </h2>
+            <p className="text-gray-400 text-xs sm:text-sm mt-2 font-medium">
+              অর্ডার করার আগে ভিডিওটি সাউন্ড সহ প্লে করে বিস্তারিত নিশ্চিত হয়ে নিন
+            </p>
+          </div>
+
+          {/* Centered Custom Video Player (max-w-[500px] as requested) */}
+          <div className="max-w-[500px] mx-auto">
+            <CustomVideoPlayer src="/images/video.mp4" />
+
+            {/* Quick Guarantees / Video CTA */}
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-yellow-500/15 border border-yellow-500/30 flex items-center justify-center text-yellow-400 shrink-0">
+                  <ShieldCheck size={22} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-white">১০০% যেমন ভিডিওতে দেখছেন ঠিক তেমনই পাবেন</p>
+                  <p className="text-[11px] text-gray-400">ডেলিভারিম্যানের সামনে খুলে চেক করার সম্পূর্ণ সুযোগ রয়েছে</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setModalOpen(true)}
+                className="w-full sm:w-auto btn-gold py-2.5 px-5 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shadow-md shadow-yellow-500/20 active:scale-95 transition-all cursor-pointer"
+              >
+                এখনই অর্ডার করুন
+              </button>
             </div>
           </div>
         </div>
@@ -485,11 +529,10 @@ export default function Home() {
                     <button
                       key={idx}
                       onClick={() => setActiveSlide(idx)}
-                      className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${
-                        activeSlide === idx
-                          ? "border-yellow-400 scale-105 shadow-md shadow-yellow-500/30"
-                          : "border-white/10 opacity-60 hover:opacity-100 hover:border-white/30"
-                      }`}
+                      className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${activeSlide === idx
+                        ? "border-yellow-400 scale-105 shadow-md shadow-yellow-500/30"
+                        : "border-white/10 opacity-60 hover:opacity-100 hover:border-white/30"
+                        }`}
                     >
                       <Image src={img.src} alt={img.title} fill className="object-cover" />
                     </button>
@@ -637,9 +680,8 @@ export default function Home() {
               return (
                 <div
                   key={idx}
-                  className={`glass-card border rounded-2xl transition-all overflow-hidden ${
-                    isOpen ? "border-yellow-500/40 bg-white/5 shadow-lg shadow-yellow-500/10" : "border-white/10 hover:border-white/20"
-                  }`}
+                  className={`glass-card border rounded-2xl transition-all overflow-hidden ${isOpen ? "border-yellow-500/40 bg-white/5 shadow-lg shadow-yellow-500/10" : "border-white/10 hover:border-white/20"
+                    }`}
                 >
                   <button
                     onClick={() => toggleQA(idx)}
@@ -651,9 +693,8 @@ export default function Home() {
                         {item.question}
                       </span>
                     </div>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                      isOpen ? "bg-yellow-500 text-black rotate-180" : "bg-white/10 text-gray-400"
-                    }`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isOpen ? "bg-yellow-500 text-black rotate-180" : "bg-white/10 text-gray-400"
+                      }`}>
                       <ChevronDown size={18} />
                     </div>
                   </button>

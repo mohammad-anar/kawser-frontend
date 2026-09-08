@@ -2,12 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { X, MapPin, Loader2, CheckCircle, AlertCircle, ShoppingBag, Minus, Plus } from "lucide-react";
+import { X, Loader2, CheckCircle, AlertCircle, ShoppingBag, Minus, Plus } from "lucide-react";
 import { useCreateOrderMutation } from "@/lib/redux/api/orderApi";
 import { useAppSelector } from "@/lib/redux/hooks";
-import { toast } from "sonner";
-
-
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -17,12 +14,8 @@ interface OrderModalProps {
 interface FormData {
   customerName: string;
   phoneNumber: string;
-  email: string;
   address: string;
-  district: string;
-  size: string;
   quantity: number;
-  orderNotes: string;
 }
 
 interface FormErrors {
@@ -38,16 +31,10 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
   const [form, setForm] = useState<FormData>({
     customerName: "",
     phoneNumber: "",
-    email: "",
     address: "",
-    district: "",
-    size: "",
     quantity: 1,
-    orderNotes: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [gpsLoading, setGpsLoading] = useState(false);
-  const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [success, setSuccess] = useState<{ orderId: string; total: number } | null>(null);
   const [serverError, setServerError] = useState("");
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -59,13 +46,11 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
         ...f,
         customerName: user.name || f.customerName,
         phoneNumber: user.phone || f.phoneNumber,
-        email: user.email || f.email,
       }));
     }
   }, [isOpen, user]);
 
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
     if (errors[name as keyof FormErrors]) setErrors((er) => ({ ...er, [name]: undefined }));
@@ -75,67 +60,19 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
     setForm((f) => ({ ...f, quantity: Math.max(1, Math.min(10, f.quantity + delta)) }));
   };
 
-  const handleGPS = () => {
-    if (!navigator.geolocation) {
-      toast.error("আপনার ব্রাউজার GPS সমর্থন করে না।");
-      return;
-    }
-    setGpsLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const { latitude: lat, longitude: lng } = pos.coords;
-        setGpsCoords({ lat, lng });
-        try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=bn`
-          );
-          const data = await res.json();
-          const addr = data.address || {};
-          const parts = [
-            addr.road || addr.pedestrian || "",
-            addr.suburb || addr.neighbourhood || addr.village || "",
-            addr.city || addr.town || addr.county || "",
-            addr.state_district || "",
-          ]
-            .filter(Boolean)
-            .join(", ");
-
-          setForm((f) => ({
-            ...f,
-            address: parts || `লোকেশন: ${lat.toFixed(4)}, ${lng.toFixed(4)}`,
-            district: addr.state_district || addr.county || addr.city || "",
-          }));
-          if (errors.address) setErrors((er) => ({ ...er, address: undefined }));
-          toast.success("জিপিএস লোকেশন সফলভাবে যোগ করা হয়েছে!");
-        } catch {
-          setForm((f) => ({
-            ...f,
-            address: f.address || `লোকেশন: ${lat.toFixed(4)}, ${lng.toFixed(4)}`,
-          }));
-          toast.success("জিপিএস কোঅর্ডিনেট সেট হয়েছে!");
-        } finally {
-          setGpsLoading(false);
-        }
-      },
-      (err) => {
-        setGpsLoading(false);
-        toast.error("লোকেশন অ্যাক্সেস করতে পারেনি। অনুগ্রহ করে ম্যানুয়ালি ঠিকানা দিন।");
-        console.error(err);
-      },
-      { timeout: 10000, enableHighAccuracy: true }
-    );
-  };
-
-
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
-    if (!form.customerName.trim()) newErrors.customerName = "নাম আবশ্যক।";
+    if (!form.customerName.trim()) {
+      newErrors.customerName = "আপনার নাম আবশ্যক।";
+    }
     if (!form.phoneNumber.trim()) {
       newErrors.phoneNumber = "ফোন নম্বর আবশ্যক।";
     } else if (!/^(?:\+88)?01[3-9]\d{8}$/.test(form.phoneNumber.replace(/\s/g, ""))) {
-      newErrors.phoneNumber = "সঠিক বাংলাদেশি নম্বর দিন (01XXXXXXXXX)।";
+      newErrors.phoneNumber = "সঠিক ১১ ডিজিটের বাংলাদেশি নম্বর দিন (01XXXXXXXXX)।";
     }
-    if (!form.address.trim()) newErrors.address = "ঠিকানা আবশ্যক।";
+    if (!form.address.trim()) {
+      newErrors.address = "সম্পূর্ণ ডেলিভারি ঠিকানা আবশ্যক।";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -146,8 +83,10 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
     setServerError("");
     try {
       const res = await createOrder({
-        ...form,
-        gpsCoordinates: gpsCoords || undefined,
+        customerName: form.customerName,
+        phoneNumber: form.phoneNumber,
+        address: form.address,
+        quantity: form.quantity,
         userId: user?.id || undefined,
       }).unwrap();
 
@@ -167,26 +106,19 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
     }
   };
 
-
   const handleClose = () => {
     if (isCreating) return;
     setSuccess(null);
     setServerError("");
-    setGpsCoords(null);
     setForm({
       customerName: user?.name || "",
       phoneNumber: user?.phone || "",
-      email: user?.email || "",
       address: "",
-      district: "",
-      size: "",
       quantity: 1,
-      orderNotes: "",
     });
     setErrors({});
     onClose();
   };
-
 
   if (!isOpen) return null;
 
@@ -202,7 +134,11 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
             <ShoppingBag className="text-yellow-400" size={22} />
             <h2 className="text-lg font-bold text-white">অর্ডার করুন</h2>
           </div>
-          <button onClick={handleClose} className="text-gray-400 hover:text-white transition-colors p-1 rounded-full hover:bg-white/10">
+          <button
+            onClick={handleClose}
+            className="text-gray-400 hover:text-white transition-colors p-1 rounded-full hover:bg-white/10"
+            aria-label="বন্ধ করুন"
+          >
             <X size={20} />
           </button>
         </div>
@@ -248,16 +184,25 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                <button type="button" onClick={() => handleQty(-1)} className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                <button
+                  type="button"
+                  onClick={() => handleQty(-1)}
+                  className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label="কমান"
+                >
                   <Minus size={14} />
                 </button>
                 <span className="text-white font-bold w-5 text-center">{form.quantity}</span>
-                <button type="button" onClick={() => handleQty(1)} className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                <button
+                  type="button"
+                  onClick={() => handleQty(1)}
+                  className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label="বাড়ান"
+                >
                   <Plus size={14} />
                 </button>
               </div>
             </div>
-
 
             <div className="text-right text-sm">
               <span className="text-gray-400">মোট: </span>
@@ -265,9 +210,9 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
               <span className="text-gray-500 text-xs ml-1">(ডেলিভারিতে পরিশোধ)</span>
             </div>
 
-            {/* Name */}
+            {/* 1. Name */}
             <div>
-              <label className="text-sm text-gray-300 mb-1.5 block">
+              <label className="text-sm text-gray-300 mb-1.5 block font-medium">
                 আপনার নাম <span className="text-red-400">*</span>
               </label>
               <input
@@ -275,15 +220,16 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                 name="customerName"
                 value={form.customerName}
                 onChange={handleChange}
-                placeholder="আপনার সম্পূর্ণ নাম"
+                placeholder="আপনার সম্পূর্ণ নাম লিখুন"
+                autoComplete="name"
               />
               {errors.customerName && <p className="text-red-400 text-xs mt-1">{errors.customerName}</p>}
             </div>
 
-            {/* Phone */}
+            {/* 2. Phone */}
             <div>
-              <label className="text-sm text-gray-300 mb-1.5 block">
-                ফোন নম্বর <span className="text-red-400">*</span>
+              <label className="text-sm text-gray-300 mb-1.5 block font-medium">
+                মোবাইল নম্বর <span className="text-red-400">*</span>
               </label>
               <input
                 className={`form-input ${errors.phoneNumber ? "error" : ""}`}
@@ -292,95 +238,36 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                 onChange={handleChange}
                 placeholder="01XXXXXXXXX"
                 type="tel"
+                autoComplete="tel"
               />
               {errors.phoneNumber && <p className="text-red-400 text-xs mt-1">{errors.phoneNumber}</p>}
             </div>
 
-            {/* Email (optional) */}
+            {/* 3. Address */}
             <div>
-              <label className="text-sm text-gray-300 mb-1.5 block">ইমেইল (ঐচ্ছিক)</label>
-              <input
-                className="form-input"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="আপনার ইমেইল"
-                type="email"
-              />
-            </div>
-
-            {/* Address */}
-            <div>
-              <label className="text-sm text-gray-300 mb-1.5 block">
-                ডেলিভারি ঠিকানা <span className="text-red-400">*</span>
+              <label className="text-sm text-gray-300 mb-1.5 block font-medium">
+                সম্পূর্ণ ঠিকানা <span className="text-red-400">*</span>
               </label>
-              <div className="relative">
-                <textarea
-                  className={`form-input resize-none ${errors.address ? "error" : ""}`}
-                  name="address"
-                  value={form.address}
-                  onChange={handleChange}
-                  placeholder="গ্রাম/মহল্লা, উপজেলা, জেলা সহ পূর্ণ ঠিকানা লিখুন"
-                  rows={3}
-                />
-              </div>
-              {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address}</p>}
-              <button
-                type="button"
-                onClick={handleGPS}
-                disabled={gpsLoading}
-                className="mt-2 flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-cyan-500/10 hover:bg-cyan-500/15 border border-cyan-500/20 px-3 py-2 rounded-lg w-full justify-center"
-              >
-                {gpsLoading ? (
-                  <><Loader2 size={14} className="animate-spin" /> লোকেশন খুঁজছে...</>
-                ) : (
-                  <><MapPin size={14} /> আমার বর্তমান লোকেশন ব্যবহার করুন</>
-                )}
-              </button>
-              {gpsCoords && (
-                <p className="text-green-400 text-xs mt-1 flex items-center gap-1">
-                  <CheckCircle size={12} /> GPS লোকেশন সেট হয়েছে
-                </p>
-              )}
-            </div>
-
-            {/* Size selector */}
-            <div>
-              <label className="text-sm text-gray-300 mb-1.5 block">সাইজ (ইঞ্চি)</label>
-              <select
-                className="form-input !text-black !bg-white cursor-pointer font-medium"
-                name="size"
-                value={form.size}
+              <textarea
+                className={`form-input resize-none ${errors.address ? "error" : ""}`}
+                name="address"
+                value={form.address}
                 onChange={handleChange}
-              >
-                <option value="" className="text-black bg-white">সাইজ বেছে নিন</option>
-                <option value="3" className="text-black bg-white">৩ ইঞ্চি</option>
-                <option value="4" className="text-black bg-white">৪ ইঞ্চি</option>
-                <option value="5" className="text-black bg-white">৫ ইঞ্চি</option>
-                <option value="6" className="text-black bg-white">৬ ইঞ্চি</option>
-              </select>
-            </div>
-
-            {/* Notes */}
-            <div>
-              <label className="text-sm text-gray-300 mb-1.5 block">অতিরিক্ত নোট (ঐচ্ছিক)</label>
-              <input
-                className="form-input"
-                name="orderNotes"
-                value={form.orderNotes}
-                onChange={handleChange}
-                placeholder="কোনো বিশেষ নির্দেশনা থাকলে লিখুন"
+                placeholder="গ্রাম/মহল্লা, রোড নম্বর, থানা ও জেলা লিখুন"
+                rows={3}
+                autoComplete="street-address"
               />
+              {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address}</p>}
             </div>
 
             {/* COD badge */}
             <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 text-base">
                 💵
               </div>
               <div>
                 <p className="text-green-400 font-semibold text-sm">ক্যাশ অন ডেলিভারি</p>
-                <p className="text-gray-400 text-xs">পণ্য হাতে পেয়ে টাকা দিন। 🔒 তথ্য গোপন।</p>
+                <p className="text-gray-400 text-xs">পণ্য হাতে পেয়ে টাকা দিন। ১০০% গোপনীয় প্যাকেজিং।</p>
               </div>
             </div>
 
@@ -394,7 +281,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
             <button
               type="submit"
               disabled={isCreating}
-              className="btn-gold w-full flex items-center justify-center gap-2 py-4 text-base disabled:opacity-60 disabled:cursor-not-allowed"
+              className="btn-gold w-full flex items-center justify-center gap-2 py-3.5 text-base disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               {isCreating ? (
                 <><Loader2 size={18} className="animate-spin" /> অর্ডার পাঠানো হচ্ছে...</>
