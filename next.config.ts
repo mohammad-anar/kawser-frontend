@@ -5,6 +5,14 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'www.selfcaresolution.online',
+      },
+      {
+        protocol: 'https',
+        hostname: 'selfcaresolution.online',
+      },
+      {
+        protocol: 'https',
         hostname: 'selfcaresolution.vercel.app',
       },
     ],
@@ -12,3 +20,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+

@@ -320,7 +320,7 @@ function TrackContent() {
               </div>
               <div className="flex gap-2">
                 <a
-                  href="https://wa.me/8801932787942?text=Hello%20Personal%20Care%20BD%2C%20I%20have%20a%20query%20about%20my%20order"
+                  href="https://wa.me/8801932787942?text=Hello%20Selfcare%20Solution%2C%20I%20have%20a%20query%20about%20my%20order"
                   target="_blank"
                   rel="noreferrer"
                   className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition-colors"
