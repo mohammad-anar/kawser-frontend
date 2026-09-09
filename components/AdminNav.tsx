@@ -169,7 +169,7 @@ export default function AdminNav() {
           </div>
           <div>
             <div className="font-bold text-sm text-white flex items-center gap-1.5">
-              Personal Care BD <Shield size={12} className="text-yellow-400" />
+              SelfCare Solution <Shield size={12} className="text-yellow-400" />
             </div>
             <div className="text-[10px] text-yellow-400 uppercase tracking-wider font-semibold">
               Admin Control Panel

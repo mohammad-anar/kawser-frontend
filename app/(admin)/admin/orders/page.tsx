@@ -141,7 +141,7 @@ export default function AdminOrdersPage() {
       link.setAttribute("href", url);
       const filename = isCustomSelected
         ? `selected-orders-${selectedIds.length}-${new Date().toISOString().slice(0, 10)}.csv`
-        : `personalcarebd-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+        : `selfcaresolution-orders-${new Date().toISOString().slice(0, 10)}.csv`;
       link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();

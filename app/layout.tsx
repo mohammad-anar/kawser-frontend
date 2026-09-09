@@ -2,20 +2,21 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://personalcarebd.com"),
+  metadataBase: new URL("https://selfcaresolution.vercel.app"),
   title: {
-    default: "Personal Care BD | টপ নচ ম্যাজিক কনডম - বাংলাদেশের সেরা কনডম | ৳৮৯৯",
-    template: "%s | Personal Care BD",
+    default: "SelfCare Solution | টপ নচ ম্যাজিক কনডম - বাংলাদেশের সেরা কনডম | ৳৮৯৯",
+    template: "%s | SelfCare Solution",
   },
   description:
-    "Personal Care BD - বাংলাদেশের সেরা রিইউজেবল সিলিকন ম্যাজিক কনডম। টপ নচ চায়না কনডম মাত্র ৳৮৯৯। সারাদেশে ফ্রি ডেলিভারি। পণ্য দেখে পেমেন্ট করুন। Magic condom Bangladesh 899 taka free delivery cash on delivery.",
+    "SelfCare Solution - বাংলাদেশের সেরা রিইউজেবল সিলিকন ম্যাজিক কনডম। টপ নচ চায়না কনডম মাত্র ৳৮৯৯। সারাদেশে ফ্রি ডেলিভারি। পণ্য দেখে পেমেন্ট করুন। Magic condom Bangladesh 899 taka free delivery cash on delivery.",
   keywords: [
     "ম্যাজিক কনডম বাংলাদেশ",
     "টপ নচ কনডম",
     "সিলিকন রিইউজেবল কনডম",
     "চায়না কনডম বাংলাদেশ",
     "কনডম দাম বাংলাদেশ",
-    "personal care bd",
+    "selfcare solution",
+    "self care solution bd",
     "magic condom bangladesh",
     "reusable silicone condom bd",
     "top notch condom price bangladesh",
@@ -28,17 +29,17 @@ export const metadata: Metadata = {
     "TPE silicone condom bd",
   ],
   openGraph: {
-    title: "Personal Care BD | টপ নচ ম্যাজিক কনডম - মাত্র ৳৮৯৯",
+    title: "SelfCare Solution | টপ নচ ম্যাজিক কনডম - মাত্র ৳৮৯৯",
     description:
       "বাংলাদেশে সর্বোচ্চ মানের রিইউজেবল ম্যাজিক কনডম। সারাদেশে ফ্রি ডেলিভারি। হাতে পণ্য পেয়ে টাকা দিন।",
-    url: "https://personalcarebd.com",
-    siteName: "Personal Care BD",
+    url: "https://selfcaresolution.vercel.app",
+    siteName: "SelfCare Solution",
     images: [
       {
         url: "/images/hero-banner.jpg",
         width: 1200,
         height: 630,
-        alt: "Personal Care BD - Top Notch Magic Condom Bangladesh",
+        alt: "SelfCare Solution - Top Notch Magic Condom Bangladesh",
       },
     ],
     locale: "bn_BD",
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Personal Care BD | টপ নচ ম্যাজিক কনডম",
+    title: "SelfCare Solution | টপ নচ ম্যাজিক কনডম",
     description: "বাংলাদেশের সেরা রিইউজেবল কনডম মাত্র ৳৮৯৯। সারাদেশে ফ্রি ডেলিভারি।",
     images: ["/images/hero-banner.jpg"],
   },
@@ -60,7 +61,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://personalcarebd.com",
+    canonical: "https://selfcaresolution.vercel.app",
   },
   icons: {
     icon: [
@@ -79,17 +80,17 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://personalcarebd.com/#website",
-      url: "https://personalcarebd.com",
-      name: "Personal Care BD",
+      "@id": "https://selfcaresolution.vercel.app/#website",
+      url: "https://selfcaresolution.vercel.app",
+      name: "SelfCare Solution",
       description: "বাংলাদেশের সেরা ম্যাজিক কনডম - টপ নচ চায়না রিইউজেবল সিলিকন কনডম",
       inLanguage: "bn",
     },
     {
       "@type": "Organization",
-      "@id": "https://personalcarebd.com/#org",
-      name: "Personal Care BD",
-      url: "https://personalcarebd.com",
+      "@id": "https://selfcaresolution.vercel.app/#org",
+      name: "SelfCare Solution",
+      url: "https://selfcaresolution.vercel.app",
       description: "Premium intimate care products for Bangladesh",
     },
     {
@@ -103,7 +104,7 @@ const jsonLd = {
         price: "899",
         priceCurrency: "BDT",
         availability: "https://schema.org/InStock",
-        seller: { "@type": "Organization", name: "Personal Care BD" },
+        seller: { "@type": "Organization", name: "SelfCare Solution" },
         shippingDetails: {
           "@type": "OfferShippingDetails",
           shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "BDT" },
@@ -145,5 +146,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-

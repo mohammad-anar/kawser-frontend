@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://personalcarebd.com";
+  const baseUrl = "https://selfcaresolution.vercel.app";
   return [
     {
       url: baseUrl,

@@ -153,7 +153,7 @@ const REVIEWS = [
     location: "উপশহর, সিলেট",
     rating: 5,
     date: "১ সপ্তাহ আগে",
-    text: "খুবই ভালো সার্ভিস। দেখার পর ডেলিভারি ম্যানকে টাকা দিয়েছি। ১০০% জেনুইন মাল পেয়েছি। ধন্যবাদ Personal Care BD টিমকে।",
+    text: "খুবই ভালো সার্ভিস। দেখার পর ডেলিভারি ম্যানকে টাকা দিয়েছি। ১০০% জেনুইন মাল পেয়েছি। ধন্যবাদ SelfCare Solution টিমকে।",
   },
   {
     name: "মাহমুদুল করিম",
@@ -802,9 +802,9 @@ export default function Home() {
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center text-black font-black text-xs">
               PC
             </div>
-            <span className="font-bold text-white text-sm">Personal Care BD</span>
+            <span className="font-bold text-white text-sm">SelfCare Solution</span>
           </div>
-          <p>© {new Date().getFullYear()} Personal Care BD. সর্বস্বত্ব সংরক্ষিত।</p>
+          <p>© {new Date().getFullYear()} SelfCare Solution. সর্বস্বত্ব সংরক্ষিত।</p>
           <div className="flex gap-4 text-gray-400 text-xs">
             <a href="#product" className="hover:text-yellow-400">পণ্য</a>
             <a href="#why" className="hover:text-yellow-400">কেন নিবেন?</a>

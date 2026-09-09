@@ -8,7 +8,7 @@ import { ShieldCheck, Mail, Lock, LogIn, AlertCircle, Loader2, ArrowLeft } from 
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@personalcarebd.com");
+  const [email, setEmail] = useState("admin@selfcaresolution.com");
   const [password, setPassword] = useState("admin123456");
   const [error, setError] = useState("");
 
@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
           </div>
           <h1 className="text-2xl font-black text-white">অ্যাডমিন কন্ট্রোল প্যানেল</h1>
           <p className="text-xs text-yellow-400 font-medium mt-1">
-            Personal Care BD — Management Portal
+            SelfCare Solution — Management Portal
           </p>
         </div>
 
@@ -70,7 +70,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@personalcarebd.com"
+                placeholder="admin@selfcaresolution.com"
                 required
                 className="form-input form-input-has-icon !pl-11 pr-4 py-3 bg-black/60 border-white/20 text-white"
               />
@@ -95,7 +95,7 @@ export default function AdminLoginPage() {
           </div>
 
           <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-xs text-gray-400">
-            💡 <span className="text-yellow-400 font-semibold">ডিফল্ট অ্যাডমিন:</span> admin@personalcarebd.com / admin123456
+            💡 <span className="text-yellow-400 font-semibold">ডিফল্ট অ্যাডমিন:</span> admin@selfcaresolution.com / admin123456
           </div>
 
           <button
