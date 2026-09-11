@@ -190,6 +190,7 @@ const jsonLd = {
       brand: { "@type": "Brand", name: "Top Notch" },
       category: "Intimate Care / Personal Wellness",
       sku: "SC-TNC-01",
+      mpn: "SC-TNC-01",
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue: "4.9",
