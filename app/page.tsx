@@ -267,7 +267,14 @@ export default function Home() {
       <section className="relative min-h-[92vh] flex items-center pt-24 sm:pt-28 pb-12 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <video className="w-full h-full object-cover" autoPlay loop muted playsInline>
+          <video
+            className="w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label="SelfCare Solution Top Notch Magic Condom Preview Video"
+          >
             <source src="/images/video.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
@@ -312,7 +319,7 @@ export default function Home() {
 
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight">
-              আপনার রাতকে করুন{" "}
+              টপ নচ ম্যাজিক কনডম — আপনার রাতকে করুন{" "}
               <span className="text-gradient-gold">অবিস্মরণীয় ও দীর্ঘস্থায়ী</span>
             </h1>
 

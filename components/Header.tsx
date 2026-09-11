@@ -70,7 +70,13 @@ export default function Header({ onOrderClick }: HeaderProps) {
             title={user?.role === "admin" ? "এডমিন ড্যাশবোর্ডে যান" : "হোম পেজ"}
           >
             <div className="w-36 sm:w-40">
-              <Image src={"/images/selfcaresolution2.PNG"} width={200} height={100} alt="Logo" priority />
+              <Image
+                src={"/images/selfcaresolution2.PNG"}
+                width={200}
+                height={100}
+                alt="SelfCare Solution - টপ নচ ম্যাজিক কনডম বাংলাদেশ"
+                priority
+              />
             </div>
           </Link>
 
