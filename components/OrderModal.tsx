@@ -96,6 +96,19 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
         window.dispatchEvent(new CustomEvent("orderPlaced", { detail: { orderId: res.orderId } }));
       }
 
+      // ===== Meta Pixel: Purchase Event =====
+      if (typeof window !== "undefined" && typeof window.fbq === "function") {
+        window.fbq("track", "Purchase", {
+          value: res.totalPrice || 899 * form.quantity,
+          currency: "BDT",
+          content_name: "Top Notch Magic Condom",
+          content_ids: ["top-notch-magic-condom"],
+          content_type: "product",
+          num_items: form.quantity,
+        });
+      }
+      // ===== End Meta Pixel =====
+
       setSuccess({ orderId: res.orderId, total: res.totalPrice });
     } catch (err: any) {
       const message =
