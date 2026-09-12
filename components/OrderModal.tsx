@@ -88,6 +88,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
         address: form.address,
         quantity: form.quantity,
         userId: user?.id || undefined,
+        productName: "Love Lock Condom / Magic Condom",
       }).unwrap();
 
       // Save latest order ID to localStorage and trigger global notification
@@ -115,14 +116,21 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
 
         if (!alreadyTracked) {
           const orderTotal = Number(res.totalPrice) || (899 * form.quantity);
+          const dynamicProductName = res.productName || "Love Lock Condom / Magic Condom";
+          const dynamicContentId =
+            dynamicProductName
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-+|-+$/g, "") || "love-lock-magic-condom";
+
           window.fbq(
             "track",
             "Purchase",
             {
               value: orderTotal,
               currency: "BDT",
-              content_name: "Top Notch Magic Condom",
-              content_ids: ["top-notch-magic-condom"],
+              content_name: dynamicProductName,
+              content_ids: [dynamicContentId],
               content_type: "product",
               num_items: form.quantity,
             },

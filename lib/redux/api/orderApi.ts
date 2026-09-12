@@ -12,6 +12,7 @@ export interface CreateOrderRequest {
   size?: string;
   orderNotes?: string;
   userId?: string;
+  productName?: string;
 }
 
 export interface CreateOrderResponse {
@@ -19,6 +20,7 @@ export interface CreateOrderResponse {
   message: string;
   orderId: string;
   totalPrice: number;
+  productName?: string;
   estimatedDelivery: string;
 }
 
