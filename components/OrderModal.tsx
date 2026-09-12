@@ -98,14 +98,37 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
 
       // ===== Meta Pixel: Purchase Event =====
       if (typeof window !== "undefined" && typeof window.fbq === "function") {
-        window.fbq("track", "Purchase", {
-          value: res.totalPrice || 899 * form.quantity,
-          currency: "BDT",
-          content_name: "Top Notch Magic Condom",
-          content_ids: ["top-notch-magic-condom"],
-          content_type: "product",
-          num_items: form.quantity,
-        });
+        const orderId = res.orderId;
+        const purchaseDedupeKey = orderId ? `fb_purchase_${orderId}` : null;
+        let alreadyTracked = false;
+
+        if (purchaseDedupeKey) {
+          try {
+            alreadyTracked = Boolean(sessionStorage.getItem(purchaseDedupeKey));
+            if (!alreadyTracked) {
+              sessionStorage.setItem(purchaseDedupeKey, "true");
+            }
+          } catch {
+            // Ignore storage access errors in private/restricted browsing mode
+          }
+        }
+
+        if (!alreadyTracked) {
+          const orderTotal = Number(res.totalPrice) || (899 * form.quantity);
+          window.fbq(
+            "track",
+            "Purchase",
+            {
+              value: orderTotal,
+              currency: "BDT",
+              content_name: "Top Notch Magic Condom",
+              content_ids: ["top-notch-magic-condom"],
+              content_type: "product",
+              num_items: form.quantity,
+            },
+            orderId ? { eventID: orderId } : undefined
+          );
+        }
       }
       // ===== End Meta Pixel =====
 
