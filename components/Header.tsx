@@ -100,14 +100,14 @@ export default function Header({ onOrderClick }: HeaderProps) {
             >
               <Package size={18} className="text-yellow-400" /> ট্র্যাক অর্ডার
             </Link>
-            <a
+            {/* <a
               href="https://wa.me/8801932787942?text=Hello%20Selfcare%20Solution"
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 transition-colors font-bold"
             >
               <WhatsAppIcon size={19} /> WhatsApp
-            </a>
+            </a> */}
           </nav>
 
           {/* Auth + CTA */}
@@ -192,14 +192,14 @@ export default function Header({ onOrderClick }: HeaderProps) {
             >
               <Package size={18} /> অর্ডার ট্র্যাক করুন
             </Link>
-            <a
+            {/* <a
               href="https://wa.me/8801932787942?text=Hello%20Selfcare%20Solution"
               target="_blank"
               rel="noreferrer"
               className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2 text-base font-bold py-1"
             >
               <WhatsAppIcon size={20} /> WhatsApp
-            </a>
+            </a> */}
 
             <div className="pt-3 border-t border-white/10">
               {user ? (
