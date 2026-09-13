@@ -364,7 +364,7 @@ export default function AdminNav() {
         </Link>
 
         <div className="flex items-center gap-2 pl-3 border-l border-white/10">
-          <span className="text-xs text-gray-300 font-medium hidden sm:block">
+          <span className="text-xs text-gray-300 font-medium hidden sm:block" suppressHydrationWarning>
             {user?.name || "এডমিন"}
           </span>
           <Link

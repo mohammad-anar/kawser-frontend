@@ -123,6 +123,7 @@ export interface AdminOrdersResponse {
 }
 
 export const orderApi = apiSlice.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     createOrder: builder.mutation<CreateOrderResponse, CreateOrderRequest>({
       query: (orderData) => ({
