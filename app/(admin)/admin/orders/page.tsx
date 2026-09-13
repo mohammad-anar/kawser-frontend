@@ -151,7 +151,7 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("pc_token");
-      if (!token) router.push("/admin/login");
+      if (!token) router.push("/login");
     }
   }, [router]);
 

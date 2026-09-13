@@ -90,7 +90,7 @@ export default function AdminDashboardPage() {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("pc_token");
       if (!token) {
-        router.push("/admin/login");
+        router.push("/login");
       }
     }
   }, [router]);

@@ -152,7 +152,7 @@ export default function AdminNav() {
 
   const handleLogout = () => {
     dispatch(logout());
-    router.push("/admin/login");
+    router.push("/login");
   };
 
   const navItems = [

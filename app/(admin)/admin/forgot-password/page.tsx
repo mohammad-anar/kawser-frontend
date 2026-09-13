@@ -181,7 +181,7 @@ export default function ForgotPasswordPage() {
               </button>
 
               <Link
-                href="/admin/login"
+                href="/login"
                 className="flex items-center justify-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors"
               >
                 <ArrowLeft size={13} /> লগইন পেজে ফিরুন
@@ -319,7 +319,7 @@ export default function ForgotPasswordPage() {
               </div>
               <button
                 id="goto-login-btn"
-                onClick={() => router.push("/admin/login")}
+                onClick={() => router.push("/login")}
                 className="btn-gold w-full py-3"
               >
                 লগইন পেজে যান

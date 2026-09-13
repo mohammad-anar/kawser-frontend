@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import OrderModal from "@/components/OrderModal";
 import { useLoginMutation } from "@/lib/redux/api/authApi";
@@ -52,13 +53,28 @@ export default function LoginPage() {
           {/* Decorative glow */}
           <div className="absolute -top-16 -right-16 w-36 h-36 bg-yellow-500/10 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="text-center mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-yellow-500/30">
-              <LogIn className="text-black" size={24} />
-            </div>
-            <h1 className="text-2xl font-black text-white">কাস্টমার লগইন</h1>
+          <div className="text-center mb-6 flex flex-col items-center">
+            {/* Website logo linking to home page */}
+            <Link
+              href="/"
+              className="inline-block mb-3 transition-transform duration-200 hover:scale-105"
+              title="হোম পেজে ফিরে যান"
+            >
+              <div className="w-40 sm:w-48">
+                <Image
+                  src="/images/selfcaresolution2.PNG"
+                  width={220}
+                  height={110}
+                  alt="SelfCare Solution"
+                  priority
+                  className="h-auto w-full object-contain"
+                />
+              </div>
+            </Link>
+
+            <h1 className="text-2xl font-black text-white">লগইন করুন</h1>
             <p className="text-xs text-gray-400 mt-1">
-              লগইন করে আপনার সমস্ত অর্ডার ট্র্যাক ও পরিচালনা করুন
+              লগইন করে আপনার সমস্ত অর্ডার ও ড্যাশবোর্ড পরিচালনা করুন
             </p>
           </div>
 
