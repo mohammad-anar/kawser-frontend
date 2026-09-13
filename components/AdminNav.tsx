@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
@@ -163,16 +164,24 @@ export default function AdminNav() {
   return (
     <header className="sticky top-0 z-40 bg-[#080814]/95 backdrop-blur-md border-b border-white/10 px-4 sm:px-8 py-3.5 flex items-center justify-between">
       <div className="flex items-center gap-6">
-        <Link href="/admin" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center text-black font-black text-xs shadow-md shadow-yellow-500/20">
-            PC
+        <Link href="/admin" className="flex items-center gap-2.5 sm:gap-3 group">
+          <div className="w-32 sm:w-40 transition-transform duration-200 group-hover:scale-105">
+            <Image
+              src="/images/selfcaresolution2.PNG"
+              width={180}
+              height={90}
+              alt="SelfCare Solution Admin"
+              priority
+              className="h-auto w-full object-contain"
+            />
           </div>
-          <div>
-            <div className="font-bold text-sm text-white flex items-center gap-1.5">
-              SelfCare Solution <Shield size={12} className="text-yellow-400" />
+          <div className="hidden xs:flex flex-col border-l border-white/10 pl-2.5">
+            <div className="flex items-center gap-1 text-[10px] font-extrabold text-yellow-400 uppercase tracking-wider">
+              <span>Admin</span>
+              <Shield size={11} className="text-yellow-400" />
             </div>
-            <div className="text-[10px] text-yellow-400 uppercase tracking-wider font-semibold">
-              Admin Control Panel
+            <div className="text-[9px] text-gray-400 font-medium whitespace-nowrap">
+              Control Panel
             </div>
           </div>
         </Link>

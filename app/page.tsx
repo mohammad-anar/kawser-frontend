@@ -803,14 +803,19 @@ export default function Home() {
       {/* =========================================================================
           8. FOOTER
       ========================================================================= */}
-      <footer className="bg-[#030308] border-t border-white/10 py-10 text-center text-xs text-gray-500 space-y-4">
+      <footer className="bg-[#030308] border-t border-white/10 pt-10 pb-[80px] text-center text-xs text-gray-500 space-y-4">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center text-black font-black text-xs">
-              PC
+          <Link href="/" className="inline-block transition-transform duration-200 hover:scale-105" title="হোম পেজ">
+            <div className="w-32 sm:w-36">
+              <Image
+                src="/images/selfcaresolution2.PNG"
+                width={160}
+                height={80}
+                alt="SelfCare Solution"
+                className="h-auto w-full object-contain"
+              />
             </div>
-            <span className="font-bold text-white text-sm">SelfCare Solution</span>
-          </div>
+          </Link>
           <p>© {new Date().getFullYear()} SelfCare Solution. সর্বস্বত্ব সংরক্ষিত।</p>
           <div className="flex gap-4 text-gray-400 text-xs">
             <a href="#product" className="hover:text-yellow-400">পণ্য</a>
