@@ -94,6 +94,7 @@ export interface AdminStatsResponse {
     totalOrders: number;
     deliveredOrders: number;
     pendingOrders: number;
+    cancelledOrders: number;
     uniqueCustomers: number;
     totalRevenue: number;
     deliveryRate: number;

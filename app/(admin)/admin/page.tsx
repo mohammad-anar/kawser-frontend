@@ -25,6 +25,7 @@ import {
   ChevronRight,
   Eye,
   AlertCircle,
+  XCircle,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -70,7 +71,7 @@ export default function AdminDashboardPage() {
     isLoading: isOrdersLoading,
     refetch: refetchOrders,
   } = useGetAllOrdersQuery(
-    { page: 1, limit: 6 },
+    { page: 1, limit: 6, status: "Delivered", isDeleted: false },
     { pollingInterval: 30000 }
   );
 
@@ -99,6 +100,7 @@ export default function AdminDashboardPage() {
     totalOrders: 0,
     deliveredOrders: 0,
     pendingOrders: 0,
+    cancelledOrders: 0,
     uniqueCustomers: 0,
     totalRevenue: 0,
     deliveryRate: 0,
@@ -134,7 +136,7 @@ export default function AdminDashboardPage() {
               অ্যাডমিন <span className="text-gradient-gold">ওভারভিউ ড্যাশবোর্ড</span>
             </h1>
             <p className="text-xs sm:text-sm text-gray-400 mt-1">
-              রিয়েল-টাইম অর্ডার পরিসংখ্যান এবং বিক্রয় ট্রেন্ড অ্যানালিটিক্স
+              রিয়েল-টাইম সফল ডেলিভারি (Delivered) পরিসংখ্যান এবং বিক্রয় ট্রেন্ড অ্যানালিটিক্স
             </p>
           </div>
 
@@ -173,43 +175,7 @@ export default function AdminDashboardPage() {
                 ৳{stats.totalRevenue.toLocaleString()}
               </div>
               <p className="text-[11px] text-yellow-400 font-medium mt-1">
-                সর্বমোট বিক্রিত পণ্যের মূল্য
-              </p>
-            </div>
-          </div>
-
-          {/* Total Orders */}
-          <div className="glass-card p-5 border border-white/10 relative overflow-hidden">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400">মোট অর্ডার</span>
-              <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                <ShoppingBag size={18} />
-              </div>
-            </div>
-            <div className="mt-3">
-              <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                {stats.totalOrders}
-              </div>
-              <p className="text-[11px] text-blue-400 font-medium mt-1">
-                সর্বমোট সফলভাবে গৃহীত অর্ডার
-              </p>
-            </div>
-          </div>
-
-          {/* Pending Orders */}
-          <div className="glass-card p-5 border border-amber-500/20 relative overflow-hidden">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400">পেন্ডিং অর্ডার</span>
-              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                <Clock size={18} />
-              </div>
-            </div>
-            <div className="mt-3">
-              <div className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight">
-                {stats.pendingOrders}
-              </div>
-              <p className="text-[11px] text-gray-400 mt-1">
-                যাচাই ও কনফার্মেশন প্রয়োজন
+                ডেলিভার্ড পণ্যের মোট আদায়
               </p>
             </div>
           </div>
@@ -227,7 +193,43 @@ export default function AdminDashboardPage() {
                 {stats.deliveredOrders}
               </div>
               <p className="text-[11px] text-emerald-400/80 font-medium mt-1">
-                ডেলিভারি রেট: {stats.deliveryRate}%
+                সফলভাবে পৌঁছানো অর্ডার
+              </p>
+            </div>
+          </div>
+
+          {/* Cancelled Orders */}
+          <div className="glass-card p-5 border border-red-500/20 relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-gray-400">বাতিল অর্ডার</span>
+              <div className="w-9 h-9 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center">
+                <XCircle size={18} />
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-2xl sm:text-3xl font-black text-red-400 tracking-tight">
+                {stats.cancelledOrders}
+              </div>
+              <p className="text-[11px] text-red-400/80 font-medium mt-1">
+                বাতিলকৃত মোট অর্ডার
+              </p>
+            </div>
+          </div>
+
+          {/* Delivery Rate */}
+          <div className="glass-card p-5 border border-purple-500/20 relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-gray-400">ডেলিভারি সাকসেস রেট</span>
+              <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center">
+                <TrendingUp size={18} />
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-2xl sm:text-3xl font-black text-purple-400 tracking-tight">
+                {stats.deliveryRate}%
+              </div>
+              <p className="text-[11px] text-purple-300 font-medium mt-1">
+                মোট অর্ডারের সফলতার অনুপাত
               </p>
             </div>
           </div>
@@ -238,9 +240,9 @@ export default function AdminDashboardPage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                <TrendingUp size={18} className="text-yellow-400" /> গত ৭ দিনের বিক্রয় প্রবণতা
+                <TrendingUp size={18} className="text-yellow-400" /> গত ৭ দিনের ডেলিভার্ড বিক্রয় প্রবণতা
               </h2>
-              <p className="text-xs text-gray-400 mt-0.5">দৈনিক রেভিনিউ এবং অর্ডারের সংখ্যা</p>
+              <p className="text-xs text-gray-400 mt-0.5">সফল ডেলিভারির দৈনিক রেভিনিউ এবং অর্ডারের সংখ্যা</p>
             </div>
           </div>
 
@@ -280,8 +282,8 @@ export default function AdminDashboardPage() {
                       boxShadow: "0 10px 25px -5px rgba(0,0,0,0.5)",
                     }}
                     formatter={(value: any, name: any) => {
-                      if (name === "বিক্রয়") return [`৳${Number(value).toLocaleString()}`, "দৈনিক বিক্রয়"];
-                      if (name === "অর্ডার") return [`${value} টি`, "মোট অর্ডার"];
+                      if (name === "বিক্রয়") return [`৳${Number(value).toLocaleString()}`, "ডেলিভার্ড বিক্রয়"];
+                      if (name === "অর্ডার") return [`${value} টি`, "ডেলিভার্ড অর্ডার"];
                       return [value, name];
                     }}
                   />
@@ -322,8 +324,10 @@ export default function AdminDashboardPage() {
         <div className="glass-card border border-white/10 overflow-hidden shadow-2xl">
           <div className="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between">
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-white">সাম্প্রতিক অর্ডারসমূহ</h2>
-              <p className="text-xs text-gray-400 mt-0.5">সর্বশেষ গৃহীত অর্ডারগুলোর সংক্ষিপ্ত তালিকা</p>
+              <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <CheckCircle2 size={18} className="text-emerald-400" /> সাম্প্রতিক ডেলিভার্ড অর্ডারসমূহ
+              </h2>
+              <p className="text-xs text-gray-400 mt-0.5">সর্বশেষ সফলভাবে ডেলিভারি সম্পন্ন হওয়া অর্ডারের সংক্ষিপ্ত তালিকা</p>
             </div>
             <Link
               href="/admin/orders"
