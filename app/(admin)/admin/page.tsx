@@ -161,75 +161,93 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* KPI Cards Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {/* Total Revenue */}
-          <div className="glass-card p-5 border border-yellow-500/20 relative overflow-hidden">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
+          {/* 1. Total Revenue */}
+          <div className="glass-card p-4 sm:p-5 border border-yellow-500/20 relative overflow-hidden">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400">মোট বিক্রয়</span>
-              <div className="w-9 h-9 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center">
+              <span className="text-xs font-semibold text-gray-400">মোট বিক্রয়</span>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center">
                 <DollarSign size={18} />
               </div>
             </div>
             <div className="mt-3">
-              <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight truncate">
                 ৳{stats.totalRevenue.toLocaleString()}
               </div>
-              <p className="text-[11px] text-yellow-400 font-medium mt-1">
-                ডেলিভার্ড পণ্যের মোট আদায়
+              <p className="text-[10px] sm:text-[11px] text-yellow-400 font-medium mt-1">
+                ডেলিভার্ড পণ্যের মোট মূল্য
               </p>
             </div>
           </div>
 
-          {/* Delivered Orders */}
-          <div className="glass-card p-5 border border-emerald-500/20 relative overflow-hidden">
+          {/* 2. Total Orders */}
+          <div className="glass-card p-4 sm:p-5 border border-blue-500/20 relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-gray-400">মোট অর্ডার</span>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                <ShoppingBag size={18} />
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">
+                {stats.totalOrders}
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-blue-400 font-medium mt-1">
+                গৃহীত সর্বমোট অর্ডার
+              </p>
+            </div>
+          </div>
+
+          {/* 3. Delivered Orders */}
+          <div className="glass-card p-4 sm:p-5 border border-emerald-500/20 relative overflow-hidden">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-gray-400">সফল ডেলিভারি</span>
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
                 <CheckCircle2 size={18} />
               </div>
             </div>
             <div className="mt-3">
-              <div className="text-2xl sm:text-3xl font-black text-emerald-400 tracking-tight">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-black text-emerald-400 tracking-tight">
                 {stats.deliveredOrders}
               </div>
-              <p className="text-[11px] text-emerald-400/80 font-medium mt-1">
-                সফলভাবে পৌঁছানো অর্ডার
+              <p className="text-[10px] sm:text-[11px] text-emerald-400/80 font-medium mt-1">
+                সফলতার হার: {stats.deliveryRate}%
               </p>
             </div>
           </div>
 
-          {/* Cancelled Orders */}
-          <div className="glass-card p-5 border border-red-500/20 relative overflow-hidden">
+          {/* 4. Pending Orders */}
+          <div className="glass-card p-4 sm:p-5 border border-amber-500/20 relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-gray-400">পেন্ডিং অর্ডার</span>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                <Clock size={18} />
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-black text-amber-400 tracking-tight">
+                {stats.pendingOrders}
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-amber-400/80 font-medium mt-1">
+                যাচাই ও প্রক্রিয়াধীন
+              </p>
+            </div>
+          </div>
+
+          {/* 5. Cancelled Orders */}
+          <div className="glass-card p-4 sm:p-5 border border-red-500/20 relative overflow-hidden">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-gray-400">বাতিল অর্ডার</span>
-              <div className="w-9 h-9 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center">
                 <XCircle size={18} />
               </div>
             </div>
             <div className="mt-3">
-              <div className="text-2xl sm:text-3xl font-black text-red-400 tracking-tight">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-black text-red-400 tracking-tight">
                 {stats.cancelledOrders}
               </div>
-              <p className="text-[11px] text-red-400/80 font-medium mt-1">
+              <p className="text-[10px] sm:text-[11px] text-red-400/80 font-medium mt-1">
                 বাতিলকৃত মোট অর্ডার
-              </p>
-            </div>
-          </div>
-
-          {/* Delivery Rate */}
-          <div className="glass-card p-5 border border-purple-500/20 relative overflow-hidden">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400">ডেলিভারি সাকসেস রেট</span>
-              <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center">
-                <TrendingUp size={18} />
-              </div>
-            </div>
-            <div className="mt-3">
-              <div className="text-2xl sm:text-3xl font-black text-purple-400 tracking-tight">
-                {stats.deliveryRate}%
-              </div>
-              <p className="text-[11px] text-purple-300 font-medium mt-1">
-                মোট অর্ডারের সফলতার অনুপাত
               </p>
             </div>
           </div>
