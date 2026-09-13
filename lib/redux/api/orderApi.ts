@@ -233,14 +233,26 @@ export const orderApi = apiSlice.injectEndpoints({
     }),
 
     exportOrdersCSV: builder.mutation<
-      string,
-      { ids?: string[]; status?: string }
+      Blob,
+      { ids?: string[]; status?: string; isDeleted?: boolean }
     >({
       query: (body) => ({
         url: "/orders/admin/export",
         method: "POST",
         body,
-        responseHandler: (response) => response.text(),
+        responseHandler: (response) => response.blob(),
+      }),
+    }),
+
+    exportOrdersExcel: builder.mutation<
+      Blob,
+      { ids?: string[]; status?: string; isDeleted?: boolean }
+    >({
+      query: (body) => ({
+        url: "/orders/admin/export",
+        method: "POST",
+        body,
+        responseHandler: (response) => response.blob(),
       }),
     }),
   }),
@@ -259,4 +271,6 @@ export const {
   useRestoreOrderMutation,
   usePermanentDeleteOrderMutation,
   useExportOrdersCSVMutation,
+  useExportOrdersExcelMutation,
 } = orderApi;
+

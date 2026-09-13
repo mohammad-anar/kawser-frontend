@@ -10,7 +10,7 @@ import {
   useSoftDeleteOrderMutation,
   useRestoreOrderMutation,
   usePermanentDeleteOrderMutation,
-  useExportOrdersCSVMutation,
+  useExportOrdersExcelMutation,
   OrderData,
 } from "@/lib/redux/api/orderApi";
 import {
@@ -137,7 +137,7 @@ export default function AdminOrdersPage() {
   const [softDeleteOrder, { isLoading: isSoftDeleting }] = useSoftDeleteOrderMutation();
   const [restoreOrder, { isLoading: isRestoring }] = useRestoreOrderMutation();
   const [permanentDeleteOrder, { isLoading: isPermanentDeleting }] = usePermanentDeleteOrderMutation();
-  const [exportCSV, { isLoading: isExporting }] = useExportOrdersCSVMutation();
+  const [exportExcel, { isLoading: isExporting }] = useExportOrdersExcelMutation();
 
   // Real-time socket notification & automatic refetch
   useAdminSocket({
@@ -349,32 +349,34 @@ export default function AdminOrdersPage() {
     }
   };
 
-  const handleExportCSV = async (exportOnlySelected: boolean = false) => {
+  const handleExportExcel = async (exportOnlySelected: boolean = false) => {
     try {
       const isCustomSelected = exportOnlySelected && selectedIds.length > 0;
-      const csvString = await exportCSV({
+      const blob = await exportExcel({
         ids: isCustomSelected ? selectedIds : undefined,
         status: !isCustomSelected && statusFilter !== "all" ? statusFilter : undefined,
+        isDeleted: activeTab === "deleted",
       }).unwrap();
 
-      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.setAttribute("href", url);
+      const dateStr = new Date().toISOString().slice(0, 10);
       const filename = isCustomSelected
-        ? `selected-orders-${selectedIds.length}-${new Date().toISOString().slice(0, 10)}.csv`
-        : `selfcaresolution-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+        ? `selected-orders-${selectedIds.length}-${dateStr}.xlsx`
+        : `selfcaresolution-orders-${activeTab === "deleted" ? "trash-" : ""}${dateStr}.xlsx`;
       link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      URL.revokeObjectURL(url);
       toast.success(
         isCustomSelected
-          ? `${selectedIds.length} টি নির্বাচিত অর্ডারের CSV ফাইল ডাউনলোড সম্পন্ন হয়েছে!`
-          : "সকল অর্ডারের CSV ফাইল ডাউনলোড সম্পন্ন হয়েছে!"
+          ? `${selectedIds.length} টি নির্বাচিত অর্ডারের Excel ফাইল ডাউনলোড সম্পন্ন হয়েছে!`
+          : "অর্ডার Excel ফাইল ডাউনলোড সম্পন্ন হয়েছে! (Google Sheets ও Excel এ ব্যবহারযোগ্য)"
       );
     } catch {
-      toast.error("CSV এক্সপোর্ট করতে সমস্যা হয়েছে।");
+      toast.error("Excel ফাইল এক্সপোর্ট করতে সমস্যা হয়েছে।");
     }
   };
 
@@ -390,7 +392,7 @@ export default function AdminOrdersPage() {
               অর্ডার <span className="text-gradient-gold">ম্যানেজমেন্ট</span>
             </h1>
             <p className="text-xs sm:text-sm text-gray-400 mt-1">
-              গ্রাহকের অর্ডার পর্যালোচনা, এডিট, সফট ডিলিট, ট্র্যাশ ও CSV এক্সপোর্ট করুন
+              গ্রাহকের অর্ডার পর্যালোচনা, এডিট, সফট ডিলিট, ট্র্যাশ ও Excel এক্সপোর্ট করুন
             </p>
           </div>
 
@@ -406,7 +408,7 @@ export default function AdminOrdersPage() {
               রিফ্রেশ
             </button>
             <button
-              onClick={() => handleExportCSV(selectedIds.length > 0)}
+              onClick={() => handleExportExcel(selectedIds.length > 0)}
               disabled={isExporting}
               className={`px-4 py-2 rounded-xl border text-xs font-semibold flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 ${
                 selectedIds.length > 0
@@ -418,8 +420,8 @@ export default function AdminOrdersPage() {
               {isExporting
                 ? "এক্সপোর্ট হচ্ছে..."
                 : selectedIds.length > 0
-                ? `সিলেক্টেড CSV (${selectedIds.length})`
-                : "সকল CSV এক্সপোর্ট"}
+                ? `সিলেক্টেড Excel (${selectedIds.length})`
+                : "সকল Excel এক্সপোর্ট"}
             </button>
           </div>
         </div>
@@ -479,12 +481,12 @@ export default function AdminOrdersPage() {
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <button
-                onClick={() => handleExportCSV(true)}
+                onClick={() => handleExportExcel(true)}
                 disabled={isExporting}
                 className="btn-gold flex-1 sm:flex-initial text-xs px-4 py-2 rounded-xl flex items-center justify-center gap-1.5 font-bold shadow-md shadow-yellow-500/20 active:scale-95"
               >
                 <Download size={14} />
-                {isExporting ? "এক্সপোর্ট হচ্ছে..." : `নির্বাচিত CSV ডাউনলোড (${selectedIds.length})`}
+                {isExporting ? "এক্সপোর্ট হচ্ছে..." : `নির্বাচিত Excel ডাউনলোড (${selectedIds.length})`}
               </button>
               <button
                 onClick={() => setSelectedIds([])}
