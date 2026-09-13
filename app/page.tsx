@@ -803,7 +803,7 @@ export default function Home() {
       {/* =========================================================================
           8. FOOTER
       ========================================================================= */}
-      <footer className="bg-[#030308] border-t border-white/10 pt-10 pb-[80px] text-center text-xs text-gray-500 space-y-4">
+      <footer className="bg-[#030308] border-t border-white/10 pt-10 pb-[120px] text-center text-xs text-gray-500 space-y-4">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <Link href="/" className="inline-block transition-transform duration-200 hover:scale-105" title="হোম পেজ">
             <div className="w-32 sm:w-36">
