@@ -60,6 +60,27 @@ export interface OrderData {
   createdAt: string;
   updatedAt: string;
   estimatedDelivery?: string;
+  isDeleted?: boolean;
+  deletedAt?: string;
+}
+
+export interface UpdateOrderRequest {
+  id: string;
+  customerName?: string;
+  phoneNumber?: string;
+  email?: string;
+  address?: string;
+  district?: string;
+  thana?: string;
+  productName?: string;
+  quantity?: number;
+  size?: string;
+  unitPrice?: number;
+  deliveryCharge?: number;
+  totalPrice?: number;
+  paymentMethod?: string;
+  status?: string;
+  orderNotes?: string;
 }
 
 export interface TrackOrderParams {
@@ -87,8 +108,10 @@ export interface AdminStatsResponse {
 export interface AdminOrdersParams {
   status?: string;
   search?: string;
+  phone?: string;
   page?: number;
   limit?: number;
+  isDeleted?: boolean;
 }
 
 export interface AdminOrdersResponse {
@@ -132,6 +155,8 @@ export const orderApi = apiSlice.injectEndpoints({
         const qp = new URLSearchParams();
         if (params.status && params.status !== "all") qp.set("status", params.status);
         if (params.search) qp.set("search", params.search);
+        if (params.phone) qp.set("phone", params.phone);
+        if (params.isDeleted !== undefined) qp.set("isDeleted", params.isDeleted.toString());
         if (params.page) qp.set("page", params.page.toString());
         if (params.limit) qp.set("limit", params.limit.toString());
         return `/orders/admin/all?${qp.toString()}`;
@@ -166,6 +191,46 @@ export const orderApi = apiSlice.injectEndpoints({
       ],
     }),
 
+    updateOrder: builder.mutation<
+      { success: boolean; message: string; order: OrderData },
+      UpdateOrderRequest
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/orders/admin/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Order", id },
+        { type: "Order", id: "LIST" },
+        "AdminStats",
+      ],
+    }),
+
+    softDeleteOrder: builder.mutation<{ success: boolean; message: string }, string>({
+      query: (id) => ({
+        url: `/orders/admin/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Order", "AdminStats"],
+    }),
+
+    restoreOrder: builder.mutation<{ success: boolean; message: string }, string>({
+      query: (id) => ({
+        url: `/orders/admin/${id}/restore`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Order", "AdminStats"],
+    }),
+
+    permanentDeleteOrder: builder.mutation<{ success: boolean; message: string }, string>({
+      query: (id) => ({
+        url: `/orders/admin/${id}/permanent`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Order", "AdminStats"],
+    }),
+
     exportOrdersCSV: builder.mutation<
       string,
       { ids?: string[]; status?: string }
@@ -188,5 +253,9 @@ export const {
   useGetAllOrdersQuery,
   useGetOrderStatsQuery,
   useUpdateOrderStatusMutation,
+  useUpdateOrderMutation,
+  useSoftDeleteOrderMutation,
+  useRestoreOrderMutation,
+  usePermanentDeleteOrderMutation,
   useExportOrdersCSVMutation,
 } = orderApi;

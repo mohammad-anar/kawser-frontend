@@ -99,43 +99,49 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
 
       // ===== Meta Pixel: Purchase Event =====
       if (typeof window !== "undefined" && typeof window.fbq === "function") {
-        const orderId = res.orderId;
-        const purchaseDedupeKey = orderId ? `fb_purchase_${orderId}` : null;
-        let alreadyTracked = false;
+        const rawTotal = res?.totalPrice;
+        const orderTotal = typeof rawTotal === "number" ? rawTotal : Number(rawTotal);
 
-        if (purchaseDedupeKey) {
-          try {
-            alreadyTracked = Boolean(sessionStorage.getItem(purchaseDedupeKey));
-            if (!alreadyTracked) {
-              sessionStorage.setItem(purchaseDedupeKey, "true");
+        if (isNaN(orderTotal) || orderTotal <= 0) {
+          console.warn("[Meta Pixel] Purchase event skipped: Missing or invalid res.totalPrice", rawTotal);
+        } else {
+          const orderId = res.orderId;
+          const purchaseDedupeKey = orderId ? `fb_purchase_${orderId}` : null;
+          let alreadyTracked = false;
+
+          if (purchaseDedupeKey) {
+            try {
+              alreadyTracked = Boolean(sessionStorage.getItem(purchaseDedupeKey));
+              if (!alreadyTracked) {
+                sessionStorage.setItem(purchaseDedupeKey, "true");
+              }
+            } catch {
+              // Ignore storage access errors in private/restricted browsing mode
             }
-          } catch {
-            // Ignore storage access errors in private/restricted browsing mode
           }
-        }
 
-        if (!alreadyTracked) {
-          const orderTotal = Number(res.totalPrice) || (899 * form.quantity);
-          const dynamicProductName = res.productName || "Love Lock Condom / Magic Condom";
-          const dynamicContentId =
-            dynamicProductName
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-")
-              .replace(/^-+|-+$/g, "") || "love-lock-magic-condom";
+          if (!alreadyTracked) {
+            const dynamicProductName = res.productName || "Love Lock Condom / Magic Condom";
+            const dynamicContentId =
+              dynamicProductName
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "") || "love-lock-magic-condom";
 
-          window.fbq(
-            "track",
-            "Purchase",
-            {
-              value: orderTotal,
-              currency: "BDT",
-              content_name: dynamicProductName,
-              content_ids: [dynamicContentId],
-              content_type: "product",
-              num_items: form.quantity,
-            },
-            orderId ? { eventID: orderId } : undefined
-          );
+            window.fbq(
+              "track",
+              "Purchase",
+              {
+                value: orderTotal,
+                currency: "BDT",
+                content_name: dynamicProductName,
+                content_ids: [dynamicContentId],
+                content_type: "product",
+                num_items: form.quantity,
+              },
+              orderId ? { eventID: orderId } : undefined
+            );
+          }
         }
       }
       // ===== End Meta Pixel =====
