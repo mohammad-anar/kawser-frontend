@@ -821,14 +821,14 @@ export default function Home() {
             <a href="#product" className="hover:text-yellow-400">পণ্য</a>
             <a href="#why" className="hover:text-yellow-400">কেন নিবেন?</a>
             <a href="#faq" className="hover:text-yellow-400">জিজ্ঞাসা (FAQ)</a>
-            <a
+            {/* <a
               href="https://wa.me/8801932787942?text=Hello%20Personal%20Care%20BD"
               target="_blank"
               rel="noreferrer"
               className="hover:text-emerald-400 text-emerald-500 font-semibold"
             >
               হেল্পলাইন (WhatsApp)
-            </a>
+            </a> */}
           </div>
         </div>
       </footer>
