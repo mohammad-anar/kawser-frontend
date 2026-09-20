@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.carezonebd.store"),
+  metadataBase: new URL("https://carezonebd.store"),
   title: {
     default: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Magic Condom Price in BD ৳৮৯৯ | Care Zone BD",
     template: "%s | Care Zone BD",
@@ -26,6 +26,10 @@ export const metadata: Metadata = {
     "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৮৯৯। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি এবং ১০০% গোপনীয় প্যাকেজিং।",
   keywords: [
     // Primary Bangla Keywords
+    "কেয়ার জোন বিডি",
+    "carezonebd",
+    "care zone bd",
+    "carezonebd.store",
     "ম্যাজিক কনডম",
     "ম্যাজিক কনডম বাংলাদেশ",
     "ম্যাজিক কনডমের দাম কত",
@@ -36,8 +40,6 @@ export const metadata: Metadata = {
     "পুনঃব্যবহারযোগ্য কনডম",
     "চায়না ম্যাজিক কনডম",
     "ওয়াশেবল কনডম",
-    "সেলফ কেয়ার সলিউশন",
-    "সেলফকেয়ার সলিউশন",
     "কনডম দাম বাংলাদেশ",
     "ক্যাশ অন ডেলিভারি কনডম",
     "গোপনীয় প্যাকেজিং কনডম",
@@ -53,15 +55,13 @@ export const metadata: Metadata = {
     "reusable condom bd",
     "silicone condom sleeve",
     "washable condom bangladesh",
-    "selfcare solution",
-    "self care solution bd",
     "buy condom online bangladesh",
     "delay condom bangladesh",
     "dotted condom bd",
     "discreet packaging condom",
     "cash on delivery condom bd",
   ],
-  authors: [{ name: "Care Zone BD", url: "https://www.carezonebd.store" }],
+  authors: [{ name: "Care Zone BD", url: "https://carezonebd.store" }],
   creator: "Care Zone BD",
   publisher: "Care Zone BD",
   formatDetection: {
@@ -70,17 +70,17 @@ export const metadata: Metadata = {
     email: false,
   },
   openGraph: {
-    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | মাত্র ৳৮৯৯ | SelfCare Solution",
+    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | মাত্র ৳৮৯৯ | Care Zone BD",
     description:
       "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৮৯৯। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি।",
-    url: "https://www.selfcaresolution.online",
-    siteName: "SelfCare Solution",
+    url: "https://carezonebd.store",
+    siteName: "Care Zone BD",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "SelfCare Solution - টপ নচ ম্যাজিক কনডম বাংলাদেশ",
+        alt: "Care Zone BD - টপ নচ ম্যাজিক কনডম বাংলাদেশ",
       },
     ],
     locale: "bn_BD",
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | SelfCare Solution",
+    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Care Zone BD",
     description: "বাংলাদেশে অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম মাত্র ৳৮৯৯। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি।",
     images: ["/og-image.jpg"],
   },
@@ -105,10 +105,10 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://www.selfcaresolution.online",
+    canonical: "https://carezonebd.store",
     languages: {
-      "bn-BD": "https://www.selfcaresolution.online",
-      "en-US": "https://www.selfcaresolution.online",
+      "bn-BD": "https://carezonebd.store",
+      "en-US": "https://carezonebd.store",
     },
   },
   icons: {
@@ -129,23 +129,23 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://www.selfcaresolution.online/#website",
-      url: "https://www.selfcaresolution.online",
-      name: "SelfCare Solution",
+      "@id": "https://carezonebd.store/#website",
+      url: "https://carezonebd.store",
+      name: "Care Zone BD",
       description: "বাংলাদেশের বিশ্বস্ত অনলাইন শপ - অরিজিনাল টপ নচ ম্যাজিক কনডম ও পার্সোনাল কেয়ার সামগ্রী",
       inLanguage: ["bn", "en"],
       publisher: {
-        "@id": "https://www.selfcaresolution.online/#org",
+        "@id": "https://carezonebd.store/#org",
       },
     },
     {
       "@type": "Organization",
-      "@id": "https://www.selfcaresolution.online/#org",
-      name: "SelfCare Solution",
-      url: "https://www.selfcaresolution.online",
+      "@id": "https://carezonebd.store/#org",
+      name: "Care Zone BD",
+      url: "https://carezonebd.store",
       logo: {
         "@type": "ImageObject",
-        url: "https://www.selfcaresolution.online/images/selfcaresolution2.PNG",
+        url: "https://carezonebd.store/logo.jpeg",
         width: 200,
         height: 100,
       },
@@ -160,30 +160,30 @@ const jsonLd = {
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://www.selfcaresolution.online/#breadcrumbs",
+      "@id": "https://carezonebd.store/#breadcrumbs",
       itemListElement: [
         {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://www.selfcaresolution.online",
+          item: "https://carezonebd.store",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "টপ নচ ম্যাজিক কনডম",
-          item: "https://www.selfcaresolution.online/#product",
+          item: "https://carezonebd.store/#product",
         },
       ],
     },
     {
       "@type": "Product",
-      "@id": "https://www.selfcaresolution.online/#product",
+      "@id": "https://carezonebd.store/#product",
       name: "Top Notch Magic Condom (China) - অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম",
       image: [
-        "https://www.selfcaresolution.online/images/products/product-main.jpg",
-        "https://www.selfcaresolution.online/images/products/product-1.webp",
-        "https://www.selfcaresolution.online/images/products/product-2.webp",
+        "https://carezonebd.store/images/products/product-main.jpg",
+        "https://carezonebd.store/images/products/product-1.webp",
+        "https://carezonebd.store/images/products/product-2.webp",
       ],
       description:
         "উচ্চমানের মেডিকেল-গ্রেড TPE সিলিকন দিয়ে তৈরি রিইউজেবল ম্যাজিক কনডম। পুরুত্ব ৬ মিমি, দৈর্ঘ্য ৬.৭ ইঞ্চি। ডটেড সারফেস ও ডাবল লক রিং সিস্টেম সহ ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল।",
@@ -219,10 +219,10 @@ const jsonLd = {
         price: "899",
         priceCurrency: "BDT",
         availability: "https://schema.org/InStock",
-        url: "https://www.selfcaresolution.online",
+        url: "https://carezonebd.store",
         priceValidUntil: "2027-12-31",
         itemCondition: "https://schema.org/NewCondition",
-        seller: { "@type": "Organization", name: "SelfCare Solution" },
+        seller: { "@type": "Organization", name: "Care Zone BD" },
         shippingDetails: {
           "@type": "OfferShippingDetails",
           shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "BDT" },
@@ -245,7 +245,7 @@ const jsonLd = {
     },
     {
       "@type": "FAQPage",
-      "@id": "https://www.selfcaresolution.online/#faq",
+      "@id": "https://carezonebd.store/#faq",
       mainEntity: [
         {
           "@type": "Question",

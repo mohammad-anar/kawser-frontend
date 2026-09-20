@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "অর্ডার ট্র্যাক করুন | Track Your Order",
+  title: "অর্ডার ট্র্যাক করুন | Track Your Order | Care Zone BD",
   description:
-    "আপনার সেলফ কেয়ার সলিউশন অর্ডারের সর্বশেষ স্ট্যাটাস ও ডেলিভারি আপডেট সরাসরি ট্র্যাক করুন। ফোন নম্বর বা অর্ডার আইডি দিন।",
+    "আপনার Care Zone BD অর্ডারের সর্বশেষ স্ট্যাটাস ও ডেলিভারি আপডেট সরাসরি ট্র্যাক করুন। মোবাইল নম্বর বা অর্ডার আইডি দিন।",
   alternates: {
-    canonical: "https://www.selfcaresolution.online/track",
+    canonical: "https://carezonebd.store/track",
   },
   openGraph: {
-    title: "অর্ডার ট্র্যাকিং | SelfCare Solution",
-    description: "আপনার অর্ডারের বর্তমান অবস্থা ট্র্যাক করুন — দ্রুত ও নির্ভরযোগ্য হোম ডেলিভারি।",
-    url: "https://www.selfcaresolution.online/track",
+    title: "অর্ডার ট্র্যাকিং | Care Zone BD",
+    description: "আপনার অর্ডারের বর্তমান অবস্থা ট্র্যাক করুন — দ্রুত ও নির্ভরযোগ্য ফ্রি হোম ডেলিভারি।",
+    url: "https://carezonebd.store/track",
+    siteName: "Care Zone BD",
   },
 };
 

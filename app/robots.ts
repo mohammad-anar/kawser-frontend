@@ -9,7 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/cart", "/checkout", "/account", "/api/", "/admin/", "/admin"],
       },
     ],
-    sitemap: "https://www.selfcaresolution.online/sitemap.xml",
+    sitemap: "https://carezonebd.store/sitemap.xml",
   };
 }
-

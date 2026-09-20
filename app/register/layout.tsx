@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "রেজিস্ট্রেশন | Register New Account",
+  title: "রেজিস্ট্রেশন | Register New Account | Care Zone BD",
   description:
-    "SelfCare Solution-এ নতুন একাউন্ট খুলুন এবং সহজ ও দ্রুত অর্ডারের সুবিধা উপভোগ করুন।",
+    "Care Zone BD-এ নতুন একাউন্ট খুলুন এবং সহজ ও দ্রুত অর্ডারের সুবিধা উপভোগ করুন।",
+  alternates: {
+    canonical: "https://carezonebd.store/register",
+  },
   robots: {
     index: false,
     follow: true,

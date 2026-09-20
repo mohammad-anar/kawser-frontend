@@ -2,13 +2,13 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "SelfCare Solution - টপ নচ ম্যাজিক কনডম",
-    short_name: "SelfCare Solution",
+    name: "Care Zone BD - টপ নচ ম্যাজিক কনডম",
+    short_name: "Care Zone BD",
     description: "বাংলাদেশে সেরা রিইউজেবল সিলিকন ম্যাজিক কনডম ও পার্সোনাল কেয়ার সামগ্রী। মাত্র ৳৮৯৯ টাকায় ফ্রি হোম ডেলিভারি।",
     start_url: "/",
     display: "standalone",
-    background_color: "#06060e",
-    theme_color: "#06060e",
+    background_color: "#080817",
+    theme_color: "#2563EB",
     icons: [
       {
         src: "/icon.png",

@@ -60,11 +60,11 @@ export default function LoginPage() {
               className="inline-block mb-3 transition-transform duration-200 hover:scale-105"
               title="হোম পেজে ফিরে যান"
             >
-              <div className="w-40 sm:w-48">
+              <div className="w-16 sm:w-16 overflow-hidden rounded-xl">
                 <Image
-                  src="/images/selfcaresolution2.PNG"
-                  width={220}
-                  height={110}
+                  src="/logo.jpeg"
+                  width={64}
+                  height={64}
                   alt="Care Zone BD"
                   priority
                   className="h-auto w-full object-contain"

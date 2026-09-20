@@ -809,11 +809,11 @@ export default function Home() {
       <footer className="bg-slate-50 dark:bg-[#07071a] border-t border-slate-200 dark:border-slate-800 pt-10 pb-[120px] text-center text-xs text-slate-600 dark:text-slate-400 space-y-4">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <Link href="/" className="inline-block transition-transform duration-200 hover:scale-105" title="হোম পেজ">
-            <div className="w-32 sm:w-36">
+            <div className="w-16 sm:w-16 overflow-hidden rounded-xl">
               <Image
-                src="/images/selfcaresolution2.PNG"
-                width={160}
-                height={80}
+                src="/logo.jpeg"
+                width={64}
+                height={64}
                 alt="Care Zone BD"
                 className="h-auto w-full object-contain"
               />

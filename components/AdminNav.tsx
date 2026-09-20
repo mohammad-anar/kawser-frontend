@@ -165,11 +165,11 @@ export default function AdminNav() {
     <header className="sticky top-0 z-40 bg-white/98 dark:bg-[#0a0a1e]/98 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm px-4 sm:px-8 py-3.5 flex items-center justify-between transition-colors">
       <div className="flex items-center gap-6">
         <Link href="/admin" className="flex items-center gap-2.5 sm:gap-3 group">
-          <div className="w-32 sm:w-40 transition-transform duration-200 group-hover:scale-105">
+          <div className="w-16 sm:w-16 overflow-hidden rounded-xl transition-transform duration-200 group-hover:scale-105">
             <Image
-              src="/images/selfcaresolution2.PNG"
-              width={180}
-              height={90}
+              src="/logo.jpeg"
+              width={64}
+              height={64}
               alt="Care Zone BD Admin"
               priority
               className="h-auto w-full object-contain"

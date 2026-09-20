@@ -5,7 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'www.selfcaresolution.online',
+        hostname: 'carezonebd.store',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.carezonebd.store',
       },
       {
         protocol: 'https',
@@ -13,11 +17,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'selfcaresolution.vercel.app',
+        hostname: 'www.selfcaresolution.online',
       },
     ],
   },
 };
 
 export default nextConfig;
-

@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.selfcaresolution.online";
+  const baseUrl = "https://carezonebd.store";
   const now = new Date();
 
   return [
@@ -31,4 +31,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 }
-

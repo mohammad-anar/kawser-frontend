@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "কাস্টমার লগইন | Customer Login",
+  title: "কাস্টমার লগইন | Customer Login | Care Zone BD",
   description:
-    "SelfCare Solution একাউন্টে লগইন করে পূর্ববর্তী অর্ডার ও প্রোফাইল বিস্তারিত দেখুন।",
+    "Care Zone BD একাউন্টে লগইন করে পূর্ববর্তী অর্ডার ও প্রোফাইল বিস্তারিত দেখুন।",
+  alternates: {
+    canonical: "https://carezonebd.store/login",
+  },
   robots: {
     index: false,
     follow: true,
