@@ -45,13 +45,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#06060c] text-white flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#06060c] text-slate-900 dark:text-white flex flex-col">
       <Header onOrderClick={() => setIsOrderModalOpen(true)} />
 
       <main className="flex-1 flex items-center justify-center px-4 pt-28 pb-16">
-        <div className="max-w-md w-full glass-card p-8 border border-white/10 shadow-2xl relative overflow-hidden">
+        <div className="max-w-md w-full bg-white dark:bg-[#0f172a] p-8 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl relative overflow-hidden">
           {/* Decorative glow */}
-          <div className="absolute -top-16 -right-16 w-36 h-36 bg-yellow-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -top-16 -right-16 w-36 h-36 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
 
           <div className="text-center mb-6 flex flex-col items-center">
             {/* Website logo linking to home page */}
@@ -65,21 +65,21 @@ export default function LoginPage() {
                   src="/images/selfcaresolution2.PNG"
                   width={220}
                   height={110}
-                  alt="SelfCare Solution"
+                  alt="Care Zone BD"
                   priority
                   className="h-auto w-full object-contain"
                 />
               </div>
             </Link>
 
-            <h1 className="text-2xl font-black text-white">লগইন করুন</h1>
-            <p className="text-xs text-gray-400 mt-1">
+            <h1 className="text-2xl font-black text-slate-900 dark:text-white">লগইন করুন</h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               লগইন করে আপনার সমস্ত অর্ডার ও ড্যাশবোর্ড পরিচালনা করুন
             </p>
           </div>
 
           {error && (
-            <div className="mb-5 p-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-2.5 text-red-400 text-sm">
+            <div className="mb-5 p-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-2.5 text-red-500 text-sm">
               <AlertCircle size={16} className="shrink-0" />
               <span>{error}</span>
             </div>
@@ -87,11 +87,11 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                 মোবাইল নম্বর
               </label>
               <div className="relative">
-                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={18} />
+                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={18} />
                 <input
                   type="tel"
                   value={phone}
@@ -104,11 +104,11 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                 পাসওয়ার্ড
               </label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={18} />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={18} />
                 <input
                   type="password"
                   value={password}
@@ -123,7 +123,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="btn-gold w-full py-3.5 flex items-center justify-center gap-2 text-sm mt-2 disabled:opacity-60"
+              className="btn-gold w-full py-3.5 flex items-center justify-center gap-2 text-sm mt-2 disabled:opacity-60 cursor-pointer shadow-md"
             >
               {isLoading ? (
                 <>
@@ -137,11 +137,11 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-white/10 text-center text-xs text-gray-400">
+          <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
             নতুন একাউন্ট করতে চান?{" "}
             <Link
               href="/register"
-              className="text-yellow-400 hover:text-yellow-300 font-semibold inline-flex items-center gap-1 ml-1 hover:underline"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 font-semibold inline-flex items-center gap-1 ml-1 hover:underline"
             >
               রেজিস্ট্রেশন করুন <ArrowRight size={12} />
             </Link>

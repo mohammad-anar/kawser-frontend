@@ -87,15 +87,15 @@ export default function ForgotPasswordPage() {
   const stepLabels = ["ইমেইল", "OTP যাচাই", "নতুন পাসওয়ার্ড"];
 
   return (
-    <div className="min-h-screen bg-[#05050b] text-white flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080817] text-slate-900 dark:text-slate-100 flex flex-col items-center justify-center px-4 py-12 transition-colors duration-200">
       <div className="w-full max-w-md">
         {/* Logo / Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center mx-auto mb-4">
-            <KeyRound size={28} className="text-yellow-400" />
+          <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center mx-auto mb-4 text-blue-600 dark:text-blue-400 shadow-md">
+            <KeyRound size={28} />
           </div>
-          <h1 className="text-2xl font-black text-white">পাসওয়ার্ড ভুলে গেছেন?</h1>
-          <p className="text-sm text-gray-400 mt-1">ইমেইল OTP দিয়ে পাসওয়ার্ড রিসেট করুন</p>
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white">পাসওয়ার্ড ভুলে গেছেন?</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">ইমেইল OTP দিয়ে পাসওয়ার্ড রিসেট করুন</p>
         </div>
 
         {/* Step Progress */}
@@ -108,36 +108,36 @@ export default function ForgotPasswordPage() {
                     step > i + 1
                       ? "bg-emerald-500 text-white"
                       : step === i + 1
-                      ? "bg-yellow-500 text-black"
-                      : "bg-white/10 text-gray-500"
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/30"
+                      : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
                   }`}
                 >
                   {step > i + 1 ? <CheckCircle2 size={14} /> : i + 1}
                 </div>
                 <span
-                  className={`text-[11px] font-medium hidden sm:block ${
-                    step === i + 1 ? "text-yellow-400" : "text-gray-500"
+                  className={`text-[11px] font-bold hidden sm:block ${
+                    step === i + 1 ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500"
                   }`}
                 >
                   {label}
                 </span>
-                {i < 2 && <div className="h-px flex-1 bg-white/10" />}
+                {i < 2 && <div className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />}
               </div>
             ))}
           </div>
         )}
 
         {/* Card */}
-        <div className="glass-card p-7 border border-white/10 shadow-2xl">
+        <div className="bg-white dark:bg-[#0f172a] p-7 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl">
 
           {/* Error / Success */}
           {error && (
-            <div className="mb-4 bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-xs text-red-400">
+            <div className="mb-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-xl p-3 text-xs text-red-600 dark:text-red-400 font-semibold">
               {error}
             </div>
           )}
           {successMsg && step === 2 && (
-            <div className="mb-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-xs text-emerald-400">
+            <div className="mb-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-xl p-3 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
               {successMsg}
             </div>
           )}
@@ -146,16 +146,16 @@ export default function ForgotPasswordPage() {
           {step === 1 && (
             <form onSubmit={handleSendOtp} className="space-y-4">
               <div className="text-center mb-2">
-                <div className="w-12 h-12 rounded-full bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center mx-auto mb-3">
-                  <Mail size={22} className="text-yellow-400" />
+                <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center mx-auto mb-3">
+                  <Mail size={22} className="text-blue-600 dark:text-blue-400" />
                 </div>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-slate-600 dark:text-slate-400 font-semibold">
                   রেজিস্টার্ড অ্যাডমিন ইমেইল ঠিকানা দিন
                 </p>
               </div>
 
               <div>
-                <label className="text-xs text-gray-400 mb-1.5 block">ইমেইল ঠিকানা</label>
+                <label className="text-xs text-slate-600 dark:text-slate-400 mb-1.5 block font-semibold">ইমেইল ঠিকানা</label>
                 <input
                   id="forgot-email-input"
                   type="email"
@@ -163,7 +163,7 @@ export default function ForgotPasswordPage() {
                   onChange={(e) => { setEmail(e.target.value); clearMessages(); }}
                   placeholder="admin@example.com"
                   autoComplete="email"
-                  className="w-full py-3 px-4 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 transition-colors text-sm"
+                  className="w-full py-3 px-4 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors text-sm"
                 />
               </div>
 
@@ -171,7 +171,7 @@ export default function ForgotPasswordPage() {
                 id="send-forgot-otp-btn"
                 type="submit"
                 disabled={isSending || !email.trim()}
-                className="btn-gold w-full flex items-center justify-center gap-2 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-gold w-full flex items-center justify-center gap-2 py-3 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isSending ? (
                   <><Loader2 size={16} className="animate-spin" /> OTP পাঠানো হচ্ছে...</>
@@ -182,27 +182,27 @@ export default function ForgotPasswordPage() {
 
               <Link
                 href="/login"
-                className="flex items-center justify-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                className="flex items-center justify-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors"
               >
                 <ArrowLeft size={13} /> লগইন পেজে ফিরুন
               </Link>
             </form>
           )}
 
-          {/* ── Step 2: OTP ────────────────────────────────────────────── */}
+          {/* ── Step 2: OTP ────────────────────────────────────── */}
           {step === 2 && (
             <form onSubmit={handleVerifyOtp} className="space-y-5">
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center mx-auto mb-3">
-                  <ShieldCheck size={22} className="text-blue-400" />
+                <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center mx-auto mb-3">
+                  <ShieldCheck size={22} className="text-blue-600 dark:text-blue-400" />
                 </div>
-                <p className="text-sm text-gray-300">OTP পাঠানো হয়েছে:</p>
-                <p className="text-yellow-400 font-semibold text-sm mt-0.5">{email}</p>
-                <p className="text-xs text-gray-500 mt-1">১০ মিনিটের মধ্যে ব্যবহার করুন</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300">OTP পাঠানো হয়েছে:</p>
+                <p className="text-blue-600 dark:text-blue-400 font-bold text-sm mt-0.5">{email}</p>
+                <p className="text-xs text-slate-400 mt-1">১০ মিনিটের মধ্যে ব্যবহার করুন</p>
               </div>
 
               <div>
-                <label className="text-xs text-gray-400 mb-1.5 block">৬ সংখ্যার OTP কোড</label>
+                <label className="text-xs text-slate-600 dark:text-slate-400 mb-1.5 block font-semibold">৬ সংখ্যার OTP কোড</label>
                 <input
                   id="forgot-otp-input"
                   type="text"
@@ -212,7 +212,7 @@ export default function ForgotPasswordPage() {
                   onChange={(e) => { setOtp(e.target.value.replace(/\D/g, "")); clearMessages(); }}
                   placeholder="• • • • • •"
                   autoFocus
-                  className="w-full text-center text-2xl font-black tracking-[0.5em] py-4 px-4 bg-black/50 border border-white/10 rounded-xl text-yellow-400 placeholder-gray-700 focus:outline-none focus:border-yellow-500 transition-colors"
+                  className="w-full text-center text-2xl font-black tracking-[0.5em] py-4 px-4 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-blue-600 dark:text-blue-400 placeholder-slate-300 dark:placeholder-slate-700 focus:outline-none focus:border-blue-500 transition-colors"
                 />
               </div>
 
@@ -220,7 +220,7 @@ export default function ForgotPasswordPage() {
                 id="verify-forgot-otp-btn"
                 type="submit"
                 disabled={isVerifying || otp.length < 6}
-                className="btn-gold w-full flex items-center justify-center gap-2 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-gold w-full flex items-center justify-center gap-2 py-3 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isVerifying ? (
                   <><Loader2 size={16} className="animate-spin" /> যাচাই হচ্ছে...</>
@@ -232,7 +232,7 @@ export default function ForgotPasswordPage() {
               <button
                 type="button"
                 onClick={() => { setStep(1); setOtp(""); clearMessages(); }}
-                className="w-full text-xs text-gray-400 hover:text-white transition-colors flex items-center justify-center gap-1.5"
+                className="w-full text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <ArrowLeft size={13} /> নতুন OTP অনুরোধ করুন
               </button>
@@ -243,14 +243,14 @@ export default function ForgotPasswordPage() {
           {step === 3 && (
             <form onSubmit={handleResetPassword} className="space-y-4">
               <div className="text-center mb-2">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-3">
-                  <Lock size={22} className="text-emerald-400" />
+                <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center mx-auto mb-3">
+                  <Lock size={22} className="text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <p className="text-sm text-gray-400">নতুন পাসওয়ার্ড সেট করুন</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 font-semibold">নতুন পাসওয়ার্ড সেট করুন</p>
               </div>
 
               <div>
-                <label className="text-xs text-gray-400 mb-1.5 block">নতুন পাসওয়ার্ড</label>
+                <label className="text-xs text-slate-600 dark:text-slate-400 mb-1.5 block font-semibold">নতুন পাসওয়ার্ড</label>
                 <div className="relative">
                   <input
                     id="reset-new-password"
@@ -259,17 +259,17 @@ export default function ForgotPasswordPage() {
                     onChange={(e) => { setNewPassword(e.target.value); clearMessages(); }}
                     placeholder="কমপক্ষে ৬ অক্ষর"
                     minLength={6}
-                    className="w-full py-3 pl-4 pr-11 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 transition-colors text-sm"
+                    className="w-full py-3 pl-4 pr-11 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors text-sm"
                   />
                   <button type="button" onClick={() => setShowPass(!showPass)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:hover:text-white cursor-pointer">
                     {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="text-xs text-gray-400 mb-1.5 block">পাসওয়ার্ড নিশ্চিত করুন</label>
+                <label className="text-xs text-slate-600 dark:text-slate-400 mb-1.5 block font-semibold">পাসওয়ার্ড নিশ্চিত করুন</label>
                 <div className="relative">
                   <input
                     id="reset-confirm-password"
@@ -277,15 +277,15 @@ export default function ForgotPasswordPage() {
                     value={confirmPassword}
                     onChange={(e) => { setConfirmPassword(e.target.value); clearMessages(); }}
                     placeholder="পাসওয়ার্ড আবার লিখুন"
-                    className="w-full py-3 pl-4 pr-11 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-yellow-500 transition-colors text-sm"
+                    className="w-full py-3 pl-4 pr-11 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors text-sm"
                   />
                   <button type="button" onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:hover:text-white cursor-pointer">
                     {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
                 {confirmPassword && newPassword !== confirmPassword && (
-                  <p className="text-red-400 text-xs mt-1">পাসওয়ার্ড দুটি মিলছে না।</p>
+                  <p className="text-red-500 text-xs mt-1">পাসওয়ার্ড দুটি মিলছে না।</p>
                 )}
               </div>
 
@@ -293,7 +293,7 @@ export default function ForgotPasswordPage() {
                 id="reset-password-submit-btn"
                 type="submit"
                 disabled={isResetting || newPassword.length < 6 || newPassword !== confirmPassword}
-                className="btn-gold w-full flex items-center justify-center gap-2 py-3 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-gold w-full flex items-center justify-center gap-2 py-3 mt-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isResetting ? (
                   <><Loader2 size={16} className="animate-spin" /> পাসওয়ার্ড রিসেট হচ্ছে...</>
@@ -307,12 +307,12 @@ export default function ForgotPasswordPage() {
           {/* ── Step 4: Success ───────────────────────────────────────── */}
           {step === 4 && (
             <div className="text-center space-y-5 py-2">
-              <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto">
-                <CheckCircle2 size={32} className="text-emerald-400" />
+              <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center mx-auto">
+                <CheckCircle2 size={32} className="text-emerald-500" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">পাসওয়ার্ড রিসেট সফল! 🎉</h3>
-                <p className="text-sm text-gray-400 mt-1">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">পাসওয়ার্ড রিসেট সফল! 🎉</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                   আপনার পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে।<br />
                   নতুন পাসওয়ার্ড দিয়ে লগইন করুন।
                 </p>
@@ -320,7 +320,7 @@ export default function ForgotPasswordPage() {
               <button
                 id="goto-login-btn"
                 onClick={() => router.push("/login")}
-                className="btn-gold w-full py-3"
+                className="btn-gold w-full py-3 cursor-pointer"
               >
                 লগইন পেজে যান
               </button>

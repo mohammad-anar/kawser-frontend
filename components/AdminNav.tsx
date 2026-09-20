@@ -22,6 +22,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { logout } from "@/lib/redux/slices/authSlice";
 import { useAdminSocket, NewOrderPayload } from "@/lib/useAdminSocket";
+import ThemeToggle from "./ThemeToggle";
 
 export interface AdminNotification {
   id: string;
@@ -158,11 +159,10 @@ export default function AdminNav() {
   const navItems = [
     { label: "ড্যাশবোর্ড", href: "/admin", icon: LayoutDashboard },
     { label: "সকল অর্ডার", href: "/admin/orders", icon: ShoppingCart },
-    { label: "পাসওয়ার্ড", href: "/admin/change-password", icon: KeyRound },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-[#080814]/95 backdrop-blur-md border-b border-white/10 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+    <header className="sticky top-0 z-40 bg-white/98 dark:bg-[#0a0a1e]/98 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm px-4 sm:px-8 py-3.5 flex items-center justify-between transition-colors">
       <div className="flex items-center gap-6">
         <Link href="/admin" className="flex items-center gap-2.5 sm:gap-3 group">
           <div className="w-32 sm:w-40 transition-transform duration-200 group-hover:scale-105">
@@ -170,17 +170,17 @@ export default function AdminNav() {
               src="/images/selfcaresolution2.PNG"
               width={180}
               height={90}
-              alt="SelfCare Solution Admin"
+              alt="Care Zone BD Admin"
               priority
               className="h-auto w-full object-contain"
             />
           </div>
-          <div className="hidden xs:flex flex-col border-l border-white/10 pl-2.5">
-            <div className="flex items-center gap-1 text-[10px] font-extrabold text-yellow-400 uppercase tracking-wider">
+          <div className="hidden xs:flex flex-col border-l border-blue-200 dark:border-slate-700 pl-2.5">
+            <div className="flex items-center gap-1 text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
               <span>Admin</span>
-              <Shield size={11} className="text-yellow-400" />
+              <Shield size={11} className="text-blue-600 dark:text-blue-400" />
             </div>
-            <div className="text-[9px] text-gray-400 font-medium whitespace-nowrap">
+            <div className="text-[9px] text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap">
               Control Panel
             </div>
           </div>
@@ -196,8 +196,8 @@ export default function AdminNav() {
                 href={item.href}
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   isActive
-                    ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 shadow-sm"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                    ? "bg-blue-600 text-white border border-blue-700 shadow-sm"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
                 }`}
               >
                 <Icon size={14} />
@@ -213,8 +213,8 @@ export default function AdminNav() {
         <div
           className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-all ${
             isConnected
-              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-              : "bg-amber-500/10 text-amber-400 border-amber-500/30"
+              ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800"
+              : "bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border-amber-300 dark:border-amber-800"
           }`}
           title={isConnected ? "WebSocket লাইভ কানেক্টেড" : "WebSocket রিকানেক্ট হচ্ছে..."}
         >
@@ -230,17 +230,17 @@ export default function AdminNav() {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`relative p-2 rounded-xl border transition-all ${
+            className={`relative p-2 rounded-xl border transition-all cursor-pointer ${
               isOpen || unreadCount > 0
-                ? "bg-yellow-500/15 border-yellow-500/40 text-yellow-400"
-                : "bg-white/5 border-white/10 text-gray-300 hover:text-white hover:bg-white/10"
+                ? "bg-blue-50 dark:bg-blue-950/60 border-blue-300 dark:border-blue-800 text-blue-600 dark:text-blue-400"
+                : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700"
             }`}
             title="নোটিফিকেশন দেখুন"
             aria-label="Notifications"
           >
             <Bell size={17} className={unreadCount > 0 ? "animate-bounce" : ""} />
             {unreadCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-lg shadow-red-500/50 border border-black animate-pulse">
+              <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-lg shadow-red-500/50 border border-white dark:border-black animate-pulse">
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}
@@ -248,15 +248,15 @@ export default function AdminNav() {
 
           {/* Dropdown Popover */}
           {isOpen && (
-            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#0e0e24] border border-yellow-500/30 rounded-2xl shadow-2xl shadow-black/80 z-50 overflow-hidden flex flex-col animate-scaleIn">
+            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col animate-scaleIn">
               {/* Header */}
-              <div className="px-4 py-3 bg-[#131330] border-b border-white/10 flex items-center justify-between">
+              <div className="px-4 py-3 bg-blue-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-sm text-white flex items-center gap-1.5">
-                    <Bell size={15} className="text-yellow-400" /> নোটিফিকেশন তালিকা
+                  <span className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <Bell size={15} className="text-blue-600 dark:text-blue-400" /> নোটিফিকেশন তালিকা
                   </span>
                   {unreadCount > 0 && (
-                    <span className="bg-yellow-500/20 text-yellow-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-yellow-500/30">
+                    <span className="bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-[10px] px-2 py-0.5 rounded-full font-bold border border-blue-200 dark:border-blue-800">
                       {unreadCount} নতুন
                     </span>
                   )}
@@ -266,7 +266,7 @@ export default function AdminNav() {
                   {unreadCount > 0 && (
                     <button
                       onClick={markAllAsRead}
-                      className="text-[11px] text-gray-400 hover:text-yellow-400 flex items-center gap-1 px-2 py-1 rounded hover:bg-white/5 transition-colors"
+                      className="text-[11px] text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 px-2 py-1 rounded hover:bg-blue-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                       title="সব পঠিত চিহ্নিত করুন"
                     >
                       <CheckCheck size={13} />
@@ -276,7 +276,7 @@ export default function AdminNav() {
                   {notifications.length > 0 && (
                     <button
                       onClick={clearAllNotifications}
-                      className="text-[11px] text-gray-400 hover:text-red-400 flex items-center gap-1 px-1.5 py-1 rounded hover:bg-white/5 transition-colors"
+                      className="text-[11px] text-slate-500 dark:text-slate-400 hover:text-red-500 flex items-center gap-1 px-1.5 py-1 rounded hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
                       title="সব নোটিফিকেশন মুছুন"
                     >
                       <Trash2 size={13} />
@@ -286,21 +286,21 @@ export default function AdminNav() {
               </div>
 
               {/* Scrollable Notification List */}
-              <div className="max-h-80 overflow-y-auto divide-y divide-white/5 scrollbar-thin scrollbar-thumb-yellow-500/20 scrollbar-track-transparent">
+              <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60">
                 {notifications.length > 0 ? (
                   notifications.map((notif) => (
                     <div
                       key={notif.id}
                       onClick={() => handleNotificationClick(notif)}
-                      className={`p-3 sm:p-3.5 transition-colors cursor-pointer flex items-start gap-3 hover:bg-white/5 ${
-                        !notif.read ? "bg-yellow-500/[0.04]" : ""
+                      className={`p-3 sm:p-3.5 transition-colors cursor-pointer flex items-start gap-3 hover:bg-blue-50/50 dark:hover:bg-slate-800/60 ${
+                        !notif.read ? "bg-blue-50/30 dark:bg-slate-800/30" : ""
                       }`}
                     >
                       <div
                         className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-base font-bold border ${
                           !notif.read
-                            ? "bg-yellow-500/20 border-yellow-500/40 text-yellow-400 shadow-sm"
-                            : "bg-white/5 border-white/10 text-gray-400"
+                            ? "bg-blue-100 dark:bg-blue-950 border-blue-300 dark:border-blue-800 text-blue-700 dark:text-blue-300 shadow-sm"
+                            : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400"
                         }`}
                       >
                         🛍️
@@ -308,42 +308,42 @@ export default function AdminNav() {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1 mb-0.5">
-                          <span className="text-xs font-bold text-white truncate">
+                          <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
                             {notif.customerName}
                           </span>
-                          <span className="text-[10px] text-yellow-400 font-extrabold bg-yellow-500/15 px-1.5 py-0.5 rounded border border-yellow-500/25 shrink-0">
+                          <span className="text-[10px] text-blue-600 dark:text-blue-400 font-extrabold bg-blue-100 dark:bg-blue-950 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800 shrink-0">
                             {notif.orderId}
                           </span>
                         </div>
 
-                        <p className="text-[11px] text-gray-400 truncate">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
                           {notif.phoneNumber} • পরিমাণ: {notif.quantity} টি
                         </p>
 
-                        <div className="flex items-center justify-between mt-1.5 pt-1 border-t border-white/5 text-[10px]">
-                          <span className="text-emerald-400 font-bold">
+                        <div className="flex items-center justify-between mt-1.5 pt-1 border-t border-slate-100 dark:border-slate-800 text-[10px]">
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">
                             ৳{notif.totalPrice.toLocaleString()}
                           </span>
-                          <span className="text-gray-400 flex items-center gap-1">
+                          <span className="text-slate-400 dark:text-slate-500 flex items-center gap-1">
                             <Clock size={10} /> {formatTimeAgo(notif.createdAt)}
                           </span>
                         </div>
                       </div>
 
                       {!notif.read && (
-                        <div className="w-2 h-2 rounded-full bg-yellow-400 shrink-0 mt-1.5" />
+                        <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-1.5" />
                       )}
                     </div>
                   ))
                 ) : (
                   <div className="py-10 px-4 text-center">
-                    <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-2 text-gray-400">
+                    <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center mx-auto mb-2 text-slate-400">
                       <Bell size={20} />
                     </div>
-                    <p className="text-xs font-semibold text-gray-300">
+                    <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                       কোনো নতুন নোটিফিকেশন নেই
                     </p>
-                    <p className="text-[11px] text-gray-500 mt-0.5">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                       নতুন কোনো অর্ডার আসলে এখানে তাৎক্ষণিক দেখতে পাবেন।
                     </p>
                   </div>
@@ -351,11 +351,11 @@ export default function AdminNav() {
               </div>
 
               {/* Footer */}
-              <div className="p-2.5 bg-[#131330] border-t border-white/10 text-center">
+              <div className="p-2.5 bg-blue-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 text-center">
                 <Link
                   href="/admin/orders"
                   onClick={() => setIsOpen(false)}
-                  className="text-xs font-bold text-yellow-400 hover:text-yellow-300 inline-flex items-center justify-center gap-1 w-full py-1 rounded-lg hover:bg-white/5 transition-colors"
+                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 inline-flex items-center justify-center gap-1 w-full py-1 rounded-lg hover:bg-blue-100 dark:hover:bg-slate-800 transition-colors"
                 >
                   <PackageCheck size={14} /> সকল অর্ডার দেখুন
                 </Link>
@@ -364,22 +364,24 @@ export default function AdminNav() {
           )}
         </div>
 
+        <ThemeToggle />
+
         <Link
           href="/"
           target="_blank"
-          className="hidden md:flex items-center gap-1 text-xs text-gray-400 hover:text-yellow-400 transition-colors px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5"
+          className="hidden md:flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 font-semibold"
         >
           <ArrowLeft size={12} /> ওয়েবসাইট দেখুন
         </Link>
 
-        <div className="flex items-center gap-2 pl-3 border-l border-white/10">
-          <span className="text-xs text-gray-300 font-medium hidden sm:block" suppressHydrationWarning>
+        <div className="flex items-center gap-2 pl-3 border-l border-slate-200 dark:border-slate-800">
+          <span className="text-xs text-slate-700 dark:text-slate-300 font-semibold hidden sm:block" suppressHydrationWarning>
             {user?.name || "এডমিন"}
           </span>
           <Link
             href="/admin/change-password"
             title="পাসওয়ার্ড পরিবর্তন"
-            className="hidden sm:flex items-center gap-1 text-xs text-yellow-400 hover:text-yellow-300 bg-yellow-500/10 hover:bg-yellow-500/20 px-2.5 py-1.5 rounded-lg border border-yellow-500/20 transition-all"
+            className="hidden sm:flex items-center gap-1 text-xs text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-white bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900 px-2.5 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 font-bold transition-all"
           >
             <KeyRound size={13} />
             <span className="hidden md:inline">পাসওয়ার্ড</span>
@@ -387,7 +389,7 @@ export default function AdminNav() {
           <button
             onClick={handleLogout}
             title="লগআউট"
-            className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-2.5 py-1.5 rounded-lg border border-red-500/20 transition-all"
+            className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/50 px-2.5 py-1.5 rounded-lg border border-red-200 dark:border-red-900/50 font-bold transition-all cursor-pointer"
           >
             <LogOut size={13} />
             <span className="hidden sm:inline">লগআউট</span>

@@ -181,12 +181,12 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="text-yellow-400" size={22} />
-            <h2 className="text-lg font-bold text-white">অর্ডার করুন</h2>
+            <ShoppingBag className="text-blue-600 dark:text-blue-400" size={22} />
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">অর্ডার করুন</h2>
           </div>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-white transition-colors p-1 rounded-full hover:bg-white/10"
+            className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
             aria-label="বন্ধ করুন"
           >
             <X size={20} />
@@ -196,21 +196,21 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
         {success ? (
           /* Success Screen */
           <div className="text-center py-6 space-y-4">
-            <CheckCircle className="mx-auto text-green-400" size={64} />
-            <h3 className="text-xl font-bold text-white">অর্ডার সফল হয়েছে! 🎉</h3>
-            <p className="text-gray-300">আপনার অর্ডার আইডি:</p>
-            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl py-3 px-6">
-              <span className="text-2xl font-black text-yellow-400">{success.orderId}</span>
+            <CheckCircle className="mx-auto text-emerald-500" size={64} />
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">অর্ডার সফল হয়েছে! 🎉</h3>
+            <p className="text-slate-600 dark:text-slate-300">আপনার অর্ডার আইডি:</p>
+            <div className="bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-xl py-3 px-6">
+              <span className="text-2xl font-black text-blue-600 dark:text-blue-400">{success.orderId}</span>
             </div>
-            <p className="text-gray-300 text-sm">
-              মোট পরিশোধ (ডেলিভারিতে): <span className="text-green-400 font-bold">৳{success.total.toLocaleString()}</span>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">
+              মোট পরিশোধ (ডেলিভারিতে): <span className="text-emerald-600 dark:text-emerald-400 font-bold">৳{success.total.toLocaleString()}</span>
             </p>
-            <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-4 text-sm text-gray-300">
+            <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-800/60 rounded-xl p-4 text-sm text-slate-700 dark:text-slate-300">
               <p>✅ শীঘ্রই আমাদের টিম আপনার সাথে যোগাযোগ করবে।</p>
               <p className="mt-1">📦 ঢাকায় ১ দিন, ঢাকার বাইরে ২-৩ দিন।</p>
-              <p className="mt-1">🔒 তথ্য সম্পূর্ণ গোপন রাখা হবে।</p>
+              <p className="mt-1">🔒 ১০০% গোপনীয় প্যাকেজিংয়ে ডেলিভারি করা হবে।</p>
             </div>
-            <button onClick={handleClose} className="btn-gold w-full mt-2">
+            <button onClick={handleClose} className="btn-gold w-full mt-2 cursor-pointer">
               ঠিক আছে
             </button>
           </div>
@@ -218,9 +218,9 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
           /* Order Form */
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Product summary */}
-            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3 sm:p-4 flex items-center justify-between gap-3">
+            <div className="bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/80 rounded-xl p-3 sm:p-4 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg overflow-hidden relative bg-black/40 border border-yellow-500/20 shrink-0">
+                <div className="w-12 h-12 rounded-lg overflow-hidden relative bg-slate-100 dark:bg-slate-800 border border-blue-200 dark:border-blue-700 shrink-0">
                   <Image
                     src="/images/products/product-main.jpg"
                     alt="Top Notch Magic Condom"
@@ -229,25 +229,25 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                   />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm">Top Notch Magic Condom</p>
-                  <p className="text-yellow-400 text-xs mt-0.5">রিইউজেবল TPE সিলিকন • ফ্রি ডেলিভারি</p>
+                  <p className="text-slate-900 dark:text-white font-bold text-sm">Top Notch Magic Condom</p>
+                  <p className="text-blue-600 dark:text-blue-400 text-xs mt-0.5">রিইউজেবল TPE সিলিকন • ফ্রি ডেলিভারি</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={() => handleQty(-1)}
-                  className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-7 h-7 rounded-full bg-slate-200/80 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-colors cursor-pointer"
                   aria-label="কমান"
                 >
                   <Minus size={14} />
                 </button>
-                <span className="text-white font-bold w-5 text-center">{form.quantity}</span>
+                <span className="text-slate-900 dark:text-white font-bold w-5 text-center">{form.quantity}</span>
                 <button
                   type="button"
                   onClick={() => handleQty(1)}
-                  className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer"
-                  aria-label="বাড়ান"
+                  className="w-7 h-7 rounded-full bg-slate-200/80 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label=" বাড়ান"
                 >
                   <Plus size={14} />
                 </button>
@@ -255,15 +255,15 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
             </div>
 
             <div className="text-right text-sm">
-              <span className="text-gray-400">মোট: </span>
-              <span className="text-yellow-400 font-black text-lg">৳{total.toLocaleString()}</span>
-              <span className="text-gray-500 text-xs ml-1">(ডেলিভারিতে পরিশোধ)</span>
+              <span className="text-slate-600 dark:text-slate-400">মোট: </span>
+              <span className="text-blue-600 dark:text-blue-400 font-black text-lg">৳{total.toLocaleString()}</span>
+              <span className="text-slate-500 dark:text-slate-400 text-xs ml-1">(ডেলিভারিতে পরিশোধ)</span>
             </div>
 
             {/* 1. Name */}
             <div>
-              <label className="text-sm text-gray-300 mb-1.5 block font-medium">
-                আপনার নাম <span className="text-red-400">*</span>
+              <label className="text-sm text-slate-700 dark:text-slate-300 mb-1.5 block font-medium">
+                আপনার নাম <span className="text-red-500">*</span>
               </label>
               <input
                 className={`form-input ${errors.customerName ? "error" : ""}`}
@@ -273,13 +273,13 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                 placeholder="আপনার সম্পূর্ণ নাম লিখুন"
                 autoComplete="name"
               />
-              {errors.customerName && <p className="text-red-400 text-xs mt-1">{errors.customerName}</p>}
+              {errors.customerName && <p className="text-red-500 text-xs mt-1 font-medium">{errors.customerName}</p>}
             </div>
 
             {/* 2. Phone */}
             <div>
-              <label className="text-sm text-gray-300 mb-1.5 block font-medium">
-                মোবাইল নম্বর <span className="text-red-400">*</span>
+              <label className="text-sm text-slate-700 dark:text-slate-300 mb-1.5 block font-medium">
+                মোবাইল নম্বর <span className="text-red-500">*</span>
               </label>
               <input
                 className={`form-input ${errors.phoneNumber ? "error" : ""}`}
@@ -290,13 +290,13 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                 type="tel"
                 autoComplete="tel"
               />
-              {errors.phoneNumber && <p className="text-red-400 text-xs mt-1">{errors.phoneNumber}</p>}
+              {errors.phoneNumber && <p className="text-red-500 text-xs mt-1 font-medium">{errors.phoneNumber}</p>}
             </div>
 
             {/* 3. Address */}
             <div>
-              <label className="text-sm text-gray-300 mb-1.5 block font-medium">
-                সম্পূর্ণ ঠিকানা <span className="text-red-400">*</span>
+              <label className="text-sm text-slate-700 dark:text-slate-300 mb-1.5 block font-medium">
+                সম্পূর্ণ ঠিকানা <span className="text-red-500">*</span>
               </label>
               <textarea
                 className={`form-input resize-none ${errors.address ? "error" : ""}`}
@@ -307,24 +307,24 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                 rows={3}
                 autoComplete="street-address"
               />
-              {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address}</p>}
+              {errors.address && <p className="text-red-500 text-xs mt-1 font-medium">{errors.address}</p>}
             </div>
 
             {/* COD badge */}
-            <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 text-base">
+            <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-xl p-3 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/60 flex items-center justify-center flex-shrink-0 text-base">
                 💵
               </div>
               <div>
-                <p className="text-green-400 font-semibold text-sm">ক্যাশ অন ডেলিভারি</p>
-                <p className="text-gray-400 text-xs">পণ্য হাতে পেয়ে টাকা দিন। ১০০% গোপনীয় প্যাকেজিং।</p>
+                <p className="text-emerald-700 dark:text-emerald-300 font-bold text-sm">ক্যাশ অন ডেলিভারি</p>
+                <p className="text-slate-600 dark:text-slate-400 text-xs">পণ্য হাতে পেয়ে টাকা দিন। ১০০% গোপনীয় প্যাকেজিং।</p>
               </div>
             </div>
 
             {serverError && (
               <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3">
-                <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
-                <p className="text-red-400 text-sm">{serverError}</p>
+                <AlertCircle size={16} className="text-red-500 flex-shrink-0" />
+                <p className="text-red-500 text-sm font-medium">{serverError}</p>
               </div>
             )}
 

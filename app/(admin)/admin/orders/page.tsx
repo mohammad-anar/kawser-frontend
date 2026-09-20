@@ -381,17 +381,17 @@ export default function AdminOrdersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#05050b] text-white flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080817] text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
       <AdminNav />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-8 space-y-6">
         {/* Title & Actions */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white">
-              অর্ডার <span className="text-gradient-gold">ম্যানেজমেন্ট</span>
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+              অর্ডার <span className="text-gradient-blue">ম্যানেজমেন্ট</span>
             </h1>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
               গ্রাহকের অর্ডার পর্যালোচনা, এডিট, সফট ডিলিট, ট্র্যাশ ও Excel এক্সপোর্ট করুন
             </p>
           </div>
@@ -402,7 +402,7 @@ export default function AdminOrdersPage() {
                 refetchActive();
                 refetchDeleted();
               }}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300 transition-all active:scale-95"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all active:scale-95 shadow-sm cursor-pointer"
             >
               <RefreshCw size={14} className={isTableFetching ? "animate-spin" : ""} />
               রিফ্রেশ
@@ -410,10 +410,10 @@ export default function AdminOrdersPage() {
             <button
               onClick={() => handleExportExcel(selectedIds.length > 0)}
               disabled={isExporting}
-              className={`px-4 py-2 rounded-xl border text-xs font-semibold flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 ${
+              className={`px-4 py-2 rounded-xl border text-xs font-bold flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-sm ${
                 selectedIds.length > 0
                   ? "btn-gold"
-                  : "bg-white/10 hover:bg-white/15 border-white/20 text-white"
+                  : "bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
               }`}
             >
               <Download size={14} />
@@ -427,20 +427,20 @@ export default function AdminOrdersPage() {
         </div>
 
         {/* Tab Switcher: Active vs Deleted */}
-        <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
           <button
             onClick={() => handleTabChange("active")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === "active"
-                ? "bg-yellow-500 text-black shadow-lg shadow-yellow-500/20"
-                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10"
+                ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                : "bg-white dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
             }`}
           >
             <Layers size={15} />
             <span>সক্রিয় অর্ডার</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[11px] font-black ${
-                activeTab === "active" ? "bg-black/20 text-black" : "bg-yellow-500/20 text-yellow-400"
+                activeTab === "active" ? "bg-white/20 text-white" : "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400"
               }`}
             >
               {activeOrdersData?.total ?? 0}
@@ -449,17 +449,17 @@ export default function AdminOrdersPage() {
 
           <button
             onClick={() => handleTabChange("deleted")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === "deleted"
-                ? "bg-red-500 text-white shadow-lg shadow-red-500/20"
-                : "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10"
+                ? "bg-red-600 text-white shadow-md shadow-red-500/20"
+                : "bg-white dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
             }`}
           >
             <Trash2 size={15} />
             <span>ডিলিটকৃত অর্ডার (ট্র্যাশ)</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[11px] font-black ${
-                activeTab === "deleted" ? "bg-black/30 text-white" : "bg-red-500/20 text-red-400"
+                activeTab === "deleted" ? "bg-white/20 text-white" : "bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400"
               }`}
             >
               {deletedOrdersData?.total ?? 0}
@@ -469,12 +469,12 @@ export default function AdminOrdersPage() {
 
         {/* Selected Orders Action Bar */}
         {selectedIds.length > 0 && (
-          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 animate-fadeIn shadow-lg shadow-yellow-500/5">
+          <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 animate-fadeIn shadow-sm">
             <div className="flex items-center gap-2.5">
-              <span className="w-7 h-7 rounded-lg bg-yellow-500 text-black font-black text-xs flex items-center justify-center shadow-md">
+              <span className="w-7 h-7 rounded-lg bg-blue-600 text-white font-black text-xs flex items-center justify-center shadow-md">
                 {selectedIds.length}
               </span>
-              <span className="text-xs sm:text-sm font-bold text-white">
+              <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                 টি অর্ডার নির্বাচিত করা হয়েছে
               </span>
             </div>
@@ -483,14 +483,14 @@ export default function AdminOrdersPage() {
               <button
                 onClick={() => handleExportExcel(true)}
                 disabled={isExporting}
-                className="btn-gold flex-1 sm:flex-initial text-xs px-4 py-2 rounded-xl flex items-center justify-center gap-1.5 font-bold shadow-md shadow-yellow-500/20 active:scale-95"
+                className="btn-gold flex-1 sm:flex-initial text-xs px-4 py-2 rounded-xl flex items-center justify-center gap-1.5 font-bold shadow-md cursor-pointer active:scale-95"
               >
                 <Download size={14} />
                 {isExporting ? "এক্সপোর্ট হচ্ছে..." : `নির্বাচিত Excel ডাউনলোড (${selectedIds.length})`}
               </button>
               <button
                 onClick={() => setSelectedIds([])}
-                className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs border border-white/10 transition-colors"
+                className="px-3 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 font-semibold transition-colors cursor-pointer"
                 title="সিলেকশন বাতিল"
               >
                 বাতিল
@@ -500,7 +500,7 @@ export default function AdminOrdersPage() {
         )}
 
         {/* Filters & Search Bar */}
-        <div className="glass-card p-4 border border-white/10 space-y-4">
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm space-y-4">
           {/* Status Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
             {STATUSES.map((st) => (
@@ -510,10 +510,10 @@ export default function AdminOrdersPage() {
                   setStatusFilter(st.key);
                   setCurrentPage(1);
                 }}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                   statusFilter === st.key
-                    ? "bg-yellow-500 text-black shadow-md shadow-yellow-500/20 font-bold"
-                    : "bg-white/5 text-gray-400 hover:text-white hover:bg-white/10"
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700"
                 }`}
               >
                 {st.label}
@@ -525,48 +525,48 @@ export default function AdminOrdersPage() {
           <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-2.5 items-stretch md:items-center">
             {/* General Search Input */}
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
               <input
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="অর্ডার আইডি (PC-XXXX) বা গ্রাহকের নাম..."
-                className="w-full pl-9 pr-3 py-2.5 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 text-xs focus:outline-none focus:border-yellow-500 transition-colors"
+                className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 transition-colors"
               />
             </div>
 
             {/* Phone Number Filter */}
             <div className="relative flex-1">
-              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
               <input
                 type="text"
                 value={phoneInput}
                 onChange={(e) => setPhoneInput(e.target.value)}
                 placeholder="মোবাইল নম্বর দিয়ে খুঁজুন (017...)..."
-                className="w-full pl-9 pr-3 py-2.5 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 font-mono text-xs focus:outline-none focus:border-yellow-500 transition-colors"
+                className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 font-mono text-xs focus:outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 transition-colors"
               />
             </div>
 
             {/* Page Size Selector */}
-            <div className="flex items-center gap-2 bg-black/50 border border-white/10 rounded-xl px-3 py-2 shrink-0">
-              <span className="text-[11px] text-gray-400 whitespace-nowrap">প্রতি পেজে:</span>
+            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 shrink-0">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 whitespace-nowrap">প্রতি পেজে:</span>
               <select
                 value={pageSize}
                 onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-                className="bg-transparent text-yellow-400 font-bold text-xs focus:outline-none cursor-pointer"
+                className="bg-transparent text-blue-600 dark:text-blue-400 font-bold text-xs focus:outline-none cursor-pointer"
               >
-                <option value={10} className="bg-[#0b0b18] text-white">10 টি</option>
-                <option value={20} className="bg-[#0b0b18] text-white">20 টি</option>
-                <option value={30} className="bg-[#0b0b18] text-white">30 টি</option>
-                <option value={50} className="bg-[#0b0b18] text-white">50 টি</option>
-                <option value={100} className="bg-[#0b0b18] text-white">100 টি</option>
+                <option value={10} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">10 টি</option>
+                <option value={20} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">20 টি</option>
+                <option value={30} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">30 টি</option>
+                <option value={50} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">50 টি</option>
+                <option value={100} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">100 টি</option>
               </select>
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
               <button
                 type="submit"
-                className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-4 py-2.5 rounded-xl text-xs transition-colors shadow-md shadow-yellow-500/10 active:scale-95"
+                className="btn-gold font-bold px-4 py-2.5 rounded-xl text-xs transition-colors shadow-sm cursor-pointer active:scale-95"
               >
                 ফিল্টার করুন
               </button>
@@ -574,7 +574,7 @@ export default function AdminOrdersPage() {
                 <button
                   type="button"
                   onClick={handleClearFilters}
-                  className="px-3 py-2.5 rounded-xl bg-white/5 text-gray-400 hover:text-white text-xs border border-white/10 transition-colors active:scale-95"
+                  className="px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs border border-slate-200 dark:border-slate-700 font-semibold transition-colors cursor-pointer active:scale-95"
                 >
                   ক্লিয়ার
                 </button>
@@ -585,20 +585,20 @@ export default function AdminOrdersPage() {
 
         {/* Deleted Orders Banner Notice */}
         {activeTab === "deleted" && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-4 flex items-center gap-3 text-red-300 text-xs">
-            <Archive size={20} className="text-red-400 shrink-0" />
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-2xl p-4 flex items-center gap-3 text-red-700 dark:text-red-300 text-xs">
+            <Archive size={20} className="text-red-500 shrink-0" />
             <div>
-              <span className="font-bold text-white block text-sm mb-0.5">ডিলিটকৃত অর্ডার সংগ্রহশালা (রিসাইকেল বিন)</span>
+              <span className="font-bold text-slate-900 dark:text-white block text-sm mb-0.5">ডিলিটকৃত অর্ডার সংগ্রহশালা (রিসাইকেল বিন)</span>
               এই অর্ডারের তথ্য গ্রাহক ও ড্যাশবোর্ড রিপোর্ট থেকে আলাদা রয়েছে। আপনি যেকোনো সময় অর্ডার সক্রিয় তালিকায় পুনরুদ্ধার করতে পারেন অথবা স্থায়ীভাবে মুছে ফেলতে পারেন।
             </div>
           </div>
         )}
 
         {/* Orders Table Container */}
-        <div className="glass-card border border-white/10 overflow-hidden shadow-2xl">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-white/5 text-gray-400 text-[11px] uppercase tracking-wider border-b border-white/10">
+              <thead className="bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 text-[11px] uppercase tracking-wider border-b border-slate-200 dark:border-slate-700">
                 <tr>
                   {activeTab === "active" && (
                     <th className="py-3.5 px-3 w-10 text-center">
@@ -609,7 +609,7 @@ export default function AdminOrdersPage() {
                           if (el) el.indeterminate = isSomeSelected;
                         }}
                         onChange={toggleSelectAll}
-                        className="w-4 h-4 rounded text-yellow-500 bg-black/60 border-white/20 accent-yellow-500 cursor-pointer"
+                        className="w-4 h-4 rounded text-blue-600 accent-blue-600 cursor-pointer"
                         title="সব সিলেক্ট করুন"
                       />
                     </th>
@@ -628,10 +628,10 @@ export default function AdminOrdersPage() {
                   <th className="py-3.5 px-4 font-semibold text-right">অ্যাকশন</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-gray-200">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-slate-700 dark:text-slate-200">
                 {isTableLoading ? (
                   <tr>
-                    <td colSpan={activeTab === "active" ? 9 : 8} className="py-12 text-center text-yellow-400 text-xs font-semibold">
+                    <td colSpan={activeTab === "active" ? 9 : 8} className="py-12 text-center text-blue-600 dark:text-blue-400 text-xs font-bold">
                       লোড হচ্ছে...
                     </td>
                   </tr>
@@ -643,10 +643,10 @@ export default function AdminOrdersPage() {
                         key={ord._id}
                         className={`transition-colors ${
                           isSelected
-                            ? "bg-yellow-500/[0.08] hover:bg-yellow-500/[0.12]"
+                            ? "bg-blue-50/80 dark:bg-blue-950/30"
                             : activeTab === "deleted"
-                            ? "hover:bg-red-500/[0.04]"
-                            : "hover:bg-white/5"
+                            ? "hover:bg-red-50/50 dark:hover:bg-red-950/20"
+                            : "hover:bg-slate-50 dark:hover:bg-slate-800/40"
                         }`}
                       >
                         {activeTab === "active" && (
@@ -655,14 +655,14 @@ export default function AdminOrdersPage() {
                               type="checkbox"
                               checked={isSelected}
                               onChange={() => toggleSelectOne(ord._id)}
-                              className="w-4 h-4 rounded text-yellow-500 bg-black/60 border-white/20 accent-yellow-500 cursor-pointer"
+                              className="w-4 h-4 rounded text-blue-600 accent-blue-600 cursor-pointer"
                             />
                           </td>
                         )}
-                        <td className="py-3.5 px-4 font-mono font-bold text-yellow-400">
+                        <td className="py-3.5 px-4 font-mono font-bold text-blue-600 dark:text-blue-400">
                           {ord.orderId}
                         </td>
-                        <td className="py-3.5 px-4 text-xs text-gray-400 whitespace-nowrap">
+                        <td className="py-3.5 px-4 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">
                           {activeTab === "active"
                             ? new Date(ord.createdAt).toLocaleDateString("bn-BD")
                             : ord.deletedAt
@@ -670,19 +670,19 @@ export default function AdminOrdersPage() {
                             : new Date(ord.createdAt).toLocaleDateString("bn-BD")}
                         </td>
                         <td className="py-3.5 px-4">
-                          <div className="font-semibold text-white">{ord.customerName}</div>
-                          <div className="text-xs text-gray-400 font-mono">{ord.phoneNumber}</div>
+                          <div className="font-bold text-slate-900 dark:text-white">{ord.customerName}</div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">{ord.phoneNumber}</div>
                         </td>
-                        <td className="py-3.5 px-4 max-w-xs truncate text-xs text-gray-300">
+                        <td className="py-3.5 px-4 max-w-xs truncate text-xs text-slate-600 dark:text-slate-300">
                           {ord.address}
                           {ord.district ? `, ${ord.district}` : ""}
                           {ord.thana ? ` (${ord.thana})` : ""}
                         </td>
                         <td className="py-3.5 px-4 text-xs">
-                          <span className="font-semibold text-white">{ord.quantity} টি</span>
-                          {ord.size && <span className="text-gray-400 ml-1">({ord.size})</span>}
+                          <span className="font-bold text-slate-900 dark:text-white">{ord.quantity} টি</span>
+                          {ord.size && <span className="text-slate-500 dark:text-slate-400 ml-1">({ord.size})</span>}
                         </td>
-                        <td className="py-3.5 px-4 font-black text-yellow-400">
+                        <td className="py-3.5 px-4 font-black text-blue-600 dark:text-blue-400">
                           ৳{ord.totalPrice}
                         </td>
 
@@ -693,21 +693,21 @@ export default function AdminOrdersPage() {
                               value={ord.status}
                               disabled={isUpdatingStatus}
                               onChange={(e) => handleStatusChange(ord._id, e.target.value)}
-                              className={`text-xs font-semibold px-2.5 py-1 rounded-lg border bg-black/60 focus:outline-none cursor-pointer ${
-                                STATUS_COLORS[ord.status] || "border-white/10 text-white"
+                              className={`text-xs font-semibold px-2.5 py-1 rounded-lg border bg-white dark:bg-slate-900 focus:outline-none cursor-pointer ${
+                                STATUS_COLORS[ord.status] || "border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white"
                               }`}
                             >
-                              <option value="Pending" className="bg-[#0b0b1a] text-amber-400">Pending</option>
-                              <option value="Confirmed" className="bg-[#0b0b1a] text-blue-400">Confirmed</option>
-                              <option value="Processing" className="bg-[#0b0b1a] text-purple-400">Processing</option>
-                              <option value="Shipped" className="bg-[#0b0b1a] text-cyan-400">Shipped</option>
-                              <option value="Delivered" className="bg-[#0b0b1a] text-emerald-400">Delivered</option>
-                              <option value="Cancelled" className="bg-[#0b0b1a] text-red-400">Cancelled</option>
+                              <option value="Pending" className="bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400">Pending</option>
+                              <option value="Confirmed" className="bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400">Confirmed</option>
+                              <option value="Processing" className="bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400">Processing</option>
+                              <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
+                              <option value="Delivered" className="bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400">Delivered</option>
+                              <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled</option>
                             </select>
                           ) : (
                             <span
                               className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-lg border ${
-                                STATUS_COLORS[ord.status] || "border-white/10 text-white"
+                                STATUS_COLORS[ord.status] || "border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white"
                               }`}
                             >
                               {ord.status}
@@ -722,21 +722,21 @@ export default function AdminOrdersPage() {
                               <>
                                 <button
                                   onClick={() => handleOpenEdit(ord)}
-                                  className="p-1.5 rounded-lg bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 hover:text-yellow-300 border border-yellow-500/30 transition-all inline-flex items-center gap-1 text-xs shadow-sm active:scale-95"
+                                  className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95"
                                   title="অর্ডার এডিট করুন"
                                 >
                                   <Pencil size={13} />
                                 </button>
                                 <button
                                   onClick={() => setSelectedOrder(ord)}
-                                  className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 transition-all inline-flex items-center gap-1 text-xs active:scale-95"
+                                  className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95"
                                   title="বিস্তারিত দেখুন"
                                 >
                                   <Eye size={13} />
                                 </button>
                                 <button
                                   onClick={() => setSoftDeleteTarget(ord)}
-                                  className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/30 transition-all inline-flex items-center gap-1 text-xs active:scale-95"
+                                  className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/50 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95"
                                   title="অর্ডার ট্র্যাশে পাঠান (Soft Delete)"
                                 >
                                   <Trash2 size={13} />
@@ -747,7 +747,7 @@ export default function AdminOrdersPage() {
                                 <button
                                   onClick={() => handleRestore(ord)}
                                   disabled={isRestoring}
-                                  className="px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 border border-emerald-500/30 transition-all inline-flex items-center gap-1 text-xs font-semibold active:scale-95"
+                                  className="px-2.5 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 transition-all inline-flex items-center gap-1 text-xs font-semibold cursor-pointer active:scale-95"
                                   title="পুনরুদ্ধার করুন"
                                 >
                                   <RotateCcw size={13} />
@@ -755,14 +755,14 @@ export default function AdminOrdersPage() {
                                 </button>
                                 <button
                                   onClick={() => setSelectedOrder(ord)}
-                                  className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 transition-all inline-flex items-center gap-1 text-xs active:scale-95"
+                                  className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95"
                                   title="বিস্তারিত দেখুন"
                                 >
                                   <Eye size={13} />
                                 </button>
                                 <button
                                   onClick={() => setPermanentDeleteTarget(ord)}
-                                  className="px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/30 transition-all inline-flex items-center gap-1 text-xs font-semibold active:scale-95"
+                                  className="px-2.5 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/50 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 transition-all inline-flex items-center gap-1 text-xs font-semibold cursor-pointer active:scale-95"
                                   title="স্থায়ীভাবে মুছে ফেলুন (Permanent Delete)"
                                 >
                                   <Trash2 size={13} />
@@ -779,7 +779,7 @@ export default function AdminOrdersPage() {
                   <tr>
                     <td
                       colSpan={activeTab === "active" ? 9 : 8}
-                      className="py-12 text-center text-gray-500 text-xs"
+                      className="py-12 text-center text-slate-400 text-xs"
                     >
                       {activeTab === "active"
                         ? "কোনো সক্রিয় অর্ডার পাওয়া যায়নি"
@@ -792,20 +792,20 @@ export default function AdminOrdersPage() {
           </div>
 
           {/* Pagination & Page Size Footer */}
-          <div className="p-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
+          <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-900">
             <div className="flex items-center gap-3">
               <span>
                 মোট {currentOrdersData?.total || 0} টি অর্ডারের মধ্যে পৃষ্ঠা{" "}
-                <span className="text-white font-bold">{currentOrdersData?.page || 1}</span> /{" "}
+                <span className="text-slate-900 dark:text-white font-bold">{currentOrdersData?.page || 1}</span> /{" "}
                 {currentOrdersData?.pages || 1}
               </span>
-              <span className="text-gray-600">|</span>
+              <span className="text-slate-300 dark:text-slate-700">|</span>
               <div className="flex items-center gap-1.5">
                 <span>প্রতি পেজে:</span>
                 <select
                   value={pageSize}
                   onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-                  className="bg-black/60 border border-white/10 rounded-lg px-2 py-1 text-yellow-400 font-bold text-xs focus:outline-none cursor-pointer"
+                  className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-blue-600 dark:text-blue-400 font-bold text-xs focus:outline-none cursor-pointer"
                 >
                   <option value={10}>10 টি</option>
                   <option value={20}>20 টি</option>
@@ -820,18 +820,18 @@ export default function AdminOrdersPage() {
               <button
                 disabled={currentPage <= 1}
                 onClick={() => setCurrentPage((p) => p - 1)}
-                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 title="পূর্ববর্তী পৃষ্ঠা"
               >
                 <ChevronLeft size={16} />
               </button>
-              <span className="px-2 py-1 text-xs font-semibold text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+              <span className="px-2.5 py-1 text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900 rounded-lg">
                 পৃষ্ঠা {currentPage}
               </span>
               <button
                 disabled={!currentOrdersData || currentPage >= currentOrdersData.pages}
                 onClick={() => setCurrentPage((p) => p + 1)}
-                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 title="পরবর্তী পৃষ্ঠা"
               >
                 <ChevronRight size={16} />
@@ -843,57 +843,57 @@ export default function AdminOrdersPage() {
 
       {/* Details Modal */}
       {selectedOrder && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-card max-w-lg w-full p-6 border border-white/20 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f172a] max-w-lg w-full p-6 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl relative animate-scaleIn">
             <button
               onClick={() => setSelectedOrder(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white p-1 rounded-lg bg-white/5"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 dark:hover:text-white p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors cursor-pointer"
             >
               <X size={18} />
             </button>
 
-            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <ShoppingBag size={20} className="text-yellow-400" />
-              অর্ডার বিবরণ — <span className="font-mono text-yellow-400">{selectedOrder.orderId}</span>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+              <ShoppingBag size={20} className="text-blue-600 dark:text-blue-400" />
+              অর্ডার বিবরণ — <span className="font-mono text-blue-600 dark:text-blue-400">{selectedOrder.orderId}</span>
               {selectedOrder.isDeleted && (
-                <span className="text-[11px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full font-semibold">
+                <span className="text-[11px] bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900 px-2 py-0.5 rounded-full font-bold">
                   ট্র্যাশড
                 </span>
               )}
             </h3>
 
             <div className="space-y-3.5 text-xs sm:text-sm max-h-[70vh] overflow-y-auto pr-1">
-              <div className="grid grid-cols-2 gap-2 bg-white/5 p-3 rounded-xl">
+              <div className="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-100 dark:border-slate-700/60">
                 <div>
-                  <span className="text-gray-400 block text-[11px]">গ্রাহকের নাম:</span>
-                  <span className="font-semibold text-white">{selectedOrder.customerName}</span>
+                  <span className="text-slate-400 block text-[11px] font-semibold">গ্রাহকের নাম:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{selectedOrder.customerName}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block text-[11px]">ফোন নম্বর:</span>
-                  <span className="font-mono font-semibold text-white">{selectedOrder.phoneNumber}</span>
+                  <span className="text-slate-400 block text-[11px] font-semibold">ফোন নম্বর:</span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">{selectedOrder.phoneNumber}</span>
                 </div>
                 {selectedOrder.email && (
                   <div className="col-span-2">
-                    <span className="text-gray-400 block text-[11px]">ইমেইল:</span>
-                    <span className="font-semibold text-white">{selectedOrder.email}</span>
+                    <span className="text-slate-400 block text-[11px] font-semibold">ইমেইল:</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">{selectedOrder.email}</span>
                   </div>
                 )}
               </div>
 
               <div>
-                <span className="text-gray-400 block text-[11px]">ঠিকানা:</span>
-                <p className="text-white mt-0.5">{selectedOrder.address}</p>
+                <span className="text-slate-400 block text-[11px] font-semibold">ঠিকানা:</span>
+                <p className="text-slate-800 dark:text-slate-200 mt-0.5 font-medium">{selectedOrder.address}</p>
                 {selectedOrder.district && (
-                  <p className="text-gray-400 text-xs">জেলা: {selectedOrder.district}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">জেলা: {selectedOrder.district}</p>
                 )}
                 {selectedOrder.thana && (
-                  <p className="text-gray-400 text-xs">থানা: {selectedOrder.thana}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs">থানা: {selectedOrder.thana}</p>
                 )}
               </div>
 
               {selectedOrder.gpsCoordinates && selectedOrder.gpsCoordinates.lat && (
-                <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-cyan-300 text-xs">
+                <div className="p-2.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300 text-xs font-semibold">
                     <MapPin size={15} />
                     <span>
                       GPS: {selectedOrder.gpsCoordinates.lat.toFixed(5)},{" "}
@@ -911,39 +911,39 @@ export default function AdminOrdersPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-3 gap-2 bg-white/5 p-3 rounded-xl text-center">
+              <div className="grid grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-100 dark:border-slate-700/60 text-center">
                 <div>
-                  <span className="text-gray-400 block text-[11px]">পণ্য</span>
-                  <span className="font-semibold text-white text-xs">{selectedOrder.quantity} টি</span>
+                  <span className="text-slate-400 block text-[11px] font-semibold">পণ্য</span>
+                  <span className="font-bold text-slate-900 dark:text-white text-xs">{selectedOrder.quantity} টি</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block text-[11px]">সাইজ</span>
-                  <span className="font-semibold text-white text-xs">{selectedOrder.size || "স্ট্যান্ডার্ড"}</span>
+                  <span className="text-slate-400 block text-[11px] font-semibold">সাইজ</span>
+                  <span className="font-bold text-slate-900 dark:text-white text-xs">{selectedOrder.size || "স্ট্যান্ডার্ড"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block text-[11px]">পেমেন্ট</span>
-                  <span className="font-semibold text-green-400 text-xs">{selectedOrder.paymentMethod}</span>
+                  <span className="text-slate-400 block text-[11px] font-semibold">পেমেন্ট</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400 text-xs">{selectedOrder.paymentMethod}</span>
                 </div>
               </div>
 
-              <div className="border-t border-white/10 pt-3 flex items-center justify-between">
+              <div className="border-t border-slate-100 dark:border-slate-800 pt-3 flex items-center justify-between">
                 <div>
-                  <span className="text-gray-400 text-xs">অর্ডার সময়:</span>
-                  <p className="text-gray-300 text-xs">
+                  <span className="text-slate-400 text-xs">অর্ডার সময়:</span>
+                  <p className="text-slate-700 dark:text-slate-300 text-xs font-medium">
                     {new Date(selectedOrder.createdAt).toLocaleString("bn-BD")}
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-gray-400 text-xs">সর্বমোট মূল্য:</span>
-                  <p className="font-black text-yellow-400 text-base">
+                  <span className="text-slate-400 text-xs">সর্বমোট মূল্য:</span>
+                  <p className="font-black text-blue-600 dark:text-blue-400 text-base">
                     ৳{selectedOrder.totalPrice} ({selectedOrder.quantity} টি)
                   </p>
                 </div>
               </div>
 
               {selectedOrder.orderNotes && (
-                <div className="p-2.5 rounded-lg bg-white/5 text-gray-300 text-xs">
-                  <span className="text-gray-400 font-semibold block mb-0.5">নোট:</span>
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 text-xs border border-slate-100 dark:border-slate-800">
+                  <span className="text-slate-400 font-bold block mb-0.5">নোট:</span>
                   {selectedOrder.orderNotes}
                 </div>
               )}
@@ -951,34 +951,34 @@ export default function AdminOrdersPage() {
               {/* Status History Timeline */}
               {selectedOrder.statusHistory && selectedOrder.statusHistory.length > 0 && (
                 <div>
-                  <span className="text-gray-400 text-[11px] font-semibold block mb-2">স্ট্যাটাস ইতিহাস:</span>
+                  <span className="text-slate-400 text-[11px] font-bold block mb-2">স্ট্যাটাস ইতিহাস:</span>
                   <div className="space-y-1.5">
                     {[...selectedOrder.statusHistory].reverse().map((h, i) => (
                       <div key={i} className="flex items-center gap-2.5 text-xs">
-                        <div className="w-2 h-2 rounded-full bg-yellow-500 shrink-0" />
+                        <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
                         <span
-                          className={`font-semibold ${
+                          className={`font-bold ${
                             STATUS_COLORS[h.status]?.includes("amber")
-                              ? "text-amber-400"
+                              ? "text-amber-600 dark:text-amber-400"
                               : STATUS_COLORS[h.status]?.includes("blue")
-                              ? "text-blue-400"
+                              ? "text-blue-600 dark:text-blue-400"
                               : STATUS_COLORS[h.status]?.includes("purple")
-                              ? "text-purple-400"
+                              ? "text-purple-600 dark:text-purple-400"
                               : STATUS_COLORS[h.status]?.includes("cyan")
-                              ? "text-cyan-400"
+                              ? "text-cyan-600 dark:text-cyan-400"
                               : STATUS_COLORS[h.status]?.includes("emerald")
-                              ? "text-emerald-400"
+                              ? "text-emerald-600 dark:text-emerald-400"
                               : STATUS_COLORS[h.status]?.includes("red")
-                              ? "text-red-400"
-                              : "text-gray-300"
+                              ? "text-red-600 dark:text-red-400"
+                              : "text-slate-700 dark:text-slate-300"
                           }`}
                         >
                           {h.status}
                         </span>
-                        <span className="text-gray-500">
+                        <span className="text-slate-400">
                           {h.changedAt ? new Date(h.changedAt).toLocaleString("bn-BD") : ""}
                         </span>
-                        {h.changedBy && <span className="text-gray-600">— {h.changedBy}</span>}
+                        {h.changedBy && <span className="text-slate-500">— {h.changedBy}</span>}
                       </div>
                     ))}
                   </div>
@@ -991,19 +991,19 @@ export default function AdminOrdersPage() {
 
       {/* Edit Order Modal */}
       {editingOrder && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="glass-card max-w-2xl w-full p-5 sm:p-6 border border-yellow-500/30 shadow-2xl relative rounded-2xl bg-[#0b0b18]/95 max-h-[92vh] flex flex-col">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-[#0f172a] max-w-2xl w-full p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-2xl relative rounded-3xl max-h-[92vh] flex flex-col animate-scaleIn">
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-white/10 shrink-0">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400">
+                <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400">
                   <Pencil size={18} />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                    অর্ডার সম্পাদনা — <span className="font-mono text-yellow-400">{editingOrder.orderId}</span>
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    অর্ডার সম্পাদনা — <span className="font-mono text-blue-600 dark:text-blue-400">{editingOrder.orderId}</span>
                   </h3>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                     অর্ডারের তথ্য পরিবর্তন করে সংরক্ষণ করুন
                   </p>
                 </div>
@@ -1011,7 +1011,7 @@ export default function AdminOrdersPage() {
               <button
                 type="button"
                 onClick={() => setEditingOrder(null)}
-                className="text-gray-400 hover:text-white p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors cursor-pointer"
                 title="বন্ধ করুন"
               >
                 <X size={18} />
@@ -1021,151 +1021,151 @@ export default function AdminOrdersPage() {
             {/* Modal Body Form */}
             <form onSubmit={handleSaveEdit} className="flex-1 overflow-y-auto pr-1 py-4 space-y-4 text-xs sm:text-sm">
               {/* Customer Information */}
-              <div className="bg-white/5 p-4 rounded-xl border border-white/10 space-y-3">
-                <h4 className="text-xs font-bold text-yellow-400 uppercase tracking-wider">
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/60 space-y-3">
+                <h4 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
                   গ্রাহকের তথ্য
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">
-                      গ্রাহকের নাম <span className="text-red-400">*</span>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      গ্রাহকের নাম <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       required
                       value={editForm.customerName}
                       onChange={(e) => setEditForm({ ...editForm, customerName: e.target.value })}
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">
-                      মোবাইল নম্বর <span className="text-red-400">*</span>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      মোবাইল নম্বর <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       required
                       value={editForm.phoneNumber}
                       onChange={(e) => setEditForm({ ...editForm, phoneNumber: e.target.value })}
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white font-mono text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-mono text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-[11px] text-gray-400 mb-1">ইমেইল (ঐচ্ছিক)</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">ইমেইল (ঐচ্ছিক)</label>
                     <input
                       type="email"
                       value={editForm.email}
                       onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Delivery Address */}
-              <div className="bg-white/5 p-4 rounded-xl border border-white/10 space-y-3">
-                <h4 className="text-xs font-bold text-yellow-400 uppercase tracking-wider">
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/60 space-y-3">
+                <h4 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
                   ডেলিভারি ঠিকানা
                 </h4>
                 <div>
-                  <label className="block text-[11px] text-gray-400 mb-1">
-                    সম্পূর্ণ ঠিকানা <span className="text-red-400">*</span>
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    সম্পূর্ণ ঠিকানা <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     rows={2}
                     required
                     value={editForm.address}
                     onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500 resize-none"
+                    className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">জেলা</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">জেলা</label>
                     <input
                       type="text"
                       value={editForm.district}
                       onChange={(e) => setEditForm({ ...editForm, district: e.target.value })}
                       placeholder="যেমন: ঢাকা"
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">থানা / উপজেলা</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">থানা / উপজেলা</label>
                     <input
                       type="text"
                       value={editForm.thana}
                       onChange={(e) => setEditForm({ ...editForm, thana: e.target.value })}
                       placeholder="যেমন: মিরপুর"
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Product, Pricing & Quantity */}
-              <div className="bg-white/5 p-4 rounded-xl border border-white/10 space-y-3">
-                <h4 className="text-xs font-bold text-yellow-400 uppercase tracking-wider">
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/60 space-y-3">
+                <h4 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
                   পণ্য ও মূল্য বিবরণী
                 </h4>
                 <div>
-                  <label className="block text-[11px] text-gray-400 mb-1">পণ্যের নাম</label>
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">পণ্যের নাম</label>
                   <input
                     type="text"
                     value={editForm.productName}
                     onChange={(e) => setEditForm({ ...editForm, productName: e.target.value })}
-                    className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                    className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">সাইজ</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">সাইজ</label>
                     <select
                       value={editForm.size}
                       onChange={(e) => setEditForm({ ...editForm, size: e.target.value })}
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     >
-                      <option value="স্ট্যান্ডার্ড" className="bg-[#0b0b18]">স্ট্যান্ডার্ড</option>
-                      <option value="মিডিয়াম (52mm)" className="bg-[#0b0b18]">মিডিয়াম (52mm)</option>
-                      <option value="লার্জ (56mm)" className="bg-[#0b0b18]">লার্জ (56mm)</option>
-                      <option value="এক্সট্রা লার্জ" className="bg-[#0b0b18]">এক্সট্রা লার্জ</option>
+                      <option value="স্ট্যান্ডার্ড">স্ট্যান্ডার্ড</option>
+                      <option value="মিডিয়াম (52mm)">মিডিয়াম (52mm)</option>
+                      <option value="লার্জ (56mm)">লার্জ (56mm)</option>
+                      <option value="এক্সট্রা লার্জ">এক্সট্রা লার্জ</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">পরিমাণ (টি)</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">পরিমাণ (টি)</label>
                     <input
                       type="number"
                       min={1}
                       value={editForm.quantity}
                       onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">প্রতি পিসের মূল্য (৳)</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">প্রতি পিসের মূল্য (৳)</label>
                     <input
                       type="number"
                       min={0}
                       value={editForm.unitPrice}
                       onChange={(e) => handleUnitPriceChange(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">ডেলিভারি চার্জ (৳)</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">ডেলিভারি চার্জ (৳)</label>
                     <input
                       type="number"
                       min={0}
                       value={editForm.deliveryCharge}
                       onChange={(e) => handleDeliveryChargeChange(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                       সর্বমোট মূল্য (৳)
                     </label>
                     <input
@@ -1173,9 +1173,9 @@ export default function AdminOrdersPage() {
                       min={0}
                       value={editForm.totalPrice}
                       onChange={(e) => setEditForm({ ...editForm, totalPrice: parseFloat(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 bg-black/60 border border-yellow-500/50 rounded-lg text-yellow-400 font-bold text-xs focus:outline-none focus:border-yellow-400"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-blue-500/50 rounded-xl text-blue-600 dark:text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"
                     />
-                    <span className="text-[10px] text-gray-500 mt-1 block">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 block">
                       হিসাব: ৳{editForm.unitPrice} × {editForm.quantity} + ৳{editForm.deliveryCharge} = ৳{editForm.unitPrice * editForm.quantity + editForm.deliveryCharge}
                     </span>
                   </div>
@@ -1183,48 +1183,48 @@ export default function AdminOrdersPage() {
               </div>
 
               {/* Status & Payment Method */}
-              <div className="bg-white/5 p-4 rounded-xl border border-white/10 space-y-3">
-                <h4 className="text-xs font-bold text-yellow-400 uppercase tracking-wider">
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/60 space-y-3">
+                <h4 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
                   স্ট্যাটাস ও পেমেন্ট
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">অর্ডার স্ট্যাটাস</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">অর্ডার স্ট্যাটাস</label>
                     <select
                       value={editForm.status}
                       onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
-                      className={`w-full px-3 py-2 bg-black/60 border rounded-lg text-xs font-semibold focus:outline-none ${
-                        STATUS_COLORS[editForm.status] || "border-white/10 text-white"
+                      className={`w-full px-3 py-2 bg-white dark:bg-slate-900 border rounded-xl text-xs font-semibold focus:outline-none ${
+                        STATUS_COLORS[editForm.status] || "border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white"
                       }`}
                     >
-                      <option value="Pending" className="bg-[#0b0b18] text-amber-400">Pending</option>
-                      <option value="Confirmed" className="bg-[#0b0b18] text-blue-400">Confirmed</option>
-                      <option value="Processing" className="bg-[#0b0b18] text-purple-400">Processing</option>
-                      <option value="Shipped" className="bg-[#0b0b18] text-cyan-400">Shipped</option>
-                      <option value="Delivered" className="bg-[#0b0b18] text-emerald-400">Delivered</option>
-                      <option value="Cancelled" className="bg-[#0b0b18] text-red-400">Cancelled</option>
+                      <option value="Pending" className="bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400">Pending</option>
+                      <option value="Confirmed" className="bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400">Confirmed</option>
+                      <option value="Processing" className="bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400">Processing</option>
+                      <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
+                      <option value="Delivered" className="bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400">Delivered</option>
+                      <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[11px] text-gray-400 mb-1">পেমেন্ট মেথড</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">পেমেন্ট মেথড</label>
                     <select
                       value={editForm.paymentMethod}
                       onChange={(e) => setEditForm({ ...editForm, paymentMethod: e.target.value })}
-                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     >
-                      <option value="Cash on Delivery" className="bg-[#0b0b18]">Cash on Delivery</option>
-                      <option value="bKash" className="bg-[#0b0b18]">bKash</option>
-                      <option value="Nagad" className="bg-[#0b0b18]">Nagad</option>
-                      <option value="Rocket" className="bg-[#0b0b18]">Rocket</option>
-                      <option value="Bank Transfer" className="bg-[#0b0b18]">Bank Transfer</option>
+                      <option value="Cash on Delivery">Cash on Delivery</option>
+                      <option value="bKash">bKash</option>
+                      <option value="Nagad">Nagad</option>
+                      <option value="Rocket">Rocket</option>
+                      <option value="Bank Transfer">Bank Transfer</option>
                     </select>
                   </div>
                 </div>
               </div>
 
               {/* Order Notes */}
-              <div className="bg-white/5 p-4 rounded-xl border border-white/10 space-y-2">
-                <label className="block text-xs font-bold text-yellow-400 uppercase tracking-wider">
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/60 space-y-2">
+                <label className="block text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
                   অর্ডার নোট / মন্তব্য
                 </label>
                 <textarea
@@ -1232,24 +1232,24 @@ export default function AdminOrdersPage() {
                   value={editForm.orderNotes}
                   onChange={(e) => setEditForm({ ...editForm, orderNotes: e.target.value })}
                   placeholder="অর্ডার সংক্রান্ত বিশেষ তথ্য বা কাস্টমার নোট..."
-                  className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-white text-xs focus:outline-none focus:border-yellow-500 resize-none"
+                  className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
                 />
               </div>
 
               {/* Form Action Buttons */}
-              <div className="pt-2 flex items-center justify-end gap-3 border-t border-white/10">
+              <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setEditingOrder(null)}
                   disabled={isSavingOrder}
-                  className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs border border-white/10 font-semibold transition-colors"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 font-bold transition-colors cursor-pointer"
                 >
                   বাতিল
                 </button>
                 <button
                   type="submit"
                   disabled={isSavingOrder}
-                  className="btn-gold text-xs px-5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-lg shadow-yellow-500/20 active:scale-95 disabled:opacity-50"
+                  className="btn-gold text-xs px-5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-md active:scale-95 disabled:opacity-50 cursor-pointer"
                 >
                   {isSavingOrder ? (
                     <>
@@ -1271,19 +1271,19 @@ export default function AdminOrdersPage() {
 
       {/* Soft Delete Confirmation Modal */}
       {softDeleteTarget && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-card max-w-md w-full p-6 border border-red-500/30 shadow-2xl relative rounded-2xl bg-[#0e070c]">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f172a] max-w-md w-full p-6 border border-red-200 dark:border-red-900 shadow-2xl relative rounded-3xl animate-scaleIn">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
                 <Trash2 size={20} />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">অর্ডার ট্র্যাশে পাঠাবেন?</h3>
-                <p className="text-xs text-gray-400 font-mono">অর্ডার আইডি: {softDeleteTarget.orderId}</p>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">অর্ডার ট্র্যাশে পাঠাবেন?</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">অর্ডার আইডি: {softDeleteTarget.orderId}</p>
               </div>
             </div>
 
-            <p className="text-xs text-gray-300 mb-6 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
               এই অর্ডারটি সক্রিয় তালিকা থেকে সরিয়ে <strong>ডিলিটকৃত অর্ডার (ট্র্যাশ)</strong> ট্যাবে রাখা হবে। আপনি পরবর্তীতে চাইলে যেকোনো সময় এটি পুনরুদ্ধার বা স্থায়ীভাবে মুছে ফেলতে পারবেন।
             </p>
 
@@ -1292,7 +1292,7 @@ export default function AdminOrdersPage() {
                 type="button"
                 onClick={() => setSoftDeleteTarget(null)}
                 disabled={isSoftDeleting}
-                className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs border border-white/10 font-semibold transition-colors"
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 font-bold transition-colors cursor-pointer"
               >
                 বাতিল
               </button>
@@ -1300,7 +1300,7 @@ export default function AdminOrdersPage() {
                 type="button"
                 onClick={handleSoftDelete}
                 disabled={isSoftDeleting}
-                className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white text-xs font-bold transition-all shadow-lg shadow-red-500/20 active:scale-95 disabled:opacity-50 flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
               >
                 {isSoftDeleting ? (
                   <>
@@ -1321,20 +1321,20 @@ export default function AdminOrdersPage() {
 
       {/* Permanent Delete Confirmation Modal */}
       {permanentDeleteTarget && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-card max-w-md w-full p-6 border border-red-600/50 shadow-2xl relative rounded-2xl bg-[#140508]">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f172a] max-w-md w-full p-6 border border-red-300 dark:border-red-900 shadow-2xl relative rounded-3xl animate-scaleIn">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-red-600/25 border border-red-500/50 text-red-400 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
                 <AlertTriangle size={22} />
               </div>
               <div>
-                <h3 className="text-base font-bold text-red-400">স্থায়ীভাবে মুছে ফেলা নিশ্চিতকরণ</h3>
-                <p className="text-xs text-gray-400 font-mono">অর্ডার আইডি: {permanentDeleteTarget.orderId}</p>
+                <h3 className="text-base font-bold text-red-600 dark:text-red-400">স্থায়ীভাবে মুছে ফেলা নিশ্চিতকরণ</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">অর্ডার আইডি: {permanentDeleteTarget.orderId}</p>
               </div>
             </div>
 
-            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 mb-6">
-              <p className="text-xs text-red-300 leading-relaxed font-semibold">
+            <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-xl p-3 mb-6">
+              <p className="text-xs text-red-700 dark:text-red-300 leading-relaxed font-semibold">
                 সতর্কতা: এটি স্থায়ীভাবে ডেটাবেস থেকে মুছে ফেলা হবে। এই কাজটি আর ফিরিয়ে নেওয়া বা পুনরুদ্ধার করা সম্ভব হবে না!
               </p>
             </div>
@@ -1344,7 +1344,7 @@ export default function AdminOrdersPage() {
                 type="button"
                 onClick={() => setPermanentDeleteTarget(null)}
                 disabled={isPermanentDeleting}
-                className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white text-xs border border-white/10 font-semibold transition-colors"
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 font-bold transition-colors cursor-pointer"
               >
                 বাতিল
               </button>
@@ -1352,7 +1352,7 @@ export default function AdminOrdersPage() {
                 type="button"
                 onClick={handlePermanentDelete}
                 disabled={isPermanentDeleting}
-                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-black transition-all shadow-lg shadow-red-600/30 active:scale-95 disabled:opacity-50 flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
               >
                 {isPermanentDeleting ? (
                   <>

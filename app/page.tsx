@@ -202,10 +202,10 @@ function CountdownTimer() {
       ].map((item, i) => (
         <div key={i} className="flex items-center gap-1.5">
           <div className="countdown-box">
-            <div className="text-yellow-400 font-black text-lg leading-none">{pad(item.v)}</div>
-            <div className="text-gray-400 text-[9px] mt-0.5">{item.l}</div>
+            <div className="text-blue-600 font-black text-lg leading-none">{pad(item.v)}</div>
+            <div className="text-slate-500 text-[9px] mt-0.5">{item.l}</div>
           </div>
-          {i < 2 && <span className="text-yellow-500 font-bold text-lg">:</span>}
+          {i < 2 && <span className="text-blue-500 font-bold text-lg">:</span>}
         </div>
       ))}
     </div>
@@ -255,167 +255,125 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#06060e] text-white selection:bg-yellow-500 selection:text-black">
+    <div className="min-h-screen bg-white dark:bg-[#080817] text-slate-800 dark:text-slate-100 selection:bg-blue-600 selection:text-white transition-colors duration-200">
       <Header onOrderClick={() => setModalOpen(true)} />
 
-      {/* Welcome / First-Visit Offer Popup (Triggered based on isNew in localStorage) */}
+      {/* Welcome / First-Visit Offer Popup */}
       <OfferPopup onClaimOffer={() => setModalOpen(true)} />
 
       {/* =========================================================================
-          1. HERO SECTION (With Unique Custom Generated Hero Image)
+          1. HERO SECTION (Redesigned with Crystal Clear Light & Dark Theme Contrast)
       ========================================================================= */}
-      <section className="relative min-h-[92vh] flex items-center pt-24 sm:pt-28 pb-12 overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
+      <section className="relative min-h-[92vh] flex items-center pt-24 sm:pt-28 pb-12 overflow-hidden bg-gradient-to-b from-blue-50/50 via-white to-slate-50 dark:from-[#080817] dark:via-[#0c0c24] dark:to-[#080817]">
+        {/* Video / Background Texture */}
+        <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20">
           <video
             className="w-full h-full object-cover"
             autoPlay
             loop
             muted
             playsInline
-            aria-label="SelfCare Solution Top Notch Magic Condom Preview Video"
+            aria-label="Care Zone BD Top Notch Magic Condom Preview Video"
           >
             <source src="/images/video.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
           </video>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#06060e] via-[#06060e]/85 to-[#06060e]/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#06060e] via-transparent to-[#06060e]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-blue-50/60 dark:from-[#080817]/95 dark:via-[#080817]/80 dark:to-blue-950/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/40 dark:from-[#080817] dark:via-transparent dark:to-transparent" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 py-12 md:py-20">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 py-10 md:py-16">
           <div className="max-w-2xl space-y-5">
-            {/* Recent Order Alert Banner (If order placed in localStorage) */}
+            {/* Recent Order Alert Banner (Clean High-Contrast Emerald Card) */}
             {lastOrder && (
-              <div className="bg-gradient-to-r from-emerald-500/20 via-emerald-500/30 to-emerald-500/10 border-2 border-emerald-500/50 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl shadow-emerald-500/15 animate-fadeIn">
+              <div className="bg-emerald-50/95 dark:bg-emerald-950/40 border-2 border-emerald-400/80 dark:border-emerald-600/80 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md shadow-emerald-500/10 animate-fadeIn backdrop-blur-sm">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-500 text-black flex items-center justify-center shrink-0 shadow-md">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
                     <CheckCircle2 size={20} />
                   </div>
                   <div>
-                    <p className="text-[11px] text-emerald-300 font-bold uppercase tracking-wider">
+                    <p className="text-[11px] text-emerald-800 dark:text-emerald-300 font-extrabold uppercase tracking-wider">
                       আপনার সাম্প্রতিক অর্ডার সক্রিয় রয়েছে
                     </p>
-                    <p className="text-sm font-black text-white">
-                      অর্ডার নম্বর: <span className="font-mono text-yellow-400 text-base">{lastOrder}</span>
+                    <p className="text-sm font-bold text-slate-800 dark:text-slate-100">
+                      অর্ডার নম্বর: <span className="font-mono text-emerald-700 dark:text-emerald-400 font-black text-base">{lastOrder}</span>
                     </p>
                   </div>
                 </div>
                 <Link
                   href={`/track?id=${lastOrder}`}
-                  className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs rounded-xl flex items-center gap-1.5 transition-all active:scale-95 shadow-md whitespace-nowrap"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl flex items-center gap-1.5 transition-all active:scale-95 shadow-md whitespace-nowrap"
                 >
                   <Package size={14} /> অর্ডার ট্র্যাক করুন <ArrowRight size={13} />
                 </Link>
               </div>
             )}
 
-            {/* Top Badge */}
-            <div className="inline-flex items-center gap-2 bg-yellow-500/15 border border-yellow-500/30 rounded-full px-4 py-1.5 shadow-sm">
-              <Award size={15} className="text-yellow-400" />
-              <span className="text-yellow-400 text-xs font-bold tracking-wide">
-                🔥 অরিজিনাল লাভ লক কনডম — “২৫,০০০+ “পুরুষের রাত বদলে গেছে…
+            {/* Top Quality Badge */}
+            <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-full px-4 py-1.5 shadow-sm">
+              <Award size={15} className="text-blue-600 dark:text-blue-400" />
+              <span className="text-blue-700 dark:text-blue-300 text-xs font-extrabold tracking-wide">
+                🔥 অরিজিনাল লাভ লক কনডম — ২৫,০০০+ পুরুষের আস্থা ও সন্তুষ্টি
               </span>
             </div>
 
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight">
+            {/* Main Headline */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-[1.25] tracking-tight">
               টপ নচ ম্যাজিক কনডম — আপনার রাতকে করুন{" "}
-              <span className="text-gradient-gold">অবিস্মরণীয় ও দীর্ঘস্থায়ী</span>
+              <span className="text-gradient-blue">অবিস্মরণীয় ও দীর্ঘস্থায়ী</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-gray-200 font-medium leading-relaxed">
+            {/* Sub-headline */}
+            <p className="text-base sm:text-lg text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
               যাদের গোপনাঙ্গ ছোট ও চিকন। ইনস্ট্যান্ট মোটা ও লম্বা করতে চান, ভালো কার্যকরী তাৎক্ষণিক সমাধান। সময় বাড়বে ৪৮ মিনিট।
             </p>
 
-            {/* Pricing & Guarantee Badges */}
+            {/* Key Feature Pills */}
+            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <span className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-slate-800/80 border border-blue-200 dark:border-slate-700 flex items-center gap-1.5">
+                🛡️ ১০০% মেডিকেল গ্রেড সিলিকন
+              </span>
+              <span className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-slate-800/80 border border-blue-200 dark:border-slate-700 flex items-center gap-1.5">
+                💧 ধুয়ে ৭০০-৮০০ বার ব্যবহারযোগ্য
+              </span>
+              <span className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-slate-800/80 border border-blue-200 dark:border-slate-700 flex items-center gap-1.5">
+                🔒 ১০০% গোপনীয় প্যাকেজিং
+              </span>
+            </div>
+
+            {/* Pricing & Guarantee Badges Card */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-2xl px-5 py-3">
-                <span className="text-gray-400 text-xs block font-medium">বর্তমান অফার মূল্য:</span>
-                <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className="text-3xl font-black text-yellow-400">৳৮৯৯</span>
-                  <span className="text-sm text-gray-500 line-through">৳১,৮৫০</span>
-                  <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              <div className="bg-white dark:bg-slate-900/90 border-2 border-blue-200 dark:border-blue-800 rounded-2xl px-5 py-3 shadow-md shadow-blue-100/50 dark:shadow-none">
+                <span className="text-slate-500 dark:text-slate-400 text-xs block font-semibold">বর্তমান অফার মূল্য:</span>
+                <div className="flex items-baseline gap-2.5 mt-0.5">
+                  <span className="text-3xl font-black text-blue-600 dark:text-blue-400">৳৮৯৯</span>
+                  <span className="text-sm text-slate-400 line-through">৳১,৮৫০</span>
+                  <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700">
                     ৫০% ছাড়
                   </span>
                 </div>
               </div>
 
-              <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3">
-                <span className="text-gray-400 text-xs block">অফার শেষ হতে বাকি:</span>
-                <div className="mt-1">
-                  <CountdownTimer />
+              <div className="bg-white dark:bg-slate-900/90 border-2 border-blue-200 dark:border-blue-800 rounded-2xl px-4 py-3 text-xs text-slate-600 dark:text-slate-300 space-y-1 shadow-md shadow-blue-100/50 dark:shadow-none">
+                <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-100">
+                  <Truck size={14} className="text-blue-600 dark:text-blue-400" />
+                  <span>সারাদেশে ফ্রি হোম ডেলিভারি</span>
+                </div>
+                <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-100">
+                  <ShieldCheck size={14} className="text-emerald-600 dark:text-emerald-400" />
+                  <span>১০০% গোপনীয় ডেলিভারি ও প্যাকেজিং</span>
                 </div>
               </div>
             </div>
 
             {/* CTA Button */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+            <div className="pt-2 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
               <button
+                id="hero-order-btn"
                 onClick={() => setModalOpen(true)}
-                className="btn-gold text-base sm:text-lg py-4 px-8 rounded-2xl shadow-xl shadow-yellow-500/20 font-black pulse-gold flex items-center justify-center gap-2 group"
+                className="btn-gold py-4 px-8 rounded-xl text-base sm:text-lg font-black flex items-center justify-center gap-2.5 shadow-xl pulse-gold cursor-pointer"
               >
-                <ShoppingBag size={20} className="group-hover:scale-110 transition-transform" />
-                অর্ডার করতে চাই — ৳৮৯৯
-                <Zap size={18} />
-              </button>
-            </div>
-
-            {/* Quick Guarantees */}
-            <div className="pt-3 flex flex-wrap gap-4 text-xs text-gray-300">
-              <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                <CheckCircle2 size={15} /> সারাদেশে ফ্রি হোম ডেলিভারি
-              </span>
-              <span className="flex items-center gap-1.5 text-yellow-400 font-semibold">
-                <ShieldCheck size={15} /> একমাত্র আমরাই দেখার পরে পেমেন্ট করার নিশ্চয়তা দিচ্ছি
-              </span>
-              <span className="flex items-center gap-1.5 text-cyan-400 font-semibold">
-                <Lock size={15} /> ১০০% গোপনীয় প্যাকেজিং
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          VIDEO SHOWCASE SECTION (Custom React Video Player with Aspect-Video & Audio)
-      ========================================================================= */}
-      <section id="product" className="py-12 sm:py-16 bg-[#080817] relative overflow-hidden border-t border-yellow-500/15">
-        {/* Background glow effects */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-4xl mx-auto px-4 relative z-10">
-          <div className="text-center max-w-xl mx-auto mb-8">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/25 text-yellow-400 text-xs font-bold mb-3 shadow-inner">
-              <Sparkles size={14} className="text-yellow-400" /> সরাসরি পণ্যের ভিডিও দেখুন
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
-              ভিডিওতে দেখুন আসল <span className="text-gradient-gold">প্রোডাক্ট প্রিভিউ</span>
-            </h2>
-            <p className="text-gray-400 text-xs sm:text-sm mt-2 font-medium">
-              অর্ডার করার আগে ভিডিওটি সাউন্ড সহ প্লে করে বিস্তারিত নিশ্চিত হয়ে নিন
-            </p>
-          </div>
-
-          {/* Centered Custom Video Player (max-w-[500px] as requested) */}
-          <div className="max-w-[500px] mx-auto">
-            <CustomVideoPlayer src="/images/video.mp4" />
-
-            {/* Quick Guarantees / Video CTA */}
-            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-md">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-yellow-500/15 border border-yellow-500/30 flex items-center justify-center text-yellow-400 shrink-0">
-                  <ShieldCheck size={22} />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-white">১০০% যেমন ভিডিওতে দেখছেন ঠিক তেমনই পাবেন</p>
-                  <p className="text-[11px] text-gray-400">ডেলিভারিম্যানের সামনে খুলে চেক করার সম্পূর্ণ সুযোগ রয়েছে</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setModalOpen(true)}
-                className="w-full sm:w-auto btn-gold py-2.5 px-5 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shadow-md shadow-yellow-500/20 active:scale-95 transition-all cursor-pointer"
-              >
-                এখনই অর্ডার করুন
+                <ShoppingBag size={20} />
+                <span>অর্ডার করতে চাই — ৳৮৯৯</span>
               </button>
             </div>
           </div>
@@ -423,18 +381,18 @@ export default function Home() {
       </section>
 
       {/* =========================================================================
-          2. কেন নিবেন এই ম্যাজিক কনডম? (EXACT COMPETITOR BENEFIT SECTION)
+          2. WHY BUY SECTION
       ========================================================================= */}
-      <section id="why" className="py-16 sm:py-20 bg-gradient-to-b from-[#06060e] via-[#09091b] to-[#06060e] border-y border-yellow-500/15">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-bold mb-3">
+      <section className="py-14 sm:py-18 bg-slate-50 dark:bg-[#0c0c24] relative border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center max-w-xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-bold mb-3">
               🔥 এই বছরের সেরা অফার
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white">
-              কেন নিবেন এই <span className="text-gradient-gold">ম্যাজিক কনডম?</span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
+              কেন নিবেন এই <span className="text-gradient-blue">ম্যাজিক কনডম?</span>
             </h2>
-            <p className="text-gray-400 text-sm mt-2">
+            <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-medium">
               ১০০% খাঁটি ও কার্যকর বৈশিষ্ট্যসমূহ এক নজরে দেখে নিন
             </p>
           </div>
@@ -443,13 +401,13 @@ export default function Home() {
             {WHY_POINTS.map((item, idx) => (
               <div
                 key={idx}
-                className="glass-card p-4 sm:p-5 border border-white/10 hover:border-yellow-500/40 rounded-2xl flex items-start gap-3.5 transition-all hover:bg-white/5 duration-300"
+                className="bg-white dark:bg-slate-900 p-4 sm:p-5 border border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-600 rounded-2xl flex items-start gap-3.5 transition-all hover:shadow-md hover:shadow-blue-50 dark:hover:shadow-none duration-300 shadow-sm"
               >
-                <div className="w-8 h-8 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center shrink-0 mt-0.5 border border-yellow-500/30 font-black text-sm">
+                <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 mt-0.5 border border-blue-200 dark:border-blue-800 font-black text-sm">
                   ✔
                 </div>
                 <div>
-                  <p className="text-sm sm:text-base text-gray-200 leading-relaxed font-medium">
+                  <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed font-semibold">
                     {item.text}
                   </p>
                 </div>
@@ -460,7 +418,7 @@ export default function Home() {
           <div className="text-center pt-8">
             <button
               onClick={() => setModalOpen(true)}
-              className="btn-gold py-3.5 px-8 rounded-xl text-sm sm:text-base font-black inline-flex items-center gap-2 shadow-lg shadow-yellow-500/20 pulse-gold"
+              className="btn-gold py-3.5 px-8 rounded-xl text-sm sm:text-base font-black inline-flex items-center gap-2 shadow-lg pulse-gold cursor-pointer"
             >
               <ShoppingBag size={18} /> অর্ডার করতে চাই (৳৮৯৯)
             </button>
@@ -469,125 +427,166 @@ export default function Home() {
       </section>
 
       {/* =========================================================================
-          3. বাস্তবে দেখতে কেমন? এটা দেখুন। (COMPETITOR SLIDER SHOWCASE)
+          3. VIDEO SHOWCASE SECTION
       ========================================================================= */}
-      <section id="product" className="py-16 sm:py-24 bg-[#06060e]">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-bold mb-3">
-              <Sparkles size={14} /> লাইভ প্রোডাক্ট ভিউ
+      <section id="product" className="py-14 sm:py-18 bg-white dark:bg-[#080817] relative overflow-hidden border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-4xl mx-auto px-4 relative z-10">
+          <div className="text-center max-w-xl mx-auto mb-8">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-bold mb-3 shadow-sm">
+              <Sparkles size={14} className="text-blue-600 dark:text-blue-400" /> সরাসরি পণ্যের ভিডিও দেখুন
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white">
-              বাস্তবে দেখতে কেমন? <span className="text-gradient-gold">এটা দেখুন।</span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white leading-tight">
+              ভিডিওতে দেখুন আসল <span className="text-gradient-blue">প্রোডাক্ট প্রিভিউ</span>
             </h2>
-            <p className="text-gray-400 text-sm mt-2">
-              সরাসরি পণ্যটির প্রতিটি অ্যাঙ্গেল এবং ডাবল লক রিং সিস্টেম স্লাইড করে দেখুন
+            <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-2 font-medium">
+              অর্ডার করার আগে ভিডিওটি সাউন্ড সহ প্লে করে বিস্তারিত নিশ্চিত হয়ে নিন
             </p>
           </div>
 
-          {/* Interactive Slide Carousel */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Main Slide Viewer */}
-            <div className="lg:col-span-7">
-              <div className="glass-card p-3 sm:p-5 border border-yellow-500/20 shadow-2xl relative group overflow-hidden">
-                {/* Main Slide Display */}
-                <div className="relative aspect-square sm:aspect-[4/3] w-full rounded-2xl overflow-hidden bg-black/60 border border-white/10">
-                  <Image
-                    src={SLIDE_IMAGES[activeSlide].src}
-                    alt={SLIDE_IMAGES[activeSlide].title}
-                    fill
-                    className="object-contain transition-all duration-700 hover:scale-105"
-                    priority
-                  />
+          {/* Centered Custom Video Player */}
+          <div className="max-w-[500px] mx-auto">
+            <CustomVideoPlayer src="/images/video.mp4" />
 
-                  {/* Gradient Overlay for Title */}
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 flex flex-col justify-end">
-                    <span className="text-yellow-400 text-xs font-bold uppercase tracking-wider">
-                      স্লাইড {activeSlide + 1} / {SLIDE_IMAGES.length}
-                    </span>
-                    <h3 className="text-lg sm:text-xl font-bold text-white mt-1">
-                      {SLIDE_IMAGES[activeSlide].title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-300 mt-0.5">
-                      {SLIDE_IMAGES[activeSlide].subtitle}
-                    </p>
-                  </div>
+            {/* Quick Guarantees / Video CTA */}
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-blue-50/70 dark:bg-slate-900/80 border border-blue-200 dark:border-blue-900 shadow-sm backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
+                  <ShieldCheck size={22} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white">১০০% যেমন ভিডিওতে দেখছেন ঠিক তেমনই পাবেন</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">ডেলিভারিম্যানের সামনে খুলে চেক করার সম্পূর্ণ সুযোগ রয়েছে</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setModalOpen(true)}
+                className="w-full sm:w-auto btn-gold py-2.5 px-5 rounded-xl text-xs sm:text-sm font-black whitespace-nowrap shadow-md cursor-pointer"
+              >
+                এখনই অর্ডার করুন
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                  {/* Navigation Arrows */}
-                  <button
-                    onClick={prevSlide}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-yellow-500 hover:text-black text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all shadow-lg active:scale-95"
-                    aria-label="Previous Slide"
-                  >
-                    <ChevronLeft size={22} />
-                  </button>
-                  <button
-                    onClick={nextSlide}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-yellow-500 hover:text-black text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all shadow-lg active:scale-95"
-                    aria-label="Next Slide"
-                  >
-                    <ChevronRight size={22} />
-                  </button>
+      {/* =========================================================================
+          4. PRODUCT GALLERY & SPECIFICATIONS SECTION
+      ========================================================================= */}
+      <section className="py-14 sm:py-18 bg-slate-50 dark:bg-[#0c0c24] relative border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center max-w-xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-bold mb-3 shadow-sm">
+              📸 আসল পণ্যের ছবি গ্যালারি
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
+              পণ্যের বিভিন্ন অ্যাঙ্গেলের <span className="text-gradient-blue">বাস্তব ছবি</span>
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-medium">
+              স্লাইডার থেকে প্রতিটি ছবির নিখুঁত ফিনিশিং ও মেডিকেল সিলিকন কোয়ালিটি দেখে নিন
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Slider */}
+            <div className="lg:col-span-7 space-y-4 group overflow-hidden">
+              {/* Main Slide Display */}
+              <div className="relative aspect-square sm:aspect-[4/3] w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md">
+                <Image
+                  src={SLIDE_IMAGES[activeSlide].src}
+                  alt={SLIDE_IMAGES[activeSlide].title}
+                  fill
+                  className="object-contain transition-all duration-700 hover:scale-105"
+                  priority
+                />
+
+                {/* Gradient Overlay for Title */}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 flex flex-col justify-end">
+                  <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">
+                    স্লাইড {activeSlide + 1} / {SLIDE_IMAGES.length}
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-bold text-white mt-1">
+                    {SLIDE_IMAGES[activeSlide].title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-200 mt-0.5">
+                    {SLIDE_IMAGES[activeSlide].subtitle}
+                  </p>
                 </div>
 
-                {/* Thumbnails Row */}
-                <div className="grid grid-cols-6 gap-2 sm:gap-3 mt-4">
-                  {SLIDE_IMAGES.map((img, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveSlide(idx)}
-                      className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${activeSlide === idx
-                        ? "border-yellow-400 scale-105 shadow-md shadow-yellow-500/30"
-                        : "border-white/10 opacity-60 hover:opacity-100 hover:border-white/30"
-                        }`}
-                    >
-                      <Image src={img.src} alt={img.title} fill className="object-cover" />
-                    </button>
-                  ))}
-                </div>
+                {/* Navigation Arrows */}
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 dark:bg-slate-800/90 hover:bg-blue-600 hover:text-white text-slate-700 dark:text-slate-200 flex items-center justify-center backdrop-blur-md border border-blue-100 dark:border-slate-700 transition-all shadow-lg active:scale-95 cursor-pointer"
+                  aria-label="Previous Slide"
+                >
+                  <ChevronLeft size={22} />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 dark:bg-slate-800/90 hover:bg-blue-600 hover:text-white text-slate-700 dark:text-slate-200 flex items-center justify-center backdrop-blur-md border border-blue-100 dark:border-slate-700 transition-all shadow-lg active:scale-95 cursor-pointer"
+                  aria-label="Next Slide"
+                >
+                  <ChevronRight size={22} />
+                </button>
+              </div>
+
+              {/* Thumbnails Row */}
+              <div className="grid grid-cols-6 gap-2 sm:gap-3 mt-4">
+                {SLIDE_IMAGES.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveSlide(idx)}
+                    className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
+                      activeSlide === idx
+                        ? "border-blue-600 scale-105 shadow-md shadow-blue-500/30"
+                        : "border-slate-200 dark:border-slate-700 opacity-60 hover:opacity-100 hover:border-slate-400"
+                    }`}
+                  >
+                    <Image src={img.src} alt={img.title} fill className="object-cover" />
+                  </button>
+                ))}
               </div>
             </div>
 
             {/* Side Highlights */}
             <div className="lg:col-span-5 space-y-4">
-              <div className="glass-card p-6 border border-white/10 space-y-4">
+              <div className="bg-white dark:bg-slate-900 p-6 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-4 shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                     <Zap size={20} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white text-base">ইনস্ট্যান্ট রেজাল্ট ও স্থায়িত্ব</h3>
-                    <p className="text-xs text-gray-400">প্রথমবার ব্যবহারের পর থেকেই লক্ষণীয় পরিবর্তন</p>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-base">ইনস্ট্যান্ট রেজাল্ট ও স্থায়িত্ব</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">প্রথমবার ব্যবহারের পর থেকেই লক্ষণীয় পরিবর্তন</p>
                   </div>
                 </div>
 
-                <div className="space-y-2.5 pt-2 text-xs sm:text-sm text-gray-300">
-                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/5">
-                    <Check className="text-emerald-400 shrink-0" size={16} />
+                <div className="space-y-2.5 pt-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700">
+                    <Check className="text-emerald-600 dark:text-emerald-400 shrink-0" size={16} />
                     <span><strong>পুরুত্ব:</strong> ৬ মিমি হাই ডেনসিটি মেডিকেল সিলিকন</span>
                   </div>
-                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/5">
-                    <Check className="text-emerald-400 shrink-0" size={16} />
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700">
+                    <Check className="text-emerald-600 dark:text-emerald-400 shrink-0" size={16} />
                     <span><strong>ব্যবহার:</strong> ৭০০–৮০০ বার পর্যন্ত ধুয়ে রিইউজেবল</span>
                   </div>
-                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/5">
-                    <Check className="text-emerald-400 shrink-0" size={16} />
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700">
+                    <Check className="text-emerald-600 dark:text-emerald-400 shrink-0" size={16} />
                     <span><strong>সময় বৃদ্ধি:</strong> মিলনের সময় ৩০–৪০ মিনিট বৃদ্ধি</span>
                   </div>
-                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/5">
-                    <Check className="text-emerald-400 shrink-0" size={16} />
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700">
+                    <Check className="text-emerald-600 dark:text-emerald-400 shrink-0" size={16} />
                     <span><strong>সাইজ:</strong> ৩, ৪, ৫, ৬ ইঞ্চি সব সাইজে মানানসই</span>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-white/10">
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                   <button
                     onClick={() => setModalOpen(true)}
-                    className="btn-gold w-full py-3.5 rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg shadow-yellow-500/20"
+                    className="btn-gold w-full py-3.5 rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg pulse-gold cursor-pointer"
                   >
                     <ShoppingBag size={17} /> অর্ডার কনফার্ম করুন (৳৮৯৯)
                   </button>
-                  <p className="text-center text-[11px] text-gray-400 mt-2">
+                  <p className="text-center text-[11px] text-slate-500 dark:text-slate-400 mt-2">
                     🔒 পণ্য দেখে পেমেন্ট • ১০০% তথ্য গোপনীয়
                   </p>
                 </div>
@@ -598,36 +597,36 @@ export default function Home() {
       </section>
 
       {/* =========================================================================
-          4. সাবধান!! নকল বের হইসে মার্কেটে 👇 (AUTHENTICITY GUARANTEE)
+          5. সাবধান!! নকল বের হইসে মার্কেটে 👇 (AUTHENTICITY GUARANTEE)
       ========================================================================= */}
-      <section className="py-16 bg-gradient-to-b from-[#06060e] via-[#090918] to-[#06060e]">
+      <section className="py-16 bg-white dark:bg-[#080817] border-t border-slate-200 dark:border-slate-800">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="glass-card p-6 sm:p-10 border-2 border-red-500/30 rounded-3xl shadow-2xl relative overflow-hidden">
+          <div className="bg-red-50/30 dark:bg-red-950/20 p-6 sm:p-10 border-2 border-red-200 dark:border-red-900/60 rounded-3xl shadow-sm relative overflow-hidden">
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="flex-1 space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 border border-red-500/40 text-red-300 text-xs font-black animate-pulse">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-black animate-pulse">
                   <AlertTriangle size={15} /> সাবধান!! নকল বের হইসে মার্কেটে 👇
                 </div>
 
-                <h2 className="text-2xl sm:text-3xl font-black text-white">
-                  অরিজিনাল <span className="text-gradient-gold">Top Notch কোয়ালিটি</span> চেনার উপায়
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                  অরিজিনাল <span className="text-gradient-blue">Top Notch কোয়ালিটি</span> চেনার উপায়
                 </h2>
 
-                <div className="space-y-3 text-sm sm:text-base text-gray-200">
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-start gap-3">
-                    <span className="text-yellow-400 text-lg">👉</span>
+                <div className="space-y-3 text-sm sm:text-base text-slate-700 dark:text-slate-300">
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex items-start gap-3 shadow-xs">
+                    <span className="text-blue-600 dark:text-blue-400 text-lg">👉</span>
                     <span><strong>Top Notch কোয়ালিটি পাবেন:</strong> উচ্চমানের সফট মেডিকেল-গ্রেড সিলিকন।</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-start gap-3">
-                    <span className="text-yellow-400 text-lg">👉</span>
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex items-start gap-3 shadow-xs">
+                    <span className="text-blue-600 dark:text-blue-400 text-lg">👉</span>
                     <span><strong>১ মাসের রিপ্লেসমেন্ট সুবিধা:</strong> এক মাসের আগে ছিঁড়ে গেলে ৫০% ডিসকাউন্টে নতুন পাবেন।</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-start gap-3">
-                    <span className="text-yellow-400 text-lg">👉</span>
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex items-start gap-3 shadow-xs">
+                    <span className="text-blue-600 dark:text-blue-400 text-lg">👉</span>
                     <span><strong>কথা কাজে মিল পাবেন:</strong> প্রোডাক্ট যেমন দেখিয়েছি ১০০% ঐরকমই পাবেন।</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-start gap-3 text-yellow-300 font-semibold">
-                    <span className="text-yellow-400 text-lg">👉</span>
+                  <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 flex items-start gap-3 text-blue-900 dark:text-blue-200 font-semibold">
+                    <span className="text-blue-600 dark:text-blue-400 text-lg">👉</span>
                     <span>প্রোডাক্ট যেমন দেখিয়েছি ঐরকম ১০০% হওয়ার পরও যদি কোনো কারণে না নিতে চান, ডেলিভারি চার্জ দিয়ে রিটার্ন করে দিতে পারবেন।</span>
                   </div>
                 </div>
@@ -635,7 +634,7 @@ export default function Home() {
                 <div className="pt-3">
                   <button
                     onClick={() => setModalOpen(true)}
-                    className="btn-gold py-3.5 px-7 rounded-xl text-sm font-black flex items-center gap-2 shadow-lg shadow-yellow-500/20"
+                    className="btn-gold py-3.5 px-7 rounded-xl text-sm font-black flex items-center gap-2 shadow-lg pulse-gold cursor-pointer"
                   >
                     <ShoppingBag size={18} /> অর্ডার করতে চাই
                   </button>
@@ -644,7 +643,7 @@ export default function Home() {
 
               {/* Side slide image */}
               <div className="w-full md:w-80 shrink-0">
-                <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-yellow-500/30 shadow-2xl bg-black">
+                <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-blue-200 dark:border-blue-800 shadow-lg bg-slate-50 dark:bg-slate-900">
                   <Image
                     src="/images/products/product-4.jpg"
                     alt="Original Top Notch Lock Ring"
@@ -652,7 +651,7 @@ export default function Home() {
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
-                    <p className="text-xs text-yellow-400 font-bold text-center w-full">
+                    <p className="text-xs text-blue-300 font-bold text-center w-full">
                       🔒 অরিজিনাল ডাবল হোল লক সিস্টেম
                     </p>
                   </div>
@@ -664,18 +663,18 @@ export default function Home() {
       </section>
 
       {/* =========================================================================
-          5. জিজ্ঞাসা! (EXACT COMPETITOR Q&A / FAQ SECTION)
+          6. জিজ্ঞাসা! (Q&A / FAQ SECTION)
       ========================================================================= */}
-      <section id="faq" className="py-16 sm:py-24 bg-[#080816] border-y border-white/5">
+      <section id="faq" className="py-16 sm:py-24 bg-slate-50 dark:bg-[#0c0c24] border-t border-slate-200 dark:border-slate-800">
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center max-w-xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-bold mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-bold mb-3 shadow-sm">
               <HelpCircle size={15} /> সচরাচর জিজ্ঞাসিত প্রশ্ন ও উত্তর
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white">
-              জিজ্ঞাসা! <span className="text-gradient-gold">(Q & A)</span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
+              জিজ্ঞাসা! <span className="text-gradient-blue">(Q & A)</span>
             </h2>
-            <p className="text-gray-400 text-sm mt-2">
+            <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-medium">
               আপনার মনের সকল সাধারণ প্রশ্নের সরাসরি উত্তর জেনে নিন
             </p>
           </div>
@@ -687,8 +686,11 @@ export default function Home() {
               return (
                 <div
                   key={idx}
-                  className={`glass-card border rounded-2xl transition-all overflow-hidden ${isOpen ? "border-yellow-500/40 bg-white/5 shadow-lg shadow-yellow-500/10" : "border-white/10 hover:border-white/20"
-                    }`}
+                  className={`bg-white dark:bg-slate-900 border rounded-2xl transition-all overflow-hidden shadow-sm ${
+                    isOpen
+                      ? "border-blue-400 dark:border-blue-600 shadow-md shadow-blue-50 dark:shadow-none"
+                      : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+                  }`}
                 >
                   <button
                     onClick={() => toggleQA(idx)}
@@ -696,18 +698,19 @@ export default function Home() {
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-xl">{item.icon}</span>
-                      <span className="font-bold text-white text-base sm:text-lg">
+                      <span className="font-bold text-slate-900 text-base sm:text-lg">
                         {item.question}
                       </span>
                     </div>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isOpen ? "bg-yellow-500 text-black rotate-180" : "bg-white/10 text-gray-400"
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                      isOpen ? "bg-blue-600 text-white rotate-180" : "bg-slate-100 text-slate-500"
                       }`}>
                       <ChevronDown size={18} />
                     </div>
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 pb-5 pt-1 text-sm sm:text-base text-gray-300 border-t border-white/5 leading-relaxed animate-fadeIn">
+                    <div className="px-5 pb-5 pt-1 text-sm sm:text-base text-slate-600 border-t border-slate-100 leading-relaxed animate-fadeIn">
                       <p className="whitespace-pre-line">{item.answer}</p>
                     </div>
                   )}
@@ -716,7 +719,7 @@ export default function Home() {
             })}
           </div>
 
-          <div className="mt-8 p-4 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 text-center text-xs sm:text-sm text-yellow-300 font-semibold">
+          <div className="mt-8 p-4 rounded-2xl bg-blue-50 border border-blue-200 text-center text-xs sm:text-sm text-blue-700 font-semibold">
             বিদ্রঃ আপনার সকল তথ্য ও গোপনীয়তা ১০০% রক্ষা করা হয়।
           </div>
         </div>
@@ -725,16 +728,16 @@ export default function Home() {
       {/* =========================================================================
           6. কেনার আগে রিভিউ দেখে নিন (CUSTOMER REVIEWS)
       ========================================================================= */}
-      <section id="reviews" className="py-16 sm:py-24 bg-[#06060e]">
+      <section id="reviews" className="py-16 sm:py-24 bg-white dark:bg-[#07071a] border-t border-slate-200 dark:border-slate-800/80">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-bold mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-bold mb-3 shadow-sm">
               💬 কেনার আগে রিভিউ দেখে নিন
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white">
-              গ্রাহকদের <span className="text-gradient-gold">বাস্তব অভিজ্ঞতা</span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
+              গ্রাহকদের <span className="text-gradient-blue">বাস্তব অভিজ্ঞতা</span>
             </h2>
-            <p className="text-gray-400 text-sm mt-2">
+            <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-medium">
               হাজারো সন্তুষ্ট গ্রাহকের ইতিবাচক রিভিউ ও রেটিংস
             </p>
           </div>
@@ -743,12 +746,12 @@ export default function Home() {
             {REVIEWS.map((rev, idx) => (
               <div
                 key={idx}
-                className="glass-card p-6 border border-white/10 rounded-2xl space-y-3 relative shadow-lg"
+                className="bg-white dark:bg-slate-900 p-6 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-3 relative shadow-sm hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 transition-all"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-bold text-white text-sm sm:text-base">{rev.name}</h3>
-                    <p className="text-xs text-gray-400">{rev.location} • {rev.date}</p>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">{rev.name}</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{rev.location} • {rev.date}</p>
                   </div>
                   <div className="flex items-center gap-1 text-yellow-400">
                     {[...Array(rev.rating)].map((_, r) => (
@@ -756,10 +759,10 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm text-gray-300 leading-relaxed italic">
-                  "{rev.text}"
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed italic">
+                  &quot;{rev.text}&quot;
                 </p>
-                <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold pt-1">
+                <div className="flex items-center gap-1.5 text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold pt-1">
                   <CheckCircle2 size={13} /> ভেরিফাইড পারচেজার
                 </div>
               </div>
@@ -771,30 +774,30 @@ export default function Home() {
       {/* =========================================================================
           7. অভিনন্দন! 🎉 অফার অ্যাক্টিভেশন ও ফাইনাল ব্যানার
       ========================================================================= */}
-      <section className="py-16 bg-gradient-to-r from-yellow-500/10 via-yellow-500/20 to-yellow-500/10 border-t border-yellow-500/30">
+      <section className="py-16 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-600 border-t border-blue-500">
         <div className="max-w-4xl mx-auto px-4 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500 text-black font-black text-xs uppercase tracking-wider shadow-lg animate-bounce">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white text-blue-700 font-black text-xs uppercase tracking-wider shadow-lg animate-bounce">
             <Gift size={16} /> অভিনন্দন! 🎉 অফার এক্টিভেটেড
           </div>
 
           <h2 className="text-2xl sm:text-4xl font-black text-white">
-            আপনার জন্য <span className="text-gradient-gold">ফ্রি ডেলিভারি অফারটি</span> এক্টিভেট করা হয়েছে!
+            আপনার জন্য <span className="text-yellow-300">ফ্রি ডেলিভারি অফারটি</span> এক্টিভেট করা হয়েছে!
           </h2>
 
-          <p className="text-sm sm:text-base text-gray-300 max-w-xl mx-auto">
+          <p className="text-sm sm:text-base text-blue-100 max-w-xl mx-auto">
             বর্তমান স্পেশাল অফারে মাত্র ৳৮৯৯ টাকায় টপ নচ ম্যাজিক কনডম অর্ডার করুন। কোনো অগ্রিম টাকা দিতে হবে না, পণ্য হাতে পেয়ে দেখে মূল্য পরিশোধ করুন।
           </p>
 
           <div className="pt-2">
             <button
               onClick={() => setModalOpen(true)}
-              className="btn-gold py-4 px-10 rounded-2xl text-base sm:text-lg font-black shadow-2xl shadow-yellow-500/40 pulse-gold inline-flex items-center gap-2"
+              className="bg-white text-blue-700 hover:bg-blue-50 font-black py-4 px-10 rounded-2xl text-base sm:text-lg shadow-2xl shadow-blue-900/30 pulse-blue inline-flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
             >
               <ShoppingBag size={20} /> অফারটি নিন — মাত্র ৳৮৯৯
             </button>
           </div>
 
-          <div className="pt-4 text-xs text-gray-400">
+          <div className="pt-4 text-xs text-blue-200">
             🔒 আপনার সকল তথ্য সম্পূর্ণ গোপন রাখা হবে। ইনশা-আল্লাহ
           </div>
         </div>
@@ -803,7 +806,7 @@ export default function Home() {
       {/* =========================================================================
           8. FOOTER
       ========================================================================= */}
-      <footer className="bg-[#030308] border-t border-white/10 pt-10 pb-[120px] text-center text-xs text-gray-500 space-y-4">
+      <footer className="bg-slate-50 dark:bg-[#07071a] border-t border-slate-200 dark:border-slate-800 pt-10 pb-[120px] text-center text-xs text-slate-600 dark:text-slate-400 space-y-4">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <Link href="/" className="inline-block transition-transform duration-200 hover:scale-105" title="হোম পেজ">
             <div className="w-32 sm:w-36">
@@ -811,24 +814,16 @@ export default function Home() {
                 src="/images/selfcaresolution2.PNG"
                 width={160}
                 height={80}
-                alt="SelfCare Solution"
+                alt="Care Zone BD"
                 className="h-auto w-full object-contain"
               />
             </div>
           </Link>
-          <p>© {new Date().getFullYear()} SelfCare Solution. সর্বস্বত্ব সংরক্ষিত।</p>
-          <div className="flex gap-4 text-gray-400 text-xs">
-            <a href="#product" className="hover:text-yellow-400">পণ্য</a>
-            <a href="#why" className="hover:text-yellow-400">কেন নিবেন?</a>
-            <a href="#faq" className="hover:text-yellow-400">জিজ্ঞাসা (FAQ)</a>
-            {/* <a
-              href="https://wa.me/8801932787942?text=Hello%20Personal%20Care%20BD"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-emerald-400 text-emerald-500 font-semibold"
-            >
-              হেল্পলাইন (WhatsApp)
-            </a> */}
+          <p>© {new Date().getFullYear()} Care Zone BD. সর্বস্বত্ব সংরক্ষিত।</p>
+          <div className="flex gap-4 text-slate-500 dark:text-slate-400 text-xs">
+            <a href="#product" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">পণ্য</a>
+            <a href="#why" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">কেন নিবেন?</a>
+            <a href="#faq" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">জিজ্ঞাসা (FAQ)</a>
           </div>
         </div>
       </footer>

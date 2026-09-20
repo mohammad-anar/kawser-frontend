@@ -10,17 +10,17 @@ declare global {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#06060e",
+  themeColor: "#2563EB",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.selfcaresolution.online"),
+  metadataBase: new URL("https://www.carezonebd.store"),
   title: {
-    default: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Magic Condom Price in BD ৳৮৯৯ | SelfCare Solution",
-    template: "%s | SelfCare Solution",
+    default: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Magic Condom Price in BD ৳৮৯৯ | Care Zone BD",
+    template: "%s | Care Zone BD",
   },
   description:
     "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৮৯৯। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি এবং ১০০% গোপনীয় প্যাকেজিং।",
@@ -61,9 +61,9 @@ export const metadata: Metadata = {
     "discreet packaging condom",
     "cash on delivery condom bd",
   ],
-  authors: [{ name: "SelfCare Solution", url: "https://www.selfcaresolution.online" }],
-  creator: "SelfCare Solution",
-  publisher: "SelfCare Solution",
+  authors: [{ name: "Care Zone BD", url: "https://www.carezonebd.store" }],
+  creator: "Care Zone BD",
+  publisher: "Care Zone BD",
   formatDetection: {
     telephone: true,
     address: true,
@@ -301,6 +301,7 @@ const jsonLd = {
 };
 
 import { ReduxProvider } from "@/lib/redux/providers";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "sonner";
 
 export default function RootLayout({
@@ -309,13 +310,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="bn">
+    <html lang="bn" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"
+        />
+
+        {/* Early Theme Initializer to prevent flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('pc_theme');
+                  if (saved === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
         />
 
         {/* ===== Meta Pixel ===== */}
@@ -351,11 +370,13 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="antialiased">
-        <ReduxProvider>
-          {children}
-          <Toaster richColors position="top-center" theme="dark" closeButton />
-        </ReduxProvider>
+      <body className="antialiased bg-white text-slate-900 dark:bg-[#080817] dark:text-slate-100 transition-colors duration-200">
+        <ThemeProvider>
+          <ReduxProvider>
+            {children}
+            <Toaster richColors position="top-center" theme="light" closeButton />
+          </ReduxProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
