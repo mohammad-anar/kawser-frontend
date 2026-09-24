@@ -50,6 +50,10 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
     }
   }, [isOpen, user]);
 
+  // Converts Bengali/Devanagari digits to ASCII digits
+  const normalizeBanglaPhone = (value: string): string =>
+    value.replace(/[০-৯]/g, (d) => String(d.codePointAt(0)! - 0x09e6));
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
@@ -65,9 +69,10 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
     if (!form.customerName.trim()) {
       newErrors.customerName = "আপনার নাম আবশ্যক।";
     }
-    if (!form.phoneNumber.trim()) {
+    const normalizedPhone = normalizeBanglaPhone(form.phoneNumber).replace(/\s/g, "");
+    if (!normalizedPhone) {
       newErrors.phoneNumber = "ফোন নম্বর আবশ্যক।";
-    } else if (!/^(?:\+88)?01[3-9]\d{8}$/.test(form.phoneNumber.replace(/\s/g, ""))) {
+    } else if (!/^(?:\+88)?01[3-9]\d{8}$/.test(normalizedPhone)) {
       newErrors.phoneNumber = "সঠিক ১১ ডিজিটের বাংলাদেশি নম্বর দিন (01XXXXXXXXX)।";
     }
     if (!form.address.trim()) {
@@ -84,7 +89,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
     try {
       const res = await createOrder({
         customerName: form.customerName,
-        phoneNumber: form.phoneNumber,
+        phoneNumber: normalizeBanglaPhone(form.phoneNumber).replace(/\s/g, ""),
         address: form.address,
         quantity: form.quantity,
         userId: user?.id || undefined,
