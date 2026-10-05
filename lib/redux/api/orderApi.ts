@@ -48,7 +48,7 @@ export interface OrderData {
   deliveryCharge: number;
   totalPrice: number;
   paymentMethod: string;
-  status: "Pending" | "Confirmed" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+  status: "Pending" | "Confirmed" | "Processing" | "Hold" | "Shipped" | "Delivered" | "Cancelled";
   isGuestOrder: boolean;
   orderNotes?: string;
   statusHistory?: {

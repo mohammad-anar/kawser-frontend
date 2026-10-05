@@ -42,6 +42,7 @@ const STATUSES = [
   { key: "Pending", label: "পেন্ডিং" },
   { key: "Confirmed", label: "কনফার্মড" },
   { key: "Processing", label: "প্রসেসিং" },
+  { key: "Hold", label: "হোল্ড" },
   { key: "Shipped", label: "শিপড" },
   { key: "Delivered", label: "ডেলিভার্ড" },
   { key: "Cancelled", label: "বাতিল" },
@@ -51,6 +52,7 @@ const STATUS_COLORS: Record<string, string> = {
   Pending: "bg-amber-500/10 text-amber-400 border-amber-500/30",
   Confirmed: "bg-blue-500/10 text-blue-400 border-blue-500/30",
   Processing: "bg-purple-500/10 text-purple-400 border-purple-500/30",
+  Hold: "bg-orange-500/10 text-orange-500 border-orange-500/30",
   Shipped: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
   Delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
   Cancelled: "bg-red-500/10 text-red-400 border-red-500/30",
@@ -700,6 +702,7 @@ export default function AdminOrdersPage() {
                               <option value="Pending" className="bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400">Pending</option>
                               <option value="Confirmed" className="bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400">Confirmed</option>
                               <option value="Processing" className="bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400">Processing</option>
+                              <option value="Hold" className="bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400">Hold</option>
                               <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
                               <option value="Delivered" className="bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400">Delivered</option>
                               <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled</option>
@@ -964,6 +967,8 @@ export default function AdminOrdersPage() {
                               ? "text-blue-600 dark:text-blue-400"
                               : STATUS_COLORS[h.status]?.includes("purple")
                               ? "text-purple-600 dark:text-purple-400"
+                              : STATUS_COLORS[h.status]?.includes("orange")
+                              ? "text-orange-600 dark:text-orange-400"
                               : STATUS_COLORS[h.status]?.includes("cyan")
                               ? "text-cyan-600 dark:text-cyan-400"
                               : STATUS_COLORS[h.status]?.includes("emerald")
@@ -1200,6 +1205,7 @@ export default function AdminOrdersPage() {
                       <option value="Pending" className="bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400">Pending</option>
                       <option value="Confirmed" className="bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400">Confirmed</option>
                       <option value="Processing" className="bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400">Processing</option>
+                      <option value="Hold" className="bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400">Hold</option>
                       <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
                       <option value="Delivered" className="bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400">Delivered</option>
                       <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled</option>

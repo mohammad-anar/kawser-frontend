@@ -79,6 +79,10 @@ function TrackContent() {
   const getStepStatus = (stepKey: string, currentStatus: string) => {
     const orderHierarchy = ["Pending", "Confirmed", "Processing", "Shipped", "Delivered"];
     if (currentStatus === "Cancelled") return "cancelled";
+    if (currentStatus === "Hold") {
+      if (stepKey === "Pending") return "completed";
+      return "upcoming";
+    }
     const currentIndex = orderHierarchy.indexOf(currentStatus);
     const stepIndex = orderHierarchy.indexOf(stepKey);
     if (stepIndex < currentIndex) return "completed";
@@ -159,6 +163,19 @@ function TrackContent() {
                   <h3 className="font-bold text-base text-red-700 dark:text-red-300">অর্ডারটি বাতিল করা হয়েছে</h3>
                   <p className="text-sm text-red-600 dark:text-red-400/90 mt-1 font-medium">
                     যেকোনো তথ্যের জন্য আমাদের কাস্টমার সার্ভিসে যোগাযোগ করুন।
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Status Alert if On Hold */}
+            {order.status === "Hold" && (
+              <div className="p-4 bg-orange-50 dark:bg-orange-950/50 border border-orange-200 dark:border-orange-900/60 rounded-2xl flex items-start gap-3 text-orange-600 dark:text-orange-400">
+                <Clock size={24} className="shrink-0 mt-0.5 text-orange-500" />
+                <div>
+                  <h3 className="font-bold text-base text-orange-700 dark:text-orange-300">অর্ডারটি সাময়িকভাবে হোল্ড (স্থগিত) রাখা হয়েছে</h3>
+                  <p className="text-sm text-orange-600 dark:text-orange-400/90 mt-1 font-medium">
+                    আমাদের টিম বিস্তারিত তথ্যের জন্য শীঘ্রই আপনার সাথে যোগাযোগ করবে।
                   </p>
                 </div>
               </div>

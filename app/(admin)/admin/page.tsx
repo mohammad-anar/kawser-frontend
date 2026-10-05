@@ -47,6 +47,7 @@ const STATUS_COLORS: Record<string, string> = {
   Pending: "bg-amber-500/10 text-amber-400 border-amber-500/30",
   Confirmed: "bg-blue-500/10 text-blue-400 border-blue-500/30",
   Processing: "bg-purple-500/10 text-purple-400 border-purple-500/30",
+  Hold: "bg-orange-500/10 text-orange-500 border-orange-500/30",
   Shipped: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
   Delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
   Cancelled: "bg-red-500/10 text-red-400 border-red-500/30",
@@ -398,6 +399,7 @@ export default function AdminDashboardPage() {
                           <option value="Pending">Pending</option>
                           <option value="Confirmed">Confirmed</option>
                           <option value="Processing">Processing</option>
+                          <option value="Hold" className="text-orange-500">Hold</option>
                           <option value="Shipped">Shipped</option>
                           <option value="Delivered">Delivered</option>
                           <option value="Cancelled">Cancelled</option>
@@ -541,6 +543,7 @@ export default function AdminDashboardPage() {
                           STATUS_COLORS[h.status]?.includes("amber") ? "text-amber-600 dark:text-amber-400" :
                           STATUS_COLORS[h.status]?.includes("blue") ? "text-blue-600 dark:text-blue-400" :
                           STATUS_COLORS[h.status]?.includes("purple") ? "text-purple-600 dark:text-purple-400" :
+                          STATUS_COLORS[h.status]?.includes("orange") ? "text-orange-600 dark:text-orange-400" :
                           STATUS_COLORS[h.status]?.includes("cyan") ? "text-cyan-600 dark:text-cyan-400" :
                           STATUS_COLORS[h.status]?.includes("emerald") ? "text-emerald-600 dark:text-emerald-400" :
                           STATUS_COLORS[h.status]?.includes("red") ? "text-red-600 dark:text-red-400" :
