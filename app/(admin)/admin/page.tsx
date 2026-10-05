@@ -72,7 +72,7 @@ export default function AdminDashboardPage() {
     isLoading: isOrdersLoading,
     refetch: refetchOrders,
   } = useGetAllOrdersQuery(
-    { page: 1, limit: 6, status: "Delivered", isDeleted: false },
+    { page: 1, limit: 6, status: "Pending", isDeleted: false },
     { pollingInterval: 30000 }
   );
 
@@ -344,9 +344,9 @@ export default function AdminDashboardPage() {
           <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <CheckCircle2 size={18} className="text-emerald-600 dark:text-emerald-400" /> সাম্প্রতিক ডেলিভার্ড অর্ডারসমূহ
+                <Clock size={18} className="text-amber-600 dark:text-amber-400" /> সাম্প্রতিক পেন্ডিং অর্ডারসমূহ
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">সর্বশেষ সফলভাবে ডেলিভারি সম্পন্ন হওয়া অর্ডারের সংক্ষিপ্ত তালিকা</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">সর্বশেষ অপেক্ষমাণ (Pending) অর্ডারের সংক্ষিপ্ত তালিকা</p>
             </div>
             <Link
               href="/admin/orders"
