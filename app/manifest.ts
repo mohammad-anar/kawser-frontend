@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Care Zone BD - টপ নচ ম্যাজিক কনডম",
     short_name: "Care Zone BD",
-    description: "বাংলাদেশে সেরা রিইউজেবল সিলিকন ম্যাজিক কনডম ও পার্সোনাল কেয়ার সামগ্রী। মাত্র ৳৮৯৯ টাকায় ফ্রি হোম ডেলিভারি।",
+    description: "বাংলাদেশে সেরা রিইউজেবল সিলিকন ম্যাজিক কনডম ও পার্সোনাল কেয়ার সামগ্রী। মাত্র ৳৯৫০ টাকায় ফ্রি হোম ডেলিভারি ও ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
     start_url: "/",
     display: "standalone",
     background_color: "#080817",

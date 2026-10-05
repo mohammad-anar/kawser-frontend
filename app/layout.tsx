@@ -19,11 +19,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://carezonebd.store"),
   title: {
-    default: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Magic Condom Price in BD ৳৮৯৯ | Care Zone BD",
+    default: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Magic Condom Price in BD ৳৯৫০ | Care Zone BD",
     template: "%s | Care Zone BD",
   },
   description:
-    "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৮৯৯। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি এবং ১০০% গোপনীয় প্যাকেজিং।",
+    "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৯৫০। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল। সারাদেশে ফ্রি হোম ডেলিভারি এবং সাথে ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি।",
   keywords: [
     // Primary Bangla Keywords
     "কেয়ার জোন বিডি",
@@ -70,9 +70,9 @@ export const metadata: Metadata = {
     email: false,
   },
   openGraph: {
-    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | মাত্র ৳৮৯৯ | Care Zone BD",
+    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | মাত্র ৳৯৫০ | Care Zone BD",
     description:
-      "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৮৯৯। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি।",
+      "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৯৫০। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য। সারাদেশে ফ্রি ডেলিভারি ও ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
     url: "https://carezonebd.store",
     siteName: "Care Zone BD",
     images: [
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Care Zone BD",
-    description: "বাংলাদেশে অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম মাত্র ৳৮৯৯। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি।",
+    description: "বাংলাদেশে অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম মাত্র ৳৯৫০। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি ও সাথে ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -181,9 +181,11 @@ const jsonLd = {
       "@id": "https://carezonebd.store/#product",
       name: "Top Notch Magic Condom (China) - অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম",
       image: [
-        "https://carezonebd.store/images/products/product-main.jpg",
-        "https://carezonebd.store/images/products/product-1.webp",
-        "https://carezonebd.store/images/products/product-2.webp",
+        "https://carezonebd.store/images/products/IMG_7393.jpg",
+        "https://carezonebd.store/images/products/IMG_7395.jpg",
+        "https://carezonebd.store/images/products/IMG_7386.jpg",
+        "https://carezonebd.store/images/products/IMG_7387.jpg",
+        "https://carezonebd.store/images/products/product-5.jpeg",
       ],
       description:
         "উচ্চমানের মেডিকেল-গ্রেড TPE সিলিকন দিয়ে তৈরি রিইউজেবল ম্যাজিক কনডম। পুরুত্ব ৬ মিমি, দৈর্ঘ্য ৬.৭ ইঞ্চি। ডটেড সারফেস ও ডাবল লক রিং সিস্টেম সহ ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল।",
@@ -216,7 +218,7 @@ const jsonLd = {
       ],
       offers: {
         "@type": "Offer",
-        price: "899",
+        price: "950",
         priceCurrency: "BDT",
         availability: "https://schema.org/InStock",
         url: "https://carezonebd.store",

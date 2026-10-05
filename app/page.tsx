@@ -36,29 +36,24 @@ import {
 
 const SLIDE_IMAGES = [
   {
-    src: "/images/products/product-main.jpg",
+    src: "/images/products/IMG_7393.jpg",
     title: "টপ নচ প্রিমিয়াম ম্যাজিক কনডম",
     subtitle: "অরিজিনাল চায়না ইম্পোর্টেড প্যাকেজিং",
   },
   {
-    src: "/images/products/product-1.webp",
-    title: "৬ মিলিমিটার এক্সট্রা পুরুত্ব",
-    subtitle: "ডটেড ও রিবড সারফেস — বাড়তি অনুভূতি ও স্থায়িত্ব",
+    src: "/images/products/IMG_7395.jpg",
+    title: "১০০ মিলি জেল সম্পূর্ণ ফ্রি",
+    subtitle: "স্পেশাল কম্বো প্যাকেজ — সাথে পাচ্ছেন ১০০ মিলি লুব্রিকেন্ট জেল",
   },
   {
-    src: "/images/products/product-2.webp",
-    title: "১০০% হাই-গ্রেড TPE সিলিকন",
-    subtitle: "যত টানবেন তত লম্বা, ছিঁড়ে যাওয়ার কোনো ভয় নেই",
+    src: "/images/products/IMG_7386.jpg",
+    title: "ডটেড ও রিবড সারফেস ডিজাইন",
+    subtitle: "৬ মিলিমিটার এক্সট্রা পুরুত্ব — চরম অনুভূতি ও স্থায়িত্ব",
   },
   {
-    src: "/images/products/product-3.webp",
-    title: "৬.৭ ইঞ্চি সম্পূর্ণ দৈর্ঘ্য",
-    subtitle: "সামনের অংশে ১–১.৫ ইঞ্চি সলিড ভরাট ডিজাইন",
-  },
-  {
-    src: "/images/products/product-4.jpg",
-    title: "ডাবল লক হোল ডিজাইন",
-    subtitle: "মিলনের সময় কনডম খুলে পড়ার কোনো সম্ভাবনা নেই",
+    src: "/images/products/IMG_7387.jpg",
+    title: "ডাবল লক হোল ও ১০০% TPE সিলিকন",
+    subtitle: "যত টানবেন তত লম্বা, খুলে পড়ার বা ছিঁড়ে যাওয়ার কোনো ভয় নেই",
   },
   {
     src: "/images/products/product-5.jpeg",
@@ -340,27 +335,37 @@ export default function Home() {
               </span>
             </div>
 
-            {/* Pricing & Guarantee Badges Card */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <div className="bg-white dark:bg-slate-900/90 border-2 border-blue-200 dark:border-blue-800 rounded-2xl px-5 py-3 shadow-md shadow-blue-100/50 dark:shadow-none">
-                <span className="text-slate-500 dark:text-slate-400 text-xs block font-semibold">বর্তমান অফার মূল্য:</span>
+            {/* Pricing & Free Bonus Highlight Card */}
+            <div className="flex flex-col sm:flex-row items-stretch gap-3 pt-2">
+              <div className="bg-white dark:bg-slate-900/90 border-2 border-blue-200 dark:border-blue-800 rounded-2xl px-5 py-3 shadow-md shadow-blue-100/50 dark:shadow-none flex flex-col justify-center">
+                <span className="text-slate-500 dark:text-slate-400 text-xs block font-semibold">বর্তমান অফার প্রাইজ:</span>
                 <div className="flex items-baseline gap-2.5 mt-0.5">
-                  <span className="text-3xl font-black text-blue-600 dark:text-blue-400">৳৮৯৯</span>
-                  <span className="text-sm text-slate-400 line-through">৳১,৮৫০</span>
+                  <span className="text-3xl font-black text-blue-600 dark:text-blue-400">৳৯৫০</span>
+                  <span className="text-sm text-slate-400 line-through">৳১,৯৫০</span>
                   <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700">
                     ৫০% ছাড়
                   </span>
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-slate-900/90 border-2 border-blue-200 dark:border-blue-800 rounded-2xl px-4 py-3 text-xs text-slate-600 dark:text-slate-300 space-y-1 shadow-md shadow-blue-100/50 dark:shadow-none">
-                <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-100">
-                  <Truck size={14} className="text-blue-600 dark:text-blue-400" />
-                  <span>সারাদেশে ফ্রি হোম ডেলিভারি</span>
+              <div className="bg-gradient-to-r from-emerald-50/90 to-blue-50/90 dark:from-emerald-950/40 dark:to-blue-950/40 border-2 border-emerald-400/80 dark:border-emerald-600/80 rounded-2xl px-4 py-3 text-xs space-y-1.5 shadow-md shadow-emerald-500/10 flex-1 flex flex-col justify-center">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-100">
+                    <Truck size={15} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>সারাদেশে হোম ডেলিভারি</span>
+                  </div>
+                  <span className="bg-emerald-500 text-white font-black text-[11px] sm:text-xs px-2.5 py-0.5 rounded-full shadow-xs animate-pulse tracking-wide">
+                    সম্পূর্ণ ফ্রি
+                  </span>
                 </div>
-                <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-100">
-                  <ShieldCheck size={14} className="text-emerald-600 dark:text-emerald-400" />
-                  <span>১০০% গোপনীয় ডেলিভারি ও প্যাকেজিং</span>
+                <div className="flex items-center justify-between gap-2 border-t border-emerald-200/60 dark:border-emerald-800/60 pt-1.5">
+                  <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-100">
+                    <Gift size={15} className="text-blue-600 dark:text-blue-400 shrink-0" />
+                    <span>সাথে ১০০ মিলি বোতল জেল</span>
+                  </div>
+                  <span className="bg-emerald-500 text-white font-black text-[11px] sm:text-xs px-2.5 py-0.5 rounded-full shadow-xs tracking-wide">
+                    একদম ফ্রি
+                  </span>
                 </div>
               </div>
             </div>
@@ -373,7 +378,7 @@ export default function Home() {
                 className="btn-gold py-4 px-8 rounded-xl text-base sm:text-lg font-black flex items-center justify-center gap-2.5 shadow-xl pulse-gold cursor-pointer"
               >
                 <ShoppingBag size={20} />
-                <span>অর্ডার করতে চাই — ৳৮৯৯</span>
+                <span>অর্ডার করতে চাই — ৳৯৫০</span>
               </button>
             </div>
           </div>
@@ -420,7 +425,7 @@ export default function Home() {
               onClick={() => setModalOpen(true)}
               className="btn-gold py-3.5 px-8 rounded-xl text-sm sm:text-base font-black inline-flex items-center gap-2 shadow-lg pulse-gold cursor-pointer"
             >
-              <ShoppingBag size={18} /> অর্ডার করতে চাই (৳৮৯৯)
+              <ShoppingBag size={18} /> অর্ডার করতে চাই (৳৯৫০)
             </button>
           </div>
         </div>
@@ -584,7 +589,7 @@ export default function Home() {
                     onClick={() => setModalOpen(true)}
                     className="btn-gold w-full py-3.5 rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg pulse-gold cursor-pointer"
                   >
-                    <ShoppingBag size={17} /> অর্ডার কনফার্ম করুন (৳৮৯৯)
+                    <ShoppingBag size={17} /> অর্ডার কনফার্ম করুন (৳৯৫০)
                   </button>
                   <p className="text-center text-[11px] text-slate-500 dark:text-slate-400 mt-2">
                     🔒 পণ্য দেখে পেমেন্ট • ১০০% তথ্য গোপনীয়
@@ -645,7 +650,7 @@ export default function Home() {
               <div className="w-full md:w-80 shrink-0">
                 <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-blue-200 dark:border-blue-800 shadow-lg bg-slate-50 dark:bg-slate-900">
                   <Image
-                    src="/images/products/product-4.jpg"
+                    src="/images/products/IMG_7387.jpg"
                     alt="Original Top Notch Lock Ring"
                     fill
                     className="object-cover"
@@ -781,11 +786,11 @@ export default function Home() {
           </div>
 
           <h2 className="text-2xl sm:text-4xl font-black text-white">
-            আপনার জন্য <span className="text-yellow-300">ফ্রি ডেলিভারি অফারটি</span> এক্টিভেট করা হয়েছে!
+            আপনার জন্য <span className="text-yellow-300">স্পেশাল ফ্রি বোনাস অফারটি</span> এক্টিভেট করা হয়েছে!
           </h2>
 
           <p className="text-sm sm:text-base text-blue-100 max-w-xl mx-auto">
-            বর্তমান স্পেশাল অফারে মাত্র ৳৮৯৯ টাকায় টপ নচ ম্যাজিক কনডম অর্ডার করুন। কোনো অগ্রিম টাকা দিতে হবে না, পণ্য হাতে পেয়ে দেখে মূল্য পরিশোধ করুন।
+            বর্তমান স্পেশাল অফারে মাত্র ৳৯৫০ টাকায় টপ নচ ম্যাজিক কনডম অর্ডার করুন। সাথে পাচ্ছেন ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি এবং সারাদেশে ফ্রি হোম ডেলিভারি! কোনো অগ্রিম টাকা দিতে হবে না, পণ্য হাতে পেয়ে দেখে মূল্য পরিশোধ করুন।
           </p>
 
           <div className="pt-2">
@@ -793,7 +798,7 @@ export default function Home() {
               onClick={() => setModalOpen(true)}
               className="bg-white text-blue-700 hover:bg-blue-50 font-black py-4 px-10 rounded-2xl text-base sm:text-lg shadow-2xl shadow-blue-900/30 pulse-blue inline-flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
             >
-              <ShoppingBag size={20} /> অফারটি নিন — মাত্র ৳৮৯৯
+              <ShoppingBag size={20} /> অফারটি নিন — মাত্র ৳৯৫০
             </button>
           </div>
 

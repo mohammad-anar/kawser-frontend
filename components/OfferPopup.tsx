@@ -58,15 +58,24 @@ export default function OfferPopup({ onClaimOffer }: OfferPopupProps) {
         </h2>
 
         {/* Subtitle */}
-        <p className="text-sm text-slate-600 dark:text-slate-300 mt-2.5 leading-relaxed font-medium">
-          আপনার জন্য <span className="text-blue-600 dark:text-blue-400 font-extrabold underline decoration-blue-400/50 underline-offset-2">ফ্রি ডেলিভারি</span> অফারটি এক্টিভেট করা হয়েছে!
+        <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed font-medium">
+          আপনার জন্য <span className="text-emerald-600 dark:text-emerald-400 font-black text-base underline decoration-emerald-400/50 underline-offset-2">স্পেশাল ফ্রি বোনাস</span> এক্টিভেট করা হয়েছে!
         </p>
 
-        {/* Pricing Highlight */}
-        <div className="my-4 py-2 px-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-xl">
-          <p className="text-xs text-blue-700 dark:text-blue-300 font-bold">
-            🔥 স্পেশাল ডিসকাউন্ট মূল্য: <span className="text-blue-800 dark:text-blue-200 font-black text-base">৳৮৯৯</span> (ডেলিভারি একদম ফ্রি)
-          </p>
+        {/* Pricing & Free Highlight Badges */}
+        <div className="my-4 p-3.5 bg-gradient-to-br from-blue-50 via-emerald-50/50 to-blue-50 dark:from-blue-950/70 dark:via-emerald-950/40 dark:to-blue-950/70 border-2 border-emerald-300 dark:border-emerald-700/80 rounded-2xl space-y-2 text-left shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-600 dark:text-slate-300 font-bold">স্পেশাল অফার প্রাইজ:</span>
+            <span className="text-blue-700 dark:text-blue-300 font-black text-xl">৳৯৫০</span>
+          </div>
+          <div className="flex items-center justify-between border-t border-emerald-200/60 dark:border-emerald-800/60 pt-2">
+            <span className="text-xs text-slate-800 dark:text-slate-200 font-bold flex items-center gap-1">🚚 সারাদেশে ডেলিভারি:</span>
+            <span className="bg-emerald-500 text-white font-black text-xs px-2.5 py-0.5 rounded-full shadow-xs uppercase">সম্পূর্ণ ফ্রি</span>
+          </div>
+          <div className="flex items-center justify-between border-t border-emerald-200/60 dark:border-emerald-800/60 pt-1.5">
+            <span className="text-xs text-slate-800 dark:text-slate-200 font-bold flex items-center gap-1">🎁 ১০০ মিলি জেল বোতল:</span>
+            <span className="bg-emerald-500 text-white font-black text-xs px-2.5 py-0.5 rounded-full shadow-xs uppercase">একদম ফ্রি</span>
+          </div>
         </div>
 
         {/* CTA Button */}

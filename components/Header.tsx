@@ -360,7 +360,7 @@ export default function Header({ onOrderClick }: HeaderProps) {
                   className="w-full btn-gold py-3.5 rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95 cursor-pointer"
                 >
                   <ShoppingBag size={18} />
-                  এখনই অর্ডার করুন (৳৮৯৯)
+                  এখনই অর্ডার করুন (৳৯৫০)
                 </button>
               </div>
             </div>

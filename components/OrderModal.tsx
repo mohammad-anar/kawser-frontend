@@ -177,17 +177,17 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
 
   if (!isOpen) return null;
 
-  const total = 899 * form.quantity;
+  const total = 950 * form.quantity;
 
   return (
     <div className="modal-overlay" ref={overlayRef}>
       <div className="modal-content">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <ShoppingBag className="text-blue-600 dark:text-blue-400" size={22} />
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">অর্ডার করুন</h2>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">অর্ডার কনফার্ম করুন</h2>
           </div>
           <button
             onClick={handleClose}
@@ -196,6 +196,26 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
           >
             <X size={20} />
           </button>
+        </div>
+
+        {/* Free Offer Highlight Banner in Modal */}
+        <div className="mb-4 p-3 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950/60 dark:to-blue-950/60 border-2 border-emerald-400/80 dark:border-emerald-600/80 rounded-2xl shadow-sm space-y-1.5">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+              🚚 সারাদেশে হোম ডেলিভারি:
+            </span>
+            <span className="bg-emerald-500 text-white font-black text-xs sm:text-sm px-2.5 py-0.5 rounded-full shadow-sm animate-pulse tracking-wide">
+              সম্পূর্ণ ফ্রি
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-2 border-t border-emerald-200/60 dark:border-emerald-800/60 pt-1.5">
+            <span className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+              🎁 ১০০ মিলি লুব্রিকেন্ট জেল বোতল:
+            </span>
+            <span className="bg-emerald-500 text-white font-black text-xs sm:text-sm px-2.5 py-0.5 rounded-full shadow-sm tracking-wide">
+              একদম ফ্রি
+            </span>
+          </div>
         </div>
 
         {success ? (
@@ -212,6 +232,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
             </p>
             <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-800/60 rounded-xl p-4 text-sm text-slate-700 dark:text-slate-300">
               <p>✅ শীঘ্রই আমাদের টিম আপনার সাথে যোগাযোগ করবে।</p>
+              <p className="mt-1">🎁 ১০০ মিলি বোতল জেল সাথে ফ্রি পেয়ে যাবেন।</p>
               <p className="mt-1">📦 ঢাকায় ১ দিন, ঢাকার বাইরে ২-৩ দিন।</p>
               <p className="mt-1">🔒 ১০০% গোপনীয় প্যাকেজিংয়ে ডেলিভারি করা হবে।</p>
             </div>
@@ -225,17 +246,19 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
             {/* Product summary */}
             <div className="bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/80 rounded-xl p-3 sm:p-4 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg overflow-hidden relative bg-slate-100 dark:bg-slate-800 border border-blue-200 dark:border-blue-700 shrink-0">
+                <div className="w-14 h-14 rounded-xl overflow-hidden relative bg-slate-100 dark:bg-slate-800 border border-blue-200 dark:border-blue-700 shrink-0">
                   <Image
-                    src="/images/products/product-main.jpg"
+                    src="/images/products/IMG_7393.jpg"
                     alt="Top Notch Magic Condom"
                     fill
                     className="object-cover"
                   />
                 </div>
                 <div>
-                  <p className="text-slate-900 dark:text-white font-bold text-sm">Top Notch Magic Condom</p>
-                  <p className="text-blue-600 dark:text-blue-400 text-xs mt-0.5">রিইউজেবল TPE সিলিকন • ফ্রি ডেলিভারি</p>
+                  <p className="text-slate-900 dark:text-white font-black text-sm">Top Notch Magic Condom</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
+                    মূল্য: <span className="font-bold text-blue-600 dark:text-blue-400">৳৯৫০</span> • সাথে ১০০ মিলি জেল ফ্রি
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -260,8 +283,8 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
             </div>
 
             <div className="text-right text-sm">
-              <span className="text-slate-600 dark:text-slate-400">মোট: </span>
-              <span className="text-blue-600 dark:text-blue-400 font-black text-lg">৳{total.toLocaleString()}</span>
+              <span className="text-slate-600 dark:text-slate-400">সর্বমোট প্রাইজ: </span>
+              <span className="text-blue-600 dark:text-blue-400 font-black text-xl">৳{total.toLocaleString()}</span>
               <span className="text-slate-500 dark:text-slate-400 text-xs ml-1">(ডেলিভারিতে পরিশোধ)</span>
             </div>
 
