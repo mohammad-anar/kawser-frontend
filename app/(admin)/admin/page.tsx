@@ -362,6 +362,7 @@ export default function AdminDashboardPage() {
               <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
                 <tr>
                   <th className="py-3.5 px-4 font-bold">অর্ডার আইডি</th>
+                  <th className="py-3.5 px-4 font-bold">তারিখ ও সময় (GMT+6)</th>
                   <th className="py-3.5 px-4 font-bold">গ্রাহকের নাম ও ফোন</th>
                   <th className="py-3.5 px-4 font-bold">ঠিকানা</th>
                   <th className="py-3.5 px-4 font-bold">পরিমাণ ও মূল্য</th>
@@ -375,6 +376,25 @@ export default function AdminDashboardPage() {
                     <tr key={ord._id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
                       <td className="py-3.5 px-4 font-mono font-bold text-blue-600 dark:text-blue-400">
                         {ord.orderId}
+                      </td>
+                      <td className="py-3.5 px-4 text-xs whitespace-nowrap">
+                        <div className="font-semibold text-slate-800 dark:text-slate-200">
+                          {new Date(ord.createdAt).toLocaleDateString("bn-BD", {
+                            timeZone: "Asia/Dhaka",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1 mt-0.5">
+                          <Clock size={11} className="text-slate-400 shrink-0" />
+                          {new Date(ord.createdAt).toLocaleTimeString("bn-BD", {
+                            timeZone: "Asia/Dhaka",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </div>
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="font-bold text-slate-900 dark:text-white">{ord.customerName}</div>
@@ -420,7 +440,7 @@ export default function AdminDashboardPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-400 text-xs">
+                    <td colSpan={7} className="py-8 text-center text-slate-400 text-xs">
                       কোনো অর্ডার পাওয়া যায়নি
                     </td>
                   </tr>

@@ -36,6 +36,7 @@ import {
   ShieldBan,
   ShieldCheck,
   ShieldAlert,
+  Clock,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminSocket } from "@/lib/useAdminSocket";
@@ -666,7 +667,7 @@ export default function AdminOrdersPage() {
                   )}
                   <th className="py-3.5 px-4 font-semibold">অর্ডার আইডি</th>
                   <th className="py-3.5 px-4 font-semibold">
-                    {activeTab === "active" ? "তারিখ" : "ডিলিট তারিখ"}
+                    {activeTab === "active" ? "তারিখ ও সময় (GMT+6)" : "ডিলিট তারিখ ও সময়"}
                   </th>
                   <th className="py-3.5 px-4 font-semibold">গ্রাহক ও মোবাইল</th>
                   <th className="py-3.5 px-4 font-semibold">ঠিকানা</th>
@@ -712,12 +713,68 @@ export default function AdminOrdersPage() {
                         <td className="py-3.5 px-4 font-mono font-bold text-blue-600 dark:text-blue-400">
                           {ord.orderId}
                         </td>
-                        <td className="py-3.5 px-4 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">
-                          {activeTab === "active"
-                            ? new Date(ord.createdAt).toLocaleDateString("bn-BD")
-                            : ord.deletedAt
-                            ? new Date(ord.deletedAt).toLocaleString("bn-BD")
-                            : new Date(ord.createdAt).toLocaleDateString("bn-BD")}
+                        <td className="py-3.5 px-4 text-xs whitespace-nowrap">
+                          {activeTab === "active" ? (
+                            <div>
+                              <div className="font-semibold text-slate-800 dark:text-slate-200">
+                                {new Date(ord.createdAt).toLocaleDateString("bn-BD", {
+                                  timeZone: "Asia/Dhaka",
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })}
+                              </div>
+                              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1 mt-0.5">
+                                <Clock size={11} className="text-slate-400 shrink-0" />
+                                {new Date(ord.createdAt).toLocaleTimeString("bn-BD", {
+                                  timeZone: "Asia/Dhaka",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                })}
+                              </div>
+                            </div>
+                          ) : ord.deletedAt ? (
+                            <div>
+                              <div className="font-semibold text-slate-800 dark:text-slate-200">
+                                {new Date(ord.deletedAt).toLocaleDateString("bn-BD", {
+                                  timeZone: "Asia/Dhaka",
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })}
+                              </div>
+                              <div className="text-[11px] text-red-500/80 font-mono flex items-center gap-1 mt-0.5">
+                                <Clock size={11} className="text-red-400 shrink-0" />
+                                {new Date(ord.deletedAt).toLocaleTimeString("bn-BD", {
+                                  timeZone: "Asia/Dhaka",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                })}
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="font-semibold text-slate-800 dark:text-slate-200">
+                                {new Date(ord.createdAt).toLocaleDateString("bn-BD", {
+                                  timeZone: "Asia/Dhaka",
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })}
+                              </div>
+                              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1 mt-0.5">
+                                <Clock size={11} className="text-slate-400 shrink-0" />
+                                {new Date(ord.createdAt).toLocaleTimeString("bn-BD", {
+                                  timeZone: "Asia/Dhaka",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                })}
+                              </div>
+                            </div>
+                          )}
                         </td>
                         <td className="py-3.5 px-4">
                           <div className="font-bold text-slate-900 dark:text-white">{ord.customerName}</div>
@@ -1034,8 +1091,17 @@ export default function AdminOrdersPage() {
               <div className="border-t border-slate-100 dark:border-slate-800 pt-3 flex items-center justify-between">
                 <div>
                   <span className="text-slate-400 text-xs">অর্ডার সময়:</span>
-                  <p className="text-slate-700 dark:text-slate-300 text-xs font-medium">
-                    {new Date(selectedOrder.createdAt).toLocaleString("bn-BD")}
+                  <p className="text-slate-700 dark:text-slate-300 text-xs font-semibold">
+                    {new Date(selectedOrder.createdAt).toLocaleString("bn-BD", {
+                      timeZone: "Asia/Dhaka",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}{" "}
+                    <span className="text-[11px] font-mono text-blue-500">(GMT+6)</span>
                   </p>
                 </div>
                 <div className="text-right">
@@ -1067,6 +1133,8 @@ export default function AdminOrdersPage() {
                               ? "text-amber-600 dark:text-amber-400"
                               : STATUS_COLORS[h.status]?.includes("blue")
                               ? "text-blue-600 dark:text-blue-400"
+                              : STATUS_COLORS[h.status]?.includes("indigo")
+                              ? "text-indigo-600 dark:text-indigo-400"
                               : STATUS_COLORS[h.status]?.includes("purple")
                               ? "text-purple-600 dark:text-purple-400"
                               : STATUS_COLORS[h.status]?.includes("orange")
@@ -1082,8 +1150,18 @@ export default function AdminOrdersPage() {
                         >
                           {h.status}
                         </span>
-                        <span className="text-slate-400">
-                          {h.changedAt ? new Date(h.changedAt).toLocaleString("bn-BD") : ""}
+                        <span className="text-slate-400 font-mono text-[11px]">
+                          {h.changedAt
+                            ? new Date(h.changedAt).toLocaleString("bn-BD", {
+                                timeZone: "Asia/Dhaka",
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              })
+                            : ""}
                         </span>
                         {h.changedBy && <span className="text-slate-500">— {h.changedBy}</span>}
                       </div>
