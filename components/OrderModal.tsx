@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { X, Loader2, CheckCircle, AlertCircle, ShoppingBag, Minus, Plus } from "lucide-react";
-import { useCreateOrderMutation } from "@/lib/redux/api/orderApi";
+import { useCreateOrderMutation, useRecordIncompleteOrderMutation } from "@/lib/redux/api/orderApi";
 import { useAppSelector } from "@/lib/redux/hooks";
 
 interface OrderModalProps {
@@ -27,6 +27,7 @@ interface FormErrors {
 export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
   const { user } = useAppSelector((state) => state.auth);
   const [createOrder, { isLoading: isCreating }] = useCreateOrderMutation();
+  const [recordIncompleteOrder] = useRecordIncompleteOrderMutation();
 
   const [form, setForm] = useState<FormData>({
     customerName: "",
@@ -38,6 +39,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
   const [success, setSuccess] = useState<{ orderId: string; total: number } | null>(null);
   const [serverError, setServerError] = useState("");
   const overlayRef = useRef<HTMLDivElement>(null);
+  const isSubmittedRef = useRef<boolean>(false);
 
   // Pre-fill from logged-in user
   useEffect(() => {
@@ -53,6 +55,63 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
   // Converts Bengali/Devanagari digits to ASCII digits
   const normalizeBanglaPhone = (value: string): string =>
     value.replace(/[০-৯]/g, (d) => String(d.codePointAt(0)! - 0x09e6));
+
+  const sendIncompleteOrder = () => {
+    if (isSubmittedRef.current || success) return;
+
+    const trimmedName = form.customerName.trim();
+    const cleanPhone = normalizeBanglaPhone(form.phoneNumber).replace(/\s/g, "");
+
+    // Must have at least a name and a phone number (>= 10 digits)
+    if (trimmedName.length > 0 && cleanPhone.length >= 10) {
+      recordIncompleteOrder({
+        customerName: trimmedName,
+        phoneNumber: cleanPhone,
+        address: form.address.trim(),
+        quantity: form.quantity,
+        productName: "Love Lock Condom / Magic Condom",
+        totalPrice: 950 * form.quantity,
+      }).catch(() => {
+        // Non-critical background call
+      });
+    }
+  };
+
+  // Browser exit / tab close handler
+  useEffect(() => {
+    if (!isOpen) {
+      isSubmittedRef.current = false;
+      return;
+    }
+
+    const handleBeforeUnload = () => {
+      if (isSubmittedRef.current || success) return;
+      const trimmedName = form.customerName.trim();
+      const cleanPhone = normalizeBanglaPhone(form.phoneNumber).replace(/\s/g, "");
+      if (trimmedName.length > 0 && cleanPhone.length >= 10) {
+        const payload = JSON.stringify({
+          customerName: trimmedName,
+          phoneNumber: cleanPhone,
+          address: form.address.trim(),
+          quantity: form.quantity,
+          productName: "Love Lock Condom / Magic Condom",
+          totalPrice: 950 * form.quantity,
+        });
+        const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"}/orders/incomplete`;
+        if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+          const blob = new Blob([payload], { type: "application/json" });
+          navigator.sendBeacon(url, blob);
+        }
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("pagehide", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("pagehide", handleBeforeUnload);
+    };
+  }, [isOpen, form, success]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -87,6 +146,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
     if (!validate()) return;
     setServerError("");
     try {
+      isSubmittedRef.current = true;
       const res = await createOrder({
         customerName: form.customerName,
         phoneNumber: normalizeBanglaPhone(form.phoneNumber).replace(/\s/g, ""),
@@ -153,6 +213,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
 
       setSuccess({ orderId: res.orderId, total: res.totalPrice });
     } catch (err: any) {
+      isSubmittedRef.current = false;
       const message =
         err?.data?.message ||
         err?.message ||
@@ -163,6 +224,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
 
   const handleClose = () => {
     if (isCreating) return;
+    sendIncompleteOrder();
     setSuccess(null);
     setServerError("");
     setForm({
@@ -180,7 +242,13 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
   const total = 950 * form.quantity;
 
   return (
-    <div className="modal-overlay" ref={overlayRef}>
+    <div
+      className="modal-overlay"
+      ref={overlayRef}
+      onClick={(e) => {
+        if (e.target === overlayRef.current) handleClose();
+      }}
+    >
       <div className="modal-content">
 
         {/* Header */}

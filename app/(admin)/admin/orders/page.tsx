@@ -12,6 +12,14 @@ import {
   usePermanentDeleteOrderMutation,
   useExportOrdersExcelMutation,
   OrderData,
+  IncompleteOrderData,
+  useGetBlockedIpsQuery,
+  useBlockIpMutation,
+  useUnblockIpMutation,
+  useGetIncompleteOrdersQuery,
+  useUpdateIncompleteOrderStatusMutation,
+  useConvertIncompleteOrderMutation,
+  useDeleteIncompleteOrderMutation,
 } from "@/lib/redux/api/orderApi";
 import {
   Search,
@@ -37,14 +45,15 @@ import {
   ShieldCheck,
   ShieldAlert,
   Clock,
+  PackageCheck,
+  Check,
+  PhoneCall,
+  UserCheck,
+  AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminSocket } from "@/lib/useAdminSocket";
-import {
-  useGetBlockedIpsQuery,
-  useBlockIpMutation,
-  useUnblockIpMutation,
-} from "@/lib/redux/api/orderApi";
 
 const STATUSES = [
   { key: "all", label: "সকল অর্ডার" },
@@ -71,7 +80,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function AdminOrdersPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"active" | "deleted">("active");
+  const [activeTab, setActiveTab] = useState<"active" | "incomplete" | "deleted">("active");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -87,6 +96,25 @@ export default function AdminOrdersPage() {
   const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<OrderData | null>(null);
   const [blockIpTarget, setBlockIpTarget] = useState<OrderData | null>(null);
   const [blockReason, setBlockReason] = useState<string>("স্প্যাম / অযাচিত অর্ডার");
+
+  // Incomplete Orders State
+  const [convertingTarget, setConvertingTarget] = useState<IncompleteOrderData | null>(null);
+  const [deleteIncTarget, setDeleteIncTarget] = useState<IncompleteOrderData | null>(null);
+  const [convertForm, setConvertForm] = useState({
+    customerName: "",
+    phoneNumber: "",
+    address: "",
+    district: "",
+    thana: "",
+    productName: "Love Lock Condom / Magic Condom",
+    quantity: 1,
+    size: "স্ট্যান্ডার্ড",
+    unitPrice: 950,
+    deliveryCharge: 0,
+    totalPrice: 950,
+    paymentMethod: "Cash on Delivery",
+    orderNotes: "",
+  });
 
   const [editForm, setEditForm] = useState({
     customerName: "",
@@ -142,9 +170,35 @@ export default function AdminOrdersPage() {
     { pollingInterval: 30000 }
   );
 
+  // RTK Queries: Incomplete Orders (Abandoned)
+  const {
+    data: incompleteOrdersData,
+    isLoading: isIncompleteLoading,
+    isFetching: isIncompleteFetching,
+    refetch: refetchIncomplete,
+  } = useGetIncompleteOrdersQuery(
+    {
+      page: activeTab === "incomplete" ? currentPage : 1,
+      limit: pageSize,
+      search: searchTerm || undefined,
+      status: statusFilter !== "all" ? statusFilter : undefined,
+    },
+    { pollingInterval: 30000 }
+  );
+
   const currentOrdersData = activeTab === "active" ? activeOrdersData : deletedOrdersData;
-  const isTableLoading = activeTab === "active" ? isActiveLoading : isDeletedLoading;
-  const isTableFetching = activeTab === "active" ? isActiveFetching : isDeletedFetching;
+  const isTableLoading =
+    activeTab === "active"
+      ? isActiveLoading
+      : activeTab === "incomplete"
+      ? isIncompleteLoading
+      : isDeletedLoading;
+  const isTableFetching =
+    activeTab === "active"
+      ? isActiveFetching
+      : activeTab === "incomplete"
+      ? isIncompleteFetching
+      : isDeletedFetching;
 
   // Mutations
   const [updateOrderStatus, { isLoading: isUpdatingStatus }] = useUpdateOrderStatusMutation();
@@ -155,6 +209,9 @@ export default function AdminOrdersPage() {
   const [exportExcel, { isLoading: isExporting }] = useExportOrdersExcelMutation();
   const [blockIpMutation, { isLoading: isBlockingIp }] = useBlockIpMutation();
   const [unblockIpMutation, { isLoading: isUnblockingIp }] = useUnblockIpMutation();
+  const [updateIncompleteStatus, { isLoading: isUpdatingIncStatus }] = useUpdateIncompleteOrderStatusMutation();
+  const [convertIncompleteOrder, { isLoading: isConvertingInc }] = useConvertIncompleteOrderMutation();
+  const [deleteIncompleteOrderMutation, { isLoading: isDeletingInc }] = useDeleteIncompleteOrderMutation();
   const { data: blockedIpsData } = useGetBlockedIpsQuery();
 
   const blockedIpsList = blockedIpsData?.blockedIps || [];
@@ -165,6 +222,7 @@ export default function AdminOrdersPage() {
     onNewOrder: () => {
       refetchActive();
       refetchDeleted();
+      refetchIncomplete();
     },
     enableNotification: true,
   });
@@ -196,10 +254,126 @@ export default function AdminOrdersPage() {
     );
   };
 
-  const handleTabChange = (tab: "active" | "deleted") => {
+  const handleTabChange = (tab: "active" | "incomplete" | "deleted") => {
     setActiveTab(tab);
     setCurrentPage(1);
     setSelectedIds([]);
+  };
+
+  const handleOpenConvert = (inc: IncompleteOrderData) => {
+    setConvertingTarget(inc);
+    const qty = inc.quantity || 1;
+    const unitPrice = inc.unitPrice || 950;
+    const delivery = 0;
+    setConvertForm({
+      customerName: inc.customerName || "",
+      phoneNumber: inc.phoneNumber || "",
+      address: inc.address || "",
+      district: "",
+      thana: "",
+      productName: inc.productName || "চীন ড্রাগন সিলিকন ম্যাজিক কনডম (Top Notch Reusable)",
+      quantity: qty,
+      size: inc.size || "স্ট্যান্ডার্ড",
+      unitPrice: unitPrice,
+      deliveryCharge: delivery,
+      totalPrice: unitPrice * qty + delivery,
+      paymentMethod: "Cash on Delivery",
+      orderNotes: inc.orderNotes || "",
+    });
+  };
+
+  const handleConvertQtyChange = (qty: number) => {
+    const newQty = Math.max(1, qty);
+    setConvertForm((prev) => ({
+      ...prev,
+      quantity: newQty,
+      totalPrice: prev.unitPrice * newQty + prev.deliveryCharge,
+    }));
+  };
+
+  const handleConvertUnitPriceChange = (price: number) => {
+    setConvertForm((prev) => ({
+      ...prev,
+      unitPrice: price,
+      totalPrice: price * prev.quantity + prev.deliveryCharge,
+    }));
+  };
+
+  const handleConvertDeliveryChargeChange = (charge: number) => {
+    setConvertForm((prev) => ({
+      ...prev,
+      deliveryCharge: charge,
+      totalPrice: prev.unitPrice * prev.quantity + charge,
+    }));
+  };
+
+  const handleConfirmConvert = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!convertingTarget) return;
+
+    if (!convertForm.customerName.trim()) {
+      toast.error("গ্রাহকের নাম আবশ্যক");
+      return;
+    }
+    if (!convertForm.phoneNumber.trim()) {
+      toast.error("ফোন নম্বর আবশ্যক");
+      return;
+    }
+    if (!convertForm.address.trim()) {
+      toast.error("ডেলিভারি ঠিকানা আবশ্যক");
+      return;
+    }
+
+    try {
+      const res = await convertIncompleteOrder({
+        id: convertingTarget._id,
+        customerName: convertForm.customerName.trim(),
+        phoneNumber: convertForm.phoneNumber.trim(),
+        address: convertForm.address.trim(),
+        district: convertForm.district.trim(),
+        thana: convertForm.thana.trim(),
+        productName: convertForm.productName,
+        quantity: Number(convertForm.quantity),
+        size: convertForm.size,
+        unitPrice: Number(convertForm.unitPrice),
+        deliveryCharge: Number(convertForm.deliveryCharge),
+        totalPrice: Number(convertForm.totalPrice),
+        paymentMethod: convertForm.paymentMethod,
+        orderNotes: convertForm.orderNotes,
+      }).unwrap();
+
+      toast.success(res.message || "অসম্পূর্ণ অর্ডারটি সফলভাবে মূল অর্ডারে রূপান্তর করা হয়েছে!");
+      setConvertingTarget(null);
+      refetchActive();
+      refetchIncomplete();
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "অর্ডারে রূপান্তর করতে সমস্যা হয়েছে");
+    }
+  };
+
+  const handleUpdateIncStatus = async (id: string, newStatus: string) => {
+    try {
+      await updateIncompleteStatus({ id, status: newStatus }).unwrap();
+      toast.success("অসম্পূর্ণ অর্ডারের স্ট্যাটাস সফলভাবে আপডেট হয়েছে");
+      refetchIncomplete();
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "স্ট্যাটাস পরিবর্তন করতে সমস্যা হয়েছে");
+    }
+  };
+
+  const handleDeleteIncomplete = async () => {
+    if (!deleteIncTarget) return;
+    try {
+      await deleteIncompleteOrderMutation(deleteIncTarget._id).unwrap();
+      toast.success("অসম্পূর্ণ অর্ডারটি মুছে ফেলা হয়েছে");
+      setDeleteIncTarget(null);
+      refetchIncomplete();
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "ডিলিট করতে সমস্যা হয়েছে");
+    }
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -452,6 +626,7 @@ export default function AdminOrdersPage() {
               onClick={() => {
                 refetchActive();
                 refetchDeleted();
+                refetchIncomplete();
               }}
               className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-all active:scale-95 shadow-sm cursor-pointer"
             >
@@ -477,8 +652,8 @@ export default function AdminOrdersPage() {
           </div>
         </div>
 
-        {/* Tab Switcher: Active vs Deleted */}
-        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+        {/* Tab Switcher: Active vs Incomplete vs Deleted */}
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 flex-wrap">
           <button
             onClick={() => handleTabChange("active")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
@@ -495,6 +670,25 @@ export default function AdminOrdersPage() {
               }`}
             >
               {activeOrdersData?.total ?? 0}
+            </span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange("incomplete")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === "incomplete"
+                ? "bg-amber-600 text-white shadow-md shadow-amber-500/20"
+                : "bg-white dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
+            }`}
+          >
+            <AlertCircle size={15} />
+            <span>অসম্পূর্ণ অর্ডার (Abandoned)</span>
+            <span
+              className={`px-2 py-0.5 rounded-full text-[11px] font-black ${
+                activeTab === "incomplete" ? "bg-white/20 text-white" : "bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400"
+              }`}
+            >
+              {incompleteOrdersData?.total ?? 0}
             </span>
           </button>
 
@@ -645,6 +839,17 @@ export default function AdminOrdersPage() {
           </div>
         )}
 
+        {/* Incomplete Orders Banner Notice */}
+        {activeTab === "incomplete" && (
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-2xl p-4 flex items-center gap-3 text-amber-800 dark:text-amber-300 text-xs">
+            <AlertCircle size={20} className="text-amber-500 shrink-0" />
+            <div>
+              <span className="font-bold text-slate-900 dark:text-white block text-sm mb-0.5">অসম্পূর্ণ অর্ডারসমূহ (Abandoned Checkout)</span>
+              যেসব গ্রাহক নাম ও ফোন নম্বর লিখে কিন্তু অর্ডার সাবমিট না করেই বন্ধ করে দিয়েছেন, তাদের তালিকা এখানে দেখা যাচ্ছে। আপনি ফোন করে নিশ্চিত হয়ে &quot;অর্ডারে রূপান্তর&quot; বাটনে চাপ দিয়ে চূড়ান্ত অর্ডার তৈরি করতে পারেন।
+            </div>
+          </div>
+        )}
+
         {/* Orders Table Container */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
@@ -665,16 +870,22 @@ export default function AdminOrdersPage() {
                       />
                     </th>
                   )}
-                  <th className="py-3.5 px-4 font-semibold">অর্ডার আইডি</th>
                   <th className="py-3.5 px-4 font-semibold">
-                    {activeTab === "active" ? "তারিখ ও সময় (GMT+6)" : "ডিলিট তারিখ ও সময়"}
+                    {activeTab === "incomplete" ? "অসম্পূর্ণ আইডি" : "অর্ডার আইডি"}
+                  </th>
+                  <th className="py-3.5 px-4 font-semibold">
+                    {activeTab === "deleted" ? "ডিলিট তারিখ ও সময়" : "তারিখ ও সময় (GMT+6)"}
                   </th>
                   <th className="py-3.5 px-4 font-semibold">গ্রাহক ও মোবাইল</th>
-                  <th className="py-3.5 px-4 font-semibold">ঠিকানা</th>
-                  <th className="py-3.5 px-4 font-semibold">সাইজ ও পরিমাণ</th>
-                  <th className="py-3.5 px-4 font-semibold">মোট মূল্য</th>
                   <th className="py-3.5 px-4 font-semibold">
-                    {activeTab === "active" ? "স্ট্যাটাস পরিবর্তন" : "পূর্ববর্তী স্ট্যাটাস"}
+                    {activeTab === "incomplete" ? "ঠিকানা (ঐচ্ছিক)" : "ঠিকানা"}
+                  </th>
+                  <th className="py-3.5 px-4 font-semibold">সাইজ ও পরিমাণ</th>
+                  <th className="py-3.5 px-4 font-semibold">
+                    {activeTab === "incomplete" ? "আনুমানিক মূল্য" : "মোট মূল্য"}
+                  </th>
+                  <th className="py-3.5 px-4 font-semibold">
+                    {activeTab === "deleted" ? "পূর্ববর্তী স্ট্যাটাস" : "স্ট্যাটাস পরিবর্তন"}
                   </th>
                   <th className="py-3.5 px-4 font-semibold text-right">অ্যাকশন</th>
                 </tr>
@@ -686,6 +897,128 @@ export default function AdminOrdersPage() {
                       লোড হচ্ছে...
                     </td>
                   </tr>
+                ) : activeTab === "incomplete" ? (
+                  incompleteOrdersData?.incompleteOrders && incompleteOrdersData.incompleteOrders.length > 0 ? (
+                    incompleteOrdersData.incompleteOrders.map((inc) => (
+                      <tr
+                        key={inc._id}
+                        className="hover:bg-amber-50/40 dark:hover:bg-amber-950/20 transition-colors"
+                      >
+                        <td className="py-3.5 px-4 font-mono font-bold text-amber-600 dark:text-amber-400">
+                          INC-{inc._id.slice(-6).toUpperCase()}
+                        </td>
+                        <td className="py-3.5 px-4 text-xs whitespace-nowrap">
+                          <div className="font-semibold text-slate-800 dark:text-slate-200">
+                            {new Date(inc.createdAt).toLocaleDateString("bn-BD", {
+                              timeZone: "Asia/Dhaka",
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1 mt-0.5">
+                            <Clock size={11} className="text-slate-400 shrink-0" />
+                            {new Date(inc.createdAt).toLocaleTimeString("bn-BD", {
+                              timeZone: "Asia/Dhaka",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: true,
+                            })}
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 flex-wrap">
+                            <span>{inc.customerName}</span>
+                            {inc.hasPreviousOrders && (
+                              <span
+                                className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 inline-flex items-center gap-0.5"
+                                title={`এই নম্বরে পূর্বে ${inc.previousOrdersCount} টি সফল অর্ডার রয়েছে`}
+                              >
+                                <UserCheck size={11} />
+                                পূর্বের গ্রাহক ({inc.previousOrdersCount})
+                              </span>
+                            )}
+                          </div>
+                          <div className="font-mono text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
+                            <PhoneCall size={12} className="text-emerald-500" />
+                            <a
+                              href={`tel:${inc.phoneNumber}`}
+                              className="hover:underline text-emerald-600 dark:text-emerald-400 font-bold"
+                            >
+                              {inc.phoneNumber}
+                            </a>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4 max-w-[200px]">
+                          <span className={inc.address ? "text-slate-700 dark:text-slate-300" : "text-slate-400 italic text-xs"}>
+                            {inc.address || "ঠিকানা প্রদান করা হয়নি"}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <div className="font-semibold text-slate-800 dark:text-slate-200">{inc.quantity} টি</div>
+                          <div className="text-[11px] text-slate-500 dark:text-slate-400">{inc.size || "স্ট্যান্ডার্ড"}</div>
+                        </td>
+                        <td className="py-3.5 px-4 font-black text-amber-600 dark:text-amber-400">
+                          ৳{inc.totalPrice}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <select
+                            value={inc.status}
+                            onChange={(e) => handleUpdateIncStatus(inc._id, e.target.value)}
+                            disabled={isUpdatingIncStatus}
+                            className={`text-xs font-bold rounded-lg border px-2.5 py-1 focus:outline-none cursor-pointer ${
+                              inc.status === "Pending"
+                                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30"
+                                : inc.status === "Contacted"
+                                ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30"
+                                : inc.status === "Converted"
+                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                                : "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30"
+                            }`}
+                          >
+                            <option value="Pending" className="bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400">Pending</option>
+                            <option value="Contacted" className="bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400">Contacted (যোগাযোগ সম্পন্ন)</option>
+                            <option value="Converted" className="bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400">Converted (রূপান্তরিত)</option>
+                            <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled (বাতিল)</option>
+                          </select>
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <a
+                              href={`tel:${inc.phoneNumber}`}
+                              className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95"
+                              title="সরাসরি কল দিন"
+                            >
+                              <PhoneCall size={13} />
+                            </a>
+                            {inc.status !== "Converted" && (
+                              <button
+                                onClick={() => handleOpenConvert(inc)}
+                                className="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs inline-flex items-center gap-1 transition-all shadow-sm active:scale-95 cursor-pointer"
+                                title="অর্ডারে রূপান্তর করুন"
+                              >
+                                <CheckCircle2 size={13} />
+                                <span>অর্ডারে রূপান্তর</span>
+                              </button>
+                            )}
+                            <button
+                              onClick={() => setDeleteIncTarget(inc)}
+                              className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/50 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95"
+                              title="মুছে ফেলুন"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={8} className="py-12 text-center text-slate-400 text-xs">
+                        কোনো অসম্পূর্ণ অর্ডার পাওয়া যায়নি
+                      </td>
+                    </tr>
+                  )
                 ) : currentOrders && currentOrders.length > 0 ? (
                   currentOrders.map((ord) => {
                     const isSelected = selectedIds.includes(ord._id);
@@ -940,9 +1273,11 @@ export default function AdminOrdersPage() {
           <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-900">
             <div className="flex items-center gap-3">
               <span>
-                মোট {currentOrdersData?.total || 0} টি অর্ডারের মধ্যে পৃষ্ঠা{" "}
-                <span className="text-slate-900 dark:text-white font-bold">{currentOrdersData?.page || 1}</span> /{" "}
-                {currentOrdersData?.pages || 1}
+                মোট {activeTab === "incomplete" ? incompleteOrdersData?.total || 0 : currentOrdersData?.total || 0} টি অর্ডারের মধ্যে পৃষ্ঠা{" "}
+                <span className="text-slate-900 dark:text-white font-bold">
+                  {activeTab === "incomplete" ? incompleteOrdersData?.page || 1 : currentOrdersData?.page || 1}
+                </span> /{" "}
+                {activeTab === "incomplete" ? incompleteOrdersData?.pages || 1 : currentOrdersData?.pages || 1}
               </span>
               <span className="text-slate-300 dark:text-slate-700">|</span>
               <div className="flex items-center gap-1.5">
@@ -974,7 +1309,11 @@ export default function AdminOrdersPage() {
                 পৃষ্ঠা {currentPage}
               </span>
               <button
-                disabled={!currentOrdersData || currentPage >= currentOrdersData.pages}
+                disabled={
+                  activeTab === "incomplete"
+                    ? !incompleteOrdersData || currentPage >= incompleteOrdersData.pages
+                    : !currentOrdersData || currentPage >= currentOrdersData.pages
+                }
                 onClick={() => setCurrentPage((p) => p + 1)}
                 className="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 title="পরবর্তী পৃষ্ঠা"
@@ -1696,6 +2035,254 @@ export default function AdminOrdersPage() {
                     )}
                   </button>
                 ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Incomplete Order Conversion Modal */}
+      {convertingTarget && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-[#0f172a] max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl relative rounded-3xl animate-scaleIn my-8 max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setConvertingTarget(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 dark:hover:text-white p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/80 border border-blue-300 dark:border-blue-800 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                <CheckCircle2 size={22} />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  অসম্পূর্ণ অর্ডারকে চূড়ান্ত অর্ডারে রূপান্তর
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  আইডি: INC-{convertingTarget._id.slice(-6).toUpperCase()}
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-300 mb-4 bg-blue-50 dark:bg-blue-950/40 p-3 rounded-xl border border-blue-200 dark:border-blue-900/50">
+              গ্রাহকের সাথে ফোনে কথা বলে ডেলিভারির সম্পূর্ণ ঠিকানা নিশ্চিত করুন। সম্পন্ন হলে এটি মূল অর্ডার টেবিলে যুক্ত হবে।
+            </p>
+
+            <form onSubmit={handleConfirmConvert} className="space-y-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  গ্রাহকের নাম <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={convertForm.customerName}
+                  onChange={(e) => setConvertForm({ ...convertForm, customerName: e.target.value })}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  মোবাইল নম্বর <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={convertForm.phoneNumber}
+                  onChange={(e) => setConvertForm({ ...convertForm, phoneNumber: e.target.value })}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  সম্পূর্ণ ডেলিভারি ঠিকানা <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  required
+                  rows={2}
+                  value={convertForm.address}
+                  onChange={(e) => setConvertForm({ ...convertForm, address: e.target.value })}
+                  placeholder="যেমন: বাসা/হোল্ডিং নম্বর, রোড, এলাকা/গ্রাম..."
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    জেলা (ঐচ্ছিক)
+                  </label>
+                  <input
+                    type="text"
+                    value={convertForm.district}
+                    onChange={(e) => setConvertForm({ ...convertForm, district: e.target.value })}
+                    placeholder="যেমন: ঢাকা"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    থানা / উপজেলা (ঐচ্ছিক)
+                  </label>
+                  <input
+                    type="text"
+                    value={convertForm.thana}
+                    onChange={(e) => setConvertForm({ ...convertForm, thana: e.target.value })}
+                    placeholder="যেমন: মিরপুর"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    পরিমাণ
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={convertForm.quantity}
+                    onChange={(e) => handleConvertQtyChange(Number(e.target.value))}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    একক মূল্য (৳)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={convertForm.unitPrice}
+                    onChange={(e) => handleConvertUnitPriceChange(Number(e.target.value))}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    ডেলিভারি (৳)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={convertForm.deliveryCharge}
+                    onChange={(e) => handleConvertDeliveryChargeChange(Number(e.target.value))}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs">
+                <span className="font-semibold text-slate-600 dark:text-slate-400">সর্বমোট প্রদেয় মূল্য:</span>
+                <span className="font-mono font-black text-blue-600 dark:text-blue-400 text-sm">
+                  ৳{convertForm.totalPrice}
+                </span>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  নোট / বিশেষ নির্দেশনা (ঐচ্ছিক)
+                </label>
+                <input
+                  type="text"
+                  value={convertForm.orderNotes}
+                  onChange={(e) => setConvertForm({ ...convertForm, orderNotes: e.target.value })}
+                  placeholder="যেমন: গ্রাহক আগামীকাল ডেলিভারি চেয়েছেন..."
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setConvertingTarget(null)}
+                  disabled={isConvertingInc}
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 font-bold transition-colors cursor-pointer"
+                >
+                  বাতিল
+                </button>
+                <button
+                  type="submit"
+                  disabled={isConvertingInc}
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                >
+                  {isConvertingInc ? (
+                    <>
+                      <Loader2 size={13} className="animate-spin" />
+                      রূপান্তর হচ্ছে...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 size={13} />
+                      চূড়ান্ত অর্ডারে রূপান্তর করুন
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Incomplete Order Modal */}
+      {deleteIncTarget && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f172a] max-w-sm w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl relative rounded-3xl animate-scaleIn">
+            <button
+              onClick={() => setDeleteIncTarget(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 dark:hover:text-white p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+                <Trash2 size={22} />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  অসম্পূর্ণ অর্ডার মুছে ফেলা
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  আইডি: INC-{deleteIncTarget._id.slice(-6).toUpperCase()}
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-300 mb-6">
+              আপনি কি নিশ্চিত যে <span className="font-bold text-slate-900 dark:text-white">{deleteIncTarget.customerName}</span> ({deleteIncTarget.phoneNumber})-এর এই অসম্পূর্ণ অর্ডারটি তালিকা থেকে চিরতরে মুছে ফেলতে চান?
+            </p>
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setDeleteIncTarget(null)}
+                disabled={isDeletingInc}
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 font-bold transition-colors cursor-pointer"
+              >
+                বাতিল
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteIncomplete}
+                disabled={isDeletingInc}
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+              >
+                {isDeletingInc ? (
+                  <>
+                    <Loader2 size={13} className="animate-spin" />
+                    মুছে ফেলা হচ্ছে...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 size={13} />
+                    মুছে ফেলুন
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>

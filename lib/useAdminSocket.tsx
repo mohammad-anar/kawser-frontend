@@ -21,6 +21,54 @@ interface UseAdminSocketOptions {
   enableNotification?: boolean;
 }
 
+// Global title blinker controller
+let blinkInterval: NodeJS.Timeout | null = null;
+let originalTitle: string = "";
+let blinkCount = 0;
+let isBlinking = false;
+
+export function triggerTitleBlink(count: number = 1) {
+  if (typeof document === "undefined") return;
+
+  if (!isBlinking) {
+    originalTitle = document.title;
+    isBlinking = true;
+  }
+  blinkCount = Math.max(blinkCount, count);
+
+  if (blinkInterval) {
+    clearInterval(blinkInterval);
+  }
+
+  let showAlt = true;
+  blinkInterval = setInterval(() => {
+    if (showAlt) {
+      document.title = `🔔 (${blinkCount}) নতুন অর্ডার এসেছে!`;
+    } else {
+      document.title = originalTitle || "SelfCareSolution";
+    }
+    showAlt = !showAlt;
+  }, 900);
+
+  // Stop blinking when user focuses or clicks the document
+  const stopBlinking = () => {
+    if (blinkInterval) {
+      clearInterval(blinkInterval);
+      blinkInterval = null;
+    }
+    if (originalTitle) {
+      document.title = originalTitle;
+    }
+    isBlinking = false;
+    blinkCount = 0;
+    window.removeEventListener("focus", stopBlinking);
+    window.removeEventListener("click", stopBlinking);
+  };
+
+  window.addEventListener("focus", stopBlinking, { once: true });
+  window.addEventListener("click", stopBlinking, { once: true });
+}
+
 export function useAdminSocket({
   onNewOrder,
   enableNotification = true,
@@ -47,6 +95,9 @@ export function useAdminSocket({
     const handleNewOrder = (order: NewOrderPayload) => {
       // Play audio notification chime
       playOrderNotificationSound();
+
+      // Trigger document title blinking
+      triggerTitleBlink(1);
 
       // Show rich Sonner toast
       if (enableNotification) {

@@ -17,6 +17,6 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Order", "AdminStats", "User", "SingleOrder", "BlockedIp"],
+  tagTypes: ["Order", "AdminStats", "User", "SingleOrder", "BlockedIp", "IncompleteOrder"],
   endpoints: () => ({}),
 });

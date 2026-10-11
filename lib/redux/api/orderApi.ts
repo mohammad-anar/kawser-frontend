@@ -282,8 +282,94 @@ export const orderApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["BlockedIp"],
     }),
+
+    recordIncompleteOrder: builder.mutation<
+      { success: boolean; message: string; incompleteOrder: IncompleteOrderData },
+      Partial<IncompleteOrderData>
+    >({
+      query: (body) => ({
+        url: "/orders/incomplete",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["IncompleteOrder"],
+    }),
+
+    getIncompleteOrders: builder.query<
+      {
+        success: boolean;
+        incompleteOrders: IncompleteOrderData[];
+        total: number;
+        page: number;
+        pages: number;
+      },
+      { page?: number; limit?: number; search?: string; status?: string }
+    >({
+      query: (params) => ({
+        url: "/orders/admin/incomplete",
+        params,
+      }),
+      providesTags: ["IncompleteOrder"],
+    }),
+
+    updateIncompleteOrderStatus: builder.mutation<
+      { success: boolean; message: string; incompleteOrder: IncompleteOrderData },
+      { id: string; status?: string; adminNotes?: string }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/orders/admin/incomplete/${id}/status`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["IncompleteOrder"],
+    }),
+
+    convertIncompleteOrder: builder.mutation<
+      { success: boolean; message: string; order: OrderData },
+      { id: string; [key: string]: any }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/orders/admin/incomplete/${id}/convert`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["IncompleteOrder", "Order", "AdminStats"],
+    }),
+
+    deleteIncompleteOrder: builder.mutation<{ success: boolean; message: string }, string>({
+      query: (id) => ({
+        url: `/orders/admin/incomplete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["IncompleteOrder"],
+    }),
   }),
 });
+
+export interface IncompleteOrderData {
+  _id: string;
+  customerName: string;
+  phoneNumber: string;
+  email?: string;
+  address?: string;
+  district?: string;
+  thana?: string;
+  productName: string;
+  quantity: number;
+  size?: string;
+  unitPrice: number;
+  deliveryCharge?: number;
+  totalPrice: number;
+  ipAddress?: string;
+  status: "Pending" | "Contacted" | "Converted" | "Cancelled";
+  adminNotes?: string;
+  orderNotes?: string;
+  hasPreviousOrders?: boolean;
+  previousOrdersCount?: number;
+  convertedOrderId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface BlockedIpData {
   _id?: string;
@@ -310,5 +396,10 @@ export const {
   useGetBlockedIpsQuery,
   useBlockIpMutation,
   useUnblockIpMutation,
+  useRecordIncompleteOrderMutation,
+  useGetIncompleteOrdersQuery,
+  useUpdateIncompleteOrderStatusMutation,
+  useConvertIncompleteOrderMutation,
+  useDeleteIncompleteOrderMutation,
 } = orderApi;
 
