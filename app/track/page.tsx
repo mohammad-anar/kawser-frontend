@@ -27,6 +27,7 @@ import Link from "next/link";
 const STATUS_STEPS = [
   { key: "Pending", label: "অর্ডার গ্রহণ", desc: "আপনার অর্ডারটি সফলভাবে জমা হয়েছে", icon: Clock },
   { key: "Confirmed", label: "কনফার্মড", desc: "অর্ডার যাচাই ও নিশ্চিত করা হয়েছে", icon: ShieldCheck },
+  { key: "Scheduled", label: "শিডিউলড", desc: "ডেলিভারির জন্য নির্ধারিত সময় সেট করা হয়েছে", icon: Calendar },
   { key: "Processing", label: "প্রক্রিয়াধীন", desc: "প্যাকেজিং সম্পন্ন করা হচ্ছে", icon: Package },
   { key: "Shipped", label: "কুরিয়ারে পাঠানো", desc: "ডেলিভারি ম্যানের কাছে হস্তান্তর করা হয়েছে", icon: Truck },
   { key: "Delivered", label: "ডেলিভার্ড", desc: "পণ্য সফলভাবে পৌঁছে দেওয়া হয়েছে", icon: CheckCircle2 },
@@ -77,7 +78,7 @@ function TrackContent() {
   }, [initialId]);
 
   const getStepStatus = (stepKey: string, currentStatus: string) => {
-    const orderHierarchy = ["Pending", "Confirmed", "Processing", "Shipped", "Delivered"];
+    const orderHierarchy = ["Pending", "Confirmed", "Scheduled", "Processing", "Shipped", "Delivered"];
     if (currentStatus === "Cancelled") return "cancelled";
     if (currentStatus === "Hold") {
       if (stepKey === "Pending") return "completed";

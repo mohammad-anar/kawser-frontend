@@ -33,14 +33,23 @@ import {
   Archive,
   Phone,
   Layers,
+  ShieldBan,
+  ShieldCheck,
+  ShieldAlert,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminSocket } from "@/lib/useAdminSocket";
+import {
+  useGetBlockedIpsQuery,
+  useBlockIpMutation,
+  useUnblockIpMutation,
+} from "@/lib/redux/api/orderApi";
 
 const STATUSES = [
   { key: "all", label: "সকল অর্ডার" },
   { key: "Pending", label: "পেন্ডিং" },
   { key: "Confirmed", label: "কনফার্মড" },
+  { key: "Scheduled", label: "শিডিউলড" },
   { key: "Processing", label: "প্রসেসিং" },
   { key: "Hold", label: "হোল্ড" },
   { key: "Shipped", label: "শিপড" },
@@ -51,6 +60,7 @@ const STATUSES = [
 const STATUS_COLORS: Record<string, string> = {
   Pending: "bg-amber-500/10 text-amber-400 border-amber-500/30",
   Confirmed: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  Scheduled: "bg-indigo-500/10 text-indigo-400 border-indigo-500/30",
   Processing: "bg-purple-500/10 text-purple-400 border-purple-500/30",
   Hold: "bg-orange-500/10 text-orange-500 border-orange-500/30",
   Shipped: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
@@ -74,6 +84,8 @@ export default function AdminOrdersPage() {
   const [editingOrder, setEditingOrder] = useState<OrderData | null>(null);
   const [softDeleteTarget, setSoftDeleteTarget] = useState<OrderData | null>(null);
   const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<OrderData | null>(null);
+  const [blockIpTarget, setBlockIpTarget] = useState<OrderData | null>(null);
+  const [blockReason, setBlockReason] = useState<string>("স্প্যাম / অযাচিত অর্ডার");
 
   const [editForm, setEditForm] = useState({
     customerName: "",
@@ -140,6 +152,12 @@ export default function AdminOrdersPage() {
   const [restoreOrder, { isLoading: isRestoring }] = useRestoreOrderMutation();
   const [permanentDeleteOrder, { isLoading: isPermanentDeleting }] = usePermanentDeleteOrderMutation();
   const [exportExcel, { isLoading: isExporting }] = useExportOrdersExcelMutation();
+  const [blockIpMutation, { isLoading: isBlockingIp }] = useBlockIpMutation();
+  const [unblockIpMutation, { isLoading: isUnblockingIp }] = useUnblockIpMutation();
+  const { data: blockedIpsData } = useGetBlockedIpsQuery();
+
+  const blockedIpsList = blockedIpsData?.blockedIps || [];
+  const blockedIpSet = new Set(blockedIpsList.map((b) => b.ip));
 
   // Real-time socket notification & automatic refetch
   useAdminSocket({
@@ -348,6 +366,36 @@ export default function AdminOrdersPage() {
     } catch (err: unknown) {
       const error = err as { data?: { message?: string } };
       toast.error(error?.data?.message || "স্থায়ীভাবে ডিলিট করতে সমস্যা হয়েছে");
+    }
+  };
+
+  const handleBlockIp = async () => {
+    if (!blockIpTarget?.ipAddress) {
+      toast.error("এই অর্ডারে কোনো আইপি অ্যাড্রেস সংরক্ষিত নেই।");
+      return;
+    }
+    try {
+      const res = await blockIpMutation({
+        ip: blockIpTarget.ipAddress,
+        reason: blockReason || "স্প্যাম / অযাচিত অর্ডার",
+      }).unwrap();
+      toast.success(res.message || "আইপি সফলভাবে ব্লক করা হয়েছে।");
+      setBlockIpTarget(null);
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "আইপি ব্লক করতে সমস্যা হয়েছে।");
+    }
+  };
+
+  const handleUnblockIp = async () => {
+    if (!blockIpTarget?.ipAddress) return;
+    try {
+      const res = await unblockIpMutation(blockIpTarget.ipAddress).unwrap();
+      toast.success(res.message || "আইপি সফলভাবে আনব্লক করা হয়েছে।");
+      setBlockIpTarget(null);
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "আইপি আনব্লক করতে সমস্যা হয়েছে।");
     }
   };
 
@@ -701,6 +749,7 @@ export default function AdminOrdersPage() {
                             >
                               <option value="Pending" className="bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400">Pending</option>
                               <option value="Confirmed" className="bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400">Confirmed</option>
+                              <option value="Scheduled" className="bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400">Scheduled</option>
                               <option value="Processing" className="bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400">Processing</option>
                               <option value="Hold" className="bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400">Hold</option>
                               <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
@@ -738,6 +787,24 @@ export default function AdminOrdersPage() {
                                   <Eye size={13} />
                                 </button>
                                 <button
+                                  onClick={() => {
+                                    setBlockIpTarget(ord);
+                                    setBlockReason("স্প্যাম / অযাচিত অর্ডার");
+                                  }}
+                                  className={`p-1.5 rounded-lg border transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95 ${
+                                    ord.ipAddress && blockedIpSet.has(ord.ipAddress)
+                                      ? "bg-red-500/10 text-red-500 border-red-500/30 hover:bg-red-500/20"
+                                      : "bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800"
+                                  }`}
+                                  title={
+                                    ord.ipAddress && blockedIpSet.has(ord.ipAddress)
+                                      ? "আইপি ব্লকড (ম্যানেজ / আনব্লক করুন)"
+                                      : "আইপি ব্লক করুন"
+                                  }
+                                >
+                                  <ShieldBan size={13} />
+                                </button>
+                                <button
                                   onClick={() => setSoftDeleteTarget(ord)}
                                   className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/50 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95"
                                   title="অর্ডার ট্র্যাশে পাঠান (Soft Delete)"
@@ -762,6 +829,24 @@ export default function AdminOrdersPage() {
                                   title="বিস্তারিত দেখুন"
                                 >
                                   <Eye size={13} />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setBlockIpTarget(ord);
+                                    setBlockReason("স্প্যাম / অযাচিত অর্ডার");
+                                  }}
+                                  className={`p-1.5 rounded-lg border transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95 ${
+                                    ord.ipAddress && blockedIpSet.has(ord.ipAddress)
+                                      ? "bg-red-500/10 text-red-500 border-red-500/30 hover:bg-red-500/20"
+                                      : "bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800"
+                                  }`}
+                                  title={
+                                    ord.ipAddress && blockedIpSet.has(ord.ipAddress)
+                                      ? "আইপি ব্লকড (ম্যানেজ / আনব্লক করুন)"
+                                      : "আইপি ব্লক করুন"
+                                  }
+                                >
+                                  <ShieldBan size={13} />
                                 </button>
                                 <button
                                   onClick={() => setPermanentDeleteTarget(ord)}
@@ -875,6 +960,23 @@ export default function AdminOrdersPage() {
                   <span className="text-slate-400 block text-[11px] font-semibold">ফোন নম্বর:</span>
                   <span className="font-mono font-bold text-slate-900 dark:text-white">{selectedOrder.phoneNumber}</span>
                 </div>
+                {selectedOrder.ipAddress && (
+                  <div className="col-span-2 pt-1 border-t border-slate-100 dark:border-slate-700/40 flex items-center justify-between">
+                    <div>
+                      <span className="text-slate-400 block text-[11px] font-semibold">গ্রাহকের আইপি (IP):</span>
+                      <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-xs">{selectedOrder.ipAddress}</span>
+                    </div>
+                    {blockedIpSet.has(selectedOrder.ipAddress) ? (
+                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 font-bold border border-red-200 dark:border-red-900">
+                        আইপি ব্লকড
+                      </span>
+                    ) : (
+                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-900">
+                        আইপি সচল
+                      </span>
+                    )}
+                  </div>
+                )}
                 {selectedOrder.email && (
                   <div className="col-span-2">
                     <span className="text-slate-400 block text-[11px] font-semibold">ইমেইল:</span>
@@ -1204,6 +1306,7 @@ export default function AdminOrdersPage() {
                     >
                       <option value="Pending" className="bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400">Pending</option>
                       <option value="Confirmed" className="bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400">Confirmed</option>
+                      <option value="Scheduled" className="bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400">Scheduled</option>
                       <option value="Processing" className="bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400">Processing</option>
                       <option value="Hold" className="bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400">Hold</option>
                       <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
@@ -1372,6 +1475,149 @@ export default function AdminOrdersPage() {
                   </>
                 )}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* IP Block / Unblock Modal */}
+      {blockIpTarget && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f172a] max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl relative rounded-3xl animate-scaleIn">
+            <button
+              onClick={() => setBlockIpTarget(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 dark:hover:text-white p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div
+                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${
+                  blockIpTarget.ipAddress && blockedIpSet.has(blockIpTarget.ipAddress)
+                    ? "bg-amber-100 dark:bg-amber-950/80 border-amber-300 dark:border-amber-800 text-amber-600 dark:text-amber-400"
+                    : "bg-red-100 dark:bg-red-950/80 border-red-300 dark:border-red-800 text-red-600 dark:text-red-400"
+                }`}
+              >
+                {blockIpTarget.ipAddress && blockedIpSet.has(blockIpTarget.ipAddress) ? (
+                  <ShieldCheck size={22} />
+                ) : (
+                  <ShieldAlert size={22} />
+                )}
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  {blockIpTarget.ipAddress && blockedIpSet.has(blockIpTarget.ipAddress)
+                    ? "আইপি আনব্লক ব্যবস্থাপনা"
+                    : "আইপি ব্লক ব্যবস্থাপনা"}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  অর্ডার: {blockIpTarget.orderId}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3.5 mb-6">
+              <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700/60 space-y-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-slate-500 dark:text-slate-400">গ্রাহকের নাম:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{blockIpTarget.customerName}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-slate-500 dark:text-slate-400">মোবাইল:</span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">{blockIpTarget.phoneNumber}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
+                  <span className="text-slate-500 dark:text-slate-400 font-semibold">গ্রাহকের আইপি:</span>
+                  <span className="font-mono font-black text-blue-600 dark:text-blue-400 text-sm">
+                    {blockIpTarget.ipAddress || "কোনো আইপি রেকর্ড নেই"}
+                  </span>
+                </div>
+              </div>
+
+              {blockIpTarget.ipAddress ? (
+                blockedIpSet.has(blockIpTarget.ipAddress) ? (
+                  <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-xl p-3">
+                    <p className="text-xs text-red-600 dark:text-red-300 font-semibold flex items-center gap-1.5">
+                      <ShieldBan size={15} /> এই আইপিটি বর্তমানে ব্লক করা আছে। আনব্লক করতে নিচের বাটনে চাপ দিন।
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      ব্লক করার কারণ (ঐচ্ছিক):
+                    </label>
+                    <input
+                      type="text"
+                      value={blockReason}
+                      onChange={(e) => setBlockReason(e.target.value)}
+                      placeholder="যেমন: স্প্যাম অর্ডার / ফেক অর্ডার"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-red-500"
+                    />
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      ⚠️ আইপি ব্লক করলে এই আইপি থেকে আর কোনো অর্ডার করা যাবে না।
+                    </p>
+                  </div>
+                )
+              ) : (
+                <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 rounded-xl p-3">
+                  <p className="text-xs text-amber-700 dark:text-amber-300 font-semibold">
+                    এই পুরনো অর্ডারে কোনো আইপি অ্যাড্রেস সংরক্ষিত নেই। নতুন অর্ডারের সাথে আইপি স্বয়ংক্রিয়ভাবে সংরক্ষিত হবে।
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setBlockIpTarget(null)}
+                disabled={isBlockingIp || isUnblockingIp}
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 font-bold transition-colors cursor-pointer"
+              >
+                বাতিল
+              </button>
+
+              {blockIpTarget.ipAddress &&
+                (blockedIpSet.has(blockIpTarget.ipAddress) ? (
+                  <button
+                    type="button"
+                    onClick={handleUnblockIp}
+                    disabled={isUnblockingIp}
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                  >
+                    {isUnblockingIp ? (
+                      <>
+                        <Loader2 size={13} className="animate-spin" />
+                        আনব্লক হচ্ছে...
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck size={13} />
+                        আইপি আনব্লক করুন
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleBlockIp}
+                    disabled={isBlockingIp}
+                    className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                  >
+                    {isBlockingIp ? (
+                      <>
+                        <Loader2 size={13} className="animate-spin" />
+                        ব্লক হচ্ছে...
+                      </>
+                    ) : (
+                      <>
+                        <ShieldBan size={13} />
+                        আইপি ব্লক করুন
+                      </>
+                    )}
+                  </button>
+                ))}
             </div>
           </div>
         </div>

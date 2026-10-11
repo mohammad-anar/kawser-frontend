@@ -46,6 +46,7 @@ import {
 const STATUS_COLORS: Record<string, string> = {
   Pending: "bg-amber-500/10 text-amber-400 border-amber-500/30",
   Confirmed: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  Scheduled: "bg-indigo-500/10 text-indigo-400 border-indigo-500/30",
   Processing: "bg-purple-500/10 text-purple-400 border-purple-500/30",
   Hold: "bg-orange-500/10 text-orange-500 border-orange-500/30",
   Shipped: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
@@ -398,6 +399,7 @@ export default function AdminDashboardPage() {
                         >
                           <option value="Pending">Pending</option>
                           <option value="Confirmed">Confirmed</option>
+                          <option value="Scheduled">Scheduled</option>
                           <option value="Processing">Processing</option>
                           <option value="Hold" className="text-orange-500">Hold</option>
                           <option value="Shipped">Shipped</option>

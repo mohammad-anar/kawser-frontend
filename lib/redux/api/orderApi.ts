@@ -48,7 +48,8 @@ export interface OrderData {
   deliveryCharge: number;
   totalPrice: number;
   paymentMethod: string;
-  status: "Pending" | "Confirmed" | "Processing" | "Hold" | "Shipped" | "Delivered" | "Cancelled";
+  status: "Pending" | "Confirmed" | "Scheduled" | "Processing" | "Hold" | "Shipped" | "Delivered" | "Cancelled";
+  ipAddress?: string;
   isGuestOrder: boolean;
   orderNotes?: string;
   statusHistory?: {
@@ -256,8 +257,41 @@ export const orderApi = apiSlice.injectEndpoints({
         responseHandler: (response) => response.blob(),
       }),
     }),
+
+    getBlockedIps: builder.query<{ success: boolean; blockedIps: BlockedIpData[] }, void>({
+      query: () => "/orders/admin/blocked-ips",
+      providesTags: ["BlockedIp"],
+    }),
+
+    blockIp: builder.mutation<
+      { success: boolean; message: string; blockedIp?: BlockedIpData },
+      { ip: string; reason?: string }
+    >({
+      query: (body) => ({
+        url: "/orders/admin/block-ip",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["BlockedIp"],
+    }),
+
+    unblockIp: builder.mutation<{ success: boolean; message: string }, string>({
+      query: (ip) => ({
+        url: `/orders/admin/block-ip/${encodeURIComponent(ip)}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["BlockedIp"],
+    }),
   }),
 });
+
+export interface BlockedIpData {
+  _id?: string;
+  ip: string;
+  reason?: string;
+  blockedBy?: string;
+  createdAt: string;
+}
 
 export const {
   useCreateOrderMutation,
@@ -273,5 +307,8 @@ export const {
   usePermanentDeleteOrderMutation,
   useExportOrdersCSVMutation,
   useExportOrdersExcelMutation,
+  useGetBlockedIpsQuery,
+  useBlockIpMutation,
+  useUnblockIpMutation,
 } = orderApi;
 
