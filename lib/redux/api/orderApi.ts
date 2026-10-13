@@ -84,6 +84,24 @@ export interface UpdateOrderRequest {
   orderNotes?: string;
 }
 
+export interface CreateManualOrderRequest {
+  customerName: string;
+  phoneNumber: string;
+  email?: string;
+  address: string;
+  district?: string;
+  thana?: string;
+  productName?: string;
+  quantity?: number;
+  size?: string;
+  unitPrice?: number;
+  deliveryCharge?: number;
+  totalPrice?: number;
+  paymentMethod?: string;
+  status?: string;
+  orderNotes?: string;
+}
+
 export interface TrackOrderParams {
   orderId?: string;
   phone?: string;
@@ -130,6 +148,18 @@ export const orderApi = apiSlice.injectEndpoints({
     createOrder: builder.mutation<CreateOrderResponse, CreateOrderRequest>({
       query: (orderData) => ({
         url: "/orders",
+        method: "POST",
+        body: orderData,
+      }),
+      invalidatesTags: ["Order", "AdminStats"],
+    }),
+
+    createManualOrder: builder.mutation<
+      { success: boolean; message: string; order: OrderData },
+      CreateManualOrderRequest
+    >({
+      query: (orderData) => ({
+        url: "/orders/admin/manual",
         method: "POST",
         body: orderData,
       }),
@@ -381,6 +411,7 @@ export interface BlockedIpData {
 
 export const {
   useCreateOrderMutation,
+  useCreateManualOrderMutation,
   useTrackOrderQuery,
   useLazyTrackOrderQuery,
   useGetMyOrdersQuery,

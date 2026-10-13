@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AdminNav from "@/components/AdminNav";
+import ManualOrderModal from "@/components/ManualOrderModal";
 import {
   useGetAllOrdersQuery,
   useUpdateOrderStatusMutation,
@@ -25,6 +26,7 @@ import {
   Search,
   Download,
   RefreshCw,
+  Plus,
   Eye,
   Pencil,
   Save,
@@ -96,6 +98,7 @@ export default function AdminOrdersPage() {
   const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<OrderData | null>(null);
   const [blockIpTarget, setBlockIpTarget] = useState<OrderData | null>(null);
   const [blockReason, setBlockReason] = useState<string>("স্প্যাম / অযাচিত অর্ডার");
+  const [isManualOrderOpen, setIsManualOrderOpen] = useState<boolean>(false);
 
   // Incomplete Orders State
   const [convertingTarget, setConvertingTarget] = useState<IncompleteOrderData | null>(null);
@@ -632,6 +635,13 @@ export default function AdminOrdersPage() {
             >
               <RefreshCw size={14} className={isTableFetching ? "animate-spin" : ""} />
               রিফ্রেশ
+            </button>
+            <button
+              onClick={() => setIsManualOrderOpen(true)}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all active:scale-95 shadow-md shadow-blue-500/20 cursor-pointer"
+            >
+              <Plus size={14} />
+              ম্যানুয়াল অর্ডার
             </button>
             <button
               onClick={() => handleExportExcel(selectedIds.length > 0)}
@@ -2287,6 +2297,16 @@ export default function AdminOrdersPage() {
           </div>
         </div>
       )}
+
+      {/* Manual Order Modal */}
+      <ManualOrderModal
+        isOpen={isManualOrderOpen}
+        onClose={() => setIsManualOrderOpen(false)}
+        onSuccess={() => {
+          refetchActive();
+          refetchIncomplete();
+        }}
+      />
     </div>
   );
 }
