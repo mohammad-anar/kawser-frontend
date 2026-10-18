@@ -64,6 +64,13 @@ export interface OrderData {
   deviceId?: string;
   isGuestOrder: boolean;
   orderNotes?: string;
+  steadfast?: {
+    consignmentId?: number | null;
+    trackingCode?: string;
+    status?: string;
+    sentAt?: string | null;
+    responseMessage?: string;
+  };
   statusHistory?: {
     status: string;
     changedAt: string;
@@ -75,6 +82,33 @@ export interface OrderData {
   estimatedDelivery?: string;
   isDeleted?: boolean;
   deletedAt?: string;
+}
+
+export interface FraudScoreResponse {
+  success: boolean;
+  phone?: string;
+  totalParcels?: number;
+  delivered?: number;
+  cancelled?: number;
+  deliveryRate?: number | null;
+  riskLevel?: "low" | "medium" | "high" | "unknown";
+  fraudReports?: any[];
+  message?: string;
+}
+
+export interface SteadfastSendResponse {
+  success: boolean;
+  message: string;
+  order?: OrderData;
+  consignment?: {
+    consignment_id?: number;
+    tracking_code?: string;
+    status?: string;
+    invoice?: string;
+  };
+  successCount?: number;
+  failedCount?: number;
+  updatedOrders?: OrderData[];
 }
 
 export interface UpdateOrderRequest {
@@ -450,6 +484,36 @@ export const orderApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["IncompleteOrder"],
     }),
+
+    sendOrderToSteadfast: builder.mutation<SteadfastSendResponse, string>({
+      query: (id) => ({
+        url: `/steadfast/send-order/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Order", "AdminStats"],
+    }),
+
+    sendBulkOrdersToSteadfast: builder.mutation<SteadfastSendResponse, { orderIds: string[] }>({
+      query: (body) => ({
+        url: `/steadfast/send-bulk`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Order", "AdminStats"],
+    }),
+
+    checkSteadfastStatus: builder.query<{ success: boolean; delivery_status?: string; steadfast?: any }, string>({
+      query: (orderId) => `/steadfast/status/${orderId}`,
+      providesTags: ["Order"],
+    }),
+
+    checkFraudScore: builder.query<FraudScoreResponse, string>({
+      query: (phone) => `/steadfast/fraud-score/${encodeURIComponent(phone)}`,
+    }),
+
+    getSteadfastConfigStatus: builder.query<{ success: boolean; isConfigured: boolean; baseUrl?: string }, void>({
+      query: () => `/steadfast/config-status`,
+    }),
   }),
 });
 
@@ -516,5 +580,12 @@ export const {
   useUpdateIncompleteOrderStatusMutation,
   useConvertIncompleteOrderMutation,
   useDeleteIncompleteOrderMutation,
+  useSendOrderToSteadfastMutation,
+  useSendBulkOrdersToSteadfastMutation,
+  useCheckSteadfastStatusQuery,
+  useLazyCheckSteadfastStatusQuery,
+  useCheckFraudScoreQuery,
+  useLazyCheckFraudScoreQuery,
+  useGetSteadfastConfigStatusQuery,
 } = orderApi;
 

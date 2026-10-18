@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import AdminNav from "@/components/AdminNav";
 import ManualOrderModal from "@/components/ManualOrderModal";
+import SteadfastLabelPrinterModal, { SteadfastLabelItem } from "@/components/SteadfastLabelPrinterModal";
 import {
   useGetAllOrdersQuery,
   useUpdateOrderStatusMutation,
@@ -27,6 +28,12 @@ import {
   useUpdateIncompleteOrderStatusMutation,
   useConvertIncompleteOrderMutation,
   useDeleteIncompleteOrderMutation,
+  useSendOrderToSteadfastMutation,
+  useSendBulkOrdersToSteadfastMutation,
+  useLazyCheckSteadfastStatusQuery,
+  useLazyCheckFraudScoreQuery,
+  useGetSteadfastConfigStatusQuery,
+  FraudScoreResponse,
 } from "@/lib/redux/api/orderApi";
 import {
   Search,
@@ -59,6 +66,9 @@ import {
   UserCheck,
   AlertCircle,
   CheckCircle2,
+  Truck,
+  Copy,
+  Printer,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminSocket } from "@/lib/useAdminSocket";
@@ -234,6 +244,21 @@ export default function AdminOrdersPage() {
   const blockedIpSet = useMemo(() => new Set(blockedEntitiesList.filter((e) => e.type === "ip").map((e) => e.value)), [blockedEntitiesList]);
   const blockedPhoneSet = useMemo(() => new Set(blockedEntitiesList.filter((e) => e.type === "phone").map((e) => e.value)), [blockedEntitiesList]);
   const blockedDeviceSet = useMemo(() => new Set(blockedEntitiesList.filter((e) => e.type === "device").map((e) => e.value)), [blockedEntitiesList]);
+
+  // Steadfast Courier States & Hooks
+  const [sendOrderToSteadfast, { isLoading: isSendingSingleSteadfast }] = useSendOrderToSteadfastMutation();
+  const [sendBulkOrdersToSteadfast, { isLoading: isSendingBulkSteadfast }] = useSendBulkOrdersToSteadfastMutation();
+  const [triggerCheckStatus] = useLazyCheckSteadfastStatusQuery();
+  const [triggerCheckFraud, { isFetching: isCheckingFraud }] = useLazyCheckFraudScoreQuery();
+  const { data: sfConfig } = useGetSteadfastConfigStatusQuery();
+
+  const [sendingOrderId, setSendingOrderId] = useState<string | null>(null);
+  const [syncingOrderId, setSyncingOrderId] = useState<string | null>(null);
+  const [fraudModalPhone, setFraudModalPhone] = useState<string | null>(null);
+  const [fraudData, setFraudData] = useState<FraudScoreResponse | { error?: string } | null>(null);
+  const [bulkSteadfastConfirmOpen, setBulkSteadfastConfirmOpen] = useState<boolean>(false);
+  const [isLabelPrinterOpen, setIsLabelPrinterOpen] = useState<boolean>(false);
+  const [labelPrinterIncoming, setLabelPrinterIncoming] = useState<SteadfastLabelItem[]>([]);
 
   // Real-time socket notification & automatic refetch
   useAdminSocket({
@@ -663,6 +688,150 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const selectedOrdersWithCidCount = useMemo(() => {
+    if (!currentOrders || selectedIds.length === 0) return 0;
+    return currentOrders.filter(
+      (ord) => selectedIds.includes(ord._id) && ord.steadfast?.consignmentId
+    ).length;
+  }, [currentOrders, selectedIds]);
+
+  const handleSendBulkSteadfast = async () => {
+    if (selectedIds.length === 0) return;
+    try {
+      const res = await sendBulkOrdersToSteadfast({ orderIds: selectedIds }).unwrap();
+      toast.success(res.message || `${selectedIds.length} টি অর্ডার স্টিডফাস্টে পাঠানো হয়েছে!`);
+      setSelectedIds([]);
+      setBulkSteadfastConfirmOpen(false);
+      refetchActive();
+
+      // Automatically queue returned consignments for 2x3" label printing
+      if (res.updatedOrders && res.updatedOrders.length > 0) {
+        const returnedLabels: SteadfastLabelItem[] = res.updatedOrders
+          .filter((o: OrderData) => Boolean(o.steadfast?.consignmentId))
+          .map((o: OrderData) => ({
+            id: String(o.steadfast!.consignmentId),
+            consignmentId: o.steadfast!.consignmentId!,
+            shopId: "2410661",
+            orderId: o.orderId,
+            customerName: o.customerName,
+            phoneNumber: o.phoneNumber,
+            address: o.address,
+            createdAt: new Date().toISOString(),
+          }));
+
+        if (returnedLabels.length > 0) {
+          setLabelPrinterIncoming(returnedLabels);
+          setIsLabelPrinterOpen(true);
+        }
+      }
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "স্টিডফাস্টে পাঠাতে সমস্যা হয়েছে।");
+    }
+  };
+
+  const handleSendSingleSteadfast = async (order: OrderData) => {
+    try {
+      setSendingOrderId(order._id);
+      const res = await sendOrderToSteadfast(order._id).unwrap();
+      toast.success(res.message || "স্টিডফাস্টে সফলভাবে পাঠানো হয়েছে!");
+      refetchActive();
+
+      const cid = res.consignment?.consignment_id || res.order?.steadfast?.consignmentId;
+      if (cid) {
+        setLabelPrinterIncoming([
+          {
+            id: String(cid),
+            consignmentId: cid,
+            shopId: "2410661",
+            orderId: order.orderId,
+            customerName: order.customerName,
+            phoneNumber: order.phoneNumber,
+            address: order.address,
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+        setIsLabelPrinterOpen(true);
+      }
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "স্টিডফাস্টে পাঠাতে সমস্যা হয়েছে।");
+    } finally {
+      setSendingOrderId(null);
+    }
+  };
+
+  const handleOpenPrintForSelected = () => {
+    if (!currentOrders) return;
+    const selectedOrdersWithCid = currentOrders.filter(
+      (ord) => selectedIds.includes(ord._id) && ord.steadfast?.consignmentId
+    );
+
+    if (selectedOrdersWithCid.length === 0) {
+      toast.error("নির্বাচিত কোনো অর্ডারে স্টিডফাস্ট কনসাইনমেন্ট আইডি নেই। প্রথমে স্টিডফাস্টে পাঠান।");
+      return;
+    }
+
+    const items: SteadfastLabelItem[] = selectedOrdersWithCid.map((ord) => ({
+      id: String(ord.steadfast!.consignmentId),
+      consignmentId: ord.steadfast!.consignmentId!,
+      shopId: "2410661",
+      orderId: ord.orderId,
+      customerName: ord.customerName,
+      phoneNumber: ord.phoneNumber,
+      address: ord.address,
+      createdAt: ord.createdAt || new Date().toISOString(),
+    }));
+
+    setLabelPrinterIncoming(items);
+    setIsLabelPrinterOpen(true);
+  };
+
+  const handleOpenSingleLabel = (ord: OrderData) => {
+    if (!ord.steadfast?.consignmentId) {
+      toast.error("এই অর্ডারে কোনো কনসাইনমেন্ট আইডি নেই");
+      return;
+    }
+    setLabelPrinterIncoming([
+      {
+        id: String(ord.steadfast.consignmentId),
+        consignmentId: ord.steadfast.consignmentId,
+        shopId: "2410661",
+        orderId: ord.orderId,
+        customerName: ord.customerName,
+        phoneNumber: ord.phoneNumber,
+        address: ord.address,
+        createdAt: ord.createdAt || new Date().toISOString(),
+      },
+    ]);
+    setIsLabelPrinterOpen(true);
+  };
+
+  const handleSyncSteadfastStatus = async (orderId: string) => {
+    try {
+      setSyncingOrderId(orderId);
+      const res = await triggerCheckStatus(orderId).unwrap();
+      toast.success(`স্টিডফাস্ট স্ট্যাটাস: ${res.delivery_status || res.steadfast?.status || "আপডেটেড"}`);
+      refetchActive();
+    } catch (err: unknown) {
+      toast.error("স্ট্যাটাস সিঙ্ক করতে সমস্যা হয়েছে।");
+    } finally {
+      setSyncingOrderId(null);
+    }
+  };
+
+  const handleOpenFraudCheck = async (phone: string) => {
+    setFraudModalPhone(phone);
+    setFraudData(null);
+    try {
+      const res = await triggerCheckFraud(phone).unwrap();
+      setFraudData(res);
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      setFraudData({ error: error?.data?.message || "ফ্রড স্কোর চেক করা যায়নি।" });
+    }
+  };
+
   const handleExportExcel = async (exportOnlySelected: boolean = false) => {
     try {
       const isCustomSelected = exportOnlySelected && selectedIds.length > 0;
@@ -728,6 +897,17 @@ export default function AdminOrdersPage() {
             >
               <Plus size={14} />
               ম্যানুয়াল অর্ডার
+            </button>
+            <button
+              onClick={() => {
+                setLabelPrinterIncoming([]);
+                setIsLabelPrinterOpen(true);
+              }}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800 text-xs font-bold text-emerald-700 dark:text-emerald-300 transition-all active:scale-95 shadow-sm cursor-pointer"
+              title="২×৩ ইঞ্চি স্টিডফাস্ট কুরিয়ার স্টিকার / লেবেল প্রিন্টার"
+            >
+              <Printer size={14} />
+              <span>স্টিকার প্রিন্ট</span>
             </button>
             <button
               onClick={() => handleExportExcel(selectedIds.length > 0)}
@@ -849,6 +1029,31 @@ export default function AdminOrdersPage() {
                   <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled</option>
                 </select>
               </div>
+
+              {/* Send to Steadfast Bulk Button */}
+              <button
+                type="button"
+                onClick={() => setBulkSteadfastConfirmOpen(true)}
+                disabled={isSendingBulkSteadfast}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-2 rounded-xl flex items-center justify-center gap-1.5 font-bold shadow-md cursor-pointer active:scale-95 transition-all"
+                title="নির্বাচিত অর্ডারগুলো স্টিডফাস্ট কুরিয়ারে পাঠান"
+              >
+                <Truck size={14} />
+                <span>{isSendingBulkSteadfast ? "পাঠানো হচ্ছে..." : `স্টিডফাস্টে পাঠান (${selectedIds.length})`}</span>
+              </button>
+
+              {/* Print Labels for Selected Orders */}
+              {selectedOrdersWithCidCount > 0 && (
+                <button
+                  type="button"
+                  onClick={handleOpenPrintForSelected}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3.5 py-2 rounded-xl flex items-center justify-center gap-1.5 font-bold shadow-md cursor-pointer active:scale-95 transition-all"
+                  title="নির্বাচিত অর্ডারগুলোর জন্য ২×৩ ইঞ্চি কুরিয়ার স্টিকার প্রিন্ট করুন"
+                >
+                  <Printer size={14} />
+                  <span>স্টিকার প্রিন্ট ({selectedOrdersWithCidCount})</span>
+                </button>
+              )}
 
               <button
                 onClick={() => handleExportExcel(true)}
@@ -1012,13 +1217,16 @@ export default function AdminOrdersPage() {
                   <th className="py-3.5 px-4 font-semibold">
                     {activeTab === "deleted" ? "পূর্ববর্তী স্ট্যাটাস" : "স্ট্যাটাস পরিবর্তন"}
                   </th>
+                  {activeTab === "active" && (
+                    <th className="py-3.5 px-4 font-semibold">স্টিডফাস্ট কুরিয়ার</th>
+                  )}
                   <th className="py-3.5 px-4 font-semibold text-right">অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-slate-700 dark:text-slate-200">
                 {isTableLoading ? (
                   <tr>
-                    <td colSpan={activeTab === "active" ? 9 : 8} className="py-12 text-center text-blue-600 dark:text-blue-400 text-xs font-bold">
+                    <td colSpan={activeTab === "active" ? 10 : 8} className="py-12 text-center text-blue-600 dark:text-blue-400 text-xs font-bold">
                       লোড হচ্ছে...
                     </td>
                   </tr>
@@ -1064,14 +1272,25 @@ export default function AdminOrdersPage() {
                               </span>
                             )}
                           </div>
-                          <div className="font-mono text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
-                            <PhoneCall size={12} className="text-emerald-500" />
-                            <a
-                              href={`tel:${inc.phoneNumber}`}
-                              className="hover:underline text-emerald-600 dark:text-emerald-400 font-bold"
+                          <div className="font-mono text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5 flex-wrap">
+                            <div className="flex items-center gap-1">
+                              <PhoneCall size={12} className="text-emerald-500" />
+                              <a
+                                href={`tel:${inc.phoneNumber}`}
+                                className="hover:underline text-emerald-600 dark:text-emerald-400 font-bold"
+                              >
+                                {inc.phoneNumber}
+                              </a>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenFraudCheck(inc.phoneNumber)}
+                              className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 transition-colors inline-flex items-center gap-0.5 cursor-pointer active:scale-95"
+                              title="স্টিডফাস্ট ফ্রড স্কোর ও ডেলিভারি হিস্ট্রি চেক করুন"
                             >
-                              {inc.phoneNumber}
-                            </a>
+                              <ShieldAlert size={10} />
+                              <span>ফ্রড চেক</span>
+                            </button>
                           </div>
                         </td>
                         <td className="py-3.5 px-4 max-w-[200px]">
@@ -1236,7 +1455,18 @@ export default function AdminOrdersPage() {
                         </td>
                         <td className="py-3.5 px-4">
                           <div className="font-bold text-slate-900 dark:text-white">{ord.customerName}</div>
-                          <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">{ord.phoneNumber}</div>
+                          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                            <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">{ord.phoneNumber}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenFraudCheck(ord.phoneNumber)}
+                              className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 transition-colors inline-flex items-center gap-0.5 cursor-pointer active:scale-95"
+                              title="স্টিডফাস্ট ফ্রড স্কোর ও পার্সেল হিস্ট্রি চেক করুন"
+                            >
+                              <ShieldAlert size={10} />
+                              <span>ফ্রড চেক</span>
+                            </button>
+                          </div>
                         </td>
                         <td className="py-3.5 px-4 max-w-xs truncate text-xs text-slate-600 dark:text-slate-300">
                           {ord.address}
@@ -1281,6 +1511,80 @@ export default function AdminOrdersPage() {
                             </span>
                           )}
                         </td>
+
+                        {/* Steadfast Courier Column */}
+                        {activeTab === "active" && (
+                          <td className="py-3.5 px-4 text-xs whitespace-nowrap">
+                            {ord.steadfast?.consignmentId ? (
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="font-mono font-bold text-[11px] bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
+                                    CID: {ord.steadfast.consignmentId}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSyncSteadfastStatus(ord._id)}
+                                    disabled={syncingOrderId === ord._id}
+                                    className="p-1 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 rounded transition-colors cursor-pointer"
+                                    title="লাইভ ডেলিভারি স্ট্যাটাস রিফ্রেশ করুন"
+                                  >
+                                    <RefreshCw size={11} className={syncingOrderId === ord._id ? "animate-spin text-emerald-600" : ""} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenSingleLabel(ord)}
+                                    className="p-1 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded transition-colors cursor-pointer"
+                                    title="২×৩ ইঞ্চি স্টিকার প্রিন্ট করুন"
+                                  >
+                                    <Printer size={11} />
+                                  </button>
+                                </div>
+                                {ord.steadfast.trackingCode && (
+                                  <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                                    <span>TRK: {ord.steadfast.trackingCode}</span>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        if (ord.steadfast?.trackingCode) {
+                                          navigator.clipboard.writeText(ord.steadfast.trackingCode);
+                                          toast.success("ট্র্যাকিং কোড কপি করা হয়েছে!");
+                                        }
+                                      }}
+                                      className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 cursor-pointer"
+                                      title="ট্র্যাকিং কোড কপি করুন"
+                                    >
+                                      <Copy size={10} />
+                                    </button>
+                                  </div>
+                                )}
+                                <div>
+                                  <span
+                                    className={`inline-block text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                                      ord.steadfast.status?.toLowerCase().includes("deliver")
+                                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
+                                        : ord.steadfast.status?.toLowerCase().includes("cancel")
+                                        ? "bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 border border-red-200 dark:border-red-800"
+                                        : "bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                                    }`}
+                                  >
+                                    {ord.steadfast.status || "ইন-কুরিয়ার"}
+                                  </span>
+                                </div>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleSendSingleSteadfast(ord)}
+                                disabled={sendingOrderId === ord._id}
+                                className="px-2.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-bold text-[11px] inline-flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                title="অর্ডারটি স্টিডফাস্ট কুরিয়ারে বুকিং করুন"
+                              >
+                                <Truck size={13} className={sendingOrderId === ord._id ? "animate-bounce" : ""} />
+                                <span>{sendingOrderId === ord._id ? "পাঠানো হচ্ছে..." : "স্টিডফাস্টে পাঠান"}</span>
+                              </button>
+                            )}
+                          </td>
+                        )}
 
                         {/* Action Column */}
                         <td className="py-3.5 px-4 text-right">
@@ -1579,7 +1883,7 @@ export default function AdminOrdersPage() {
                 ) : (
                   <tr>
                     <td
-                      colSpan={activeTab === "active" ? 9 : 8}
+                      colSpan={activeTab === "active" ? 10 : 8}
                       className="py-12 text-center text-slate-400 text-xs"
                     >
                       {activeTab === "active"
@@ -1780,6 +2084,73 @@ export default function AdminOrdersPage() {
                   {selectedOrder.orderNotes}
                 </div>
               )}
+
+              {/* Steadfast Courier Info in Details Modal */}
+              <div className="p-3.5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 font-bold text-xs text-slate-900 dark:text-white">
+                    <Truck size={15} className="text-emerald-600 dark:text-emerald-400" />
+                    <span>স্টিডফাস্ট কুরিয়ার ট্র্যাকিং</span>
+                  </div>
+                  {selectedOrder.steadfast?.consignmentId ? (
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenSingleLabel(selectedOrder)}
+                        className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <Printer size={12} />
+                        স্টিকার প্রিন্ট
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSyncSteadfastStatus(selectedOrder._id)}
+                        disabled={syncingOrderId === selectedOrder._id}
+                        className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <RefreshCw size={11} className={syncingOrderId === selectedOrder._id ? "animate-spin" : ""} />
+                        লাইভ সিঙ্ক
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+
+                {selectedOrder.steadfast?.consignmentId ? (
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-slate-400 text-[11px] block">কনসাইনমেন্ট আইডি:</span>
+                      <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">
+                        {selectedOrder.steadfast.consignmentId}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 text-[11px] block">ট্র্যাকিং কোড:</span>
+                      <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">
+                        {selectedOrder.steadfast.trackingCode || "প্রযোজ্য নয়"}
+                      </span>
+                    </div>
+                    <div className="col-span-2 pt-1 border-t border-emerald-100 dark:border-emerald-900/50 flex items-center justify-between">
+                      <span className="text-slate-500 dark:text-slate-400 text-[11px]">ডেলিভারি স্ট্যাটাস:</span>
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded text-[11px] border border-emerald-200 dark:border-emerald-800">
+                        {selectedOrder.steadfast.status || "In Courier"}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between pt-0.5">
+                    <span className="text-xs text-slate-500 dark:text-slate-400">স্টিডফাস্টে এখনো বুকিং করা হয়নি</span>
+                    <button
+                      type="button"
+                      onClick={() => handleSendSingleSteadfast(selectedOrder)}
+                      disabled={sendingOrderId === selectedOrder._id}
+                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs inline-flex items-center gap-1.5 shadow-sm transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                    >
+                      <Truck size={13} className={sendingOrderId === selectedOrder._id ? "animate-bounce" : ""} />
+                      {sendingOrderId === selectedOrder._id ? "পাঠানো হচ্ছে..." : "এখনই পাঠান"}
+                    </button>
+                  </div>
+                )}
+              </div>
 
               {/* Status History Timeline */}
               {selectedOrder.statusHistory && selectedOrder.statusHistory.length > 0 && (
@@ -2667,6 +3038,230 @@ export default function AdminOrdersPage() {
         </div>
       )}
 
+      {/* Bulk Steadfast Send Confirmation Modal */}
+      {bulkSteadfastConfirmOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f172a] max-w-md w-full p-6 border border-emerald-200 dark:border-emerald-900 shadow-2xl relative rounded-3xl animate-scaleIn">
+            <button
+              onClick={() => setBulkSteadfastConfirmOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 dark:hover:text-white p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <Truck size={20} className={isSendingBulkSteadfast ? "animate-bounce" : ""} />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">স্টিডফাস্ট কুরিয়ারে বুকিং</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  নির্বাচিত {selectedIds.length} টি অর্ডার
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
+              আপনি কি নিশ্চিতভাবে নির্বাচিত <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{selectedIds.length} টি</strong> অর্ডারকে <strong>স্টিডফাস্ট কুরিয়ারে (Steadfast Bulk API)</strong> পাঠাতে চান? সফলভাবে বুকিং হলে প্রতিটি অর্ডারে কনসাইনমেন্ট আইডি এবং ট্র্যাকিং কোড যুক্ত হবে।
+            </p>
+
+            {sfConfig && !sfConfig.isConfigured && (
+              <div className="mb-4 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs flex items-center gap-2">
+                <AlertCircle size={16} className="shrink-0 text-amber-500" />
+                <span>সতর্কতা: ব্যাকএন্ড .env ফাইলে STEADFAST_API_KEY বা SECRET_KEY কনফিগার করা নেই।</span>
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setBulkSteadfastConfirmOpen(false)}
+                disabled={isSendingBulkSteadfast}
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 font-bold transition-colors cursor-pointer"
+              >
+                বাতিল
+              </button>
+              <button
+                type="button"
+                onClick={handleSendBulkSteadfast}
+                disabled={isSendingBulkSteadfast}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+              >
+                {isSendingBulkSteadfast ? (
+                  <>
+                    <Loader2 size={13} className="animate-spin" />
+                    পাঠানো হচ্ছে...
+                  </>
+                ) : (
+                  <>
+                    <Truck size={13} />
+                    হ্যাঁ, পাঠিয়ে দিন ({selectedIds.length})
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fraud Score Modal */}
+      {fraudModalPhone && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f172a] max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl relative rounded-3xl animate-scaleIn">
+            <button
+              onClick={() => {
+                setFraudModalPhone(null);
+                setFraudData(null);
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 dark:hover:text-white p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <ShieldAlert size={20} />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">স্টিডফাস্ট ফ্রড স্কোর চেক</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  {fraudModalPhone}
+                </p>
+              </div>
+            </div>
+
+            {isCheckingFraud ? (
+              <div className="py-8 text-center space-y-3">
+                <Loader2 size={28} className="animate-spin text-amber-500 mx-auto" />
+                <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                  স্টিডফাস্ট কুরিয়ার ডাটাবেজ থেকে ডেলিভারি হিস্ট্রি যাচাই করা হচ্ছে...
+                </p>
+              </div>
+            ) : fraudData && "error" in fraudData && fraudData.error ? (
+              <div className="space-y-4">
+                <div className="p-3.5 rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs">
+                  <div className="font-bold mb-1 flex items-center gap-1.5">
+                    <AlertCircle size={14} />
+                    যাচাই করতে সমস্যা হয়েছে
+                  </div>
+                  <p>{fraudData.error}</p>
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFraudModalPhone(null);
+                      setFraudData(null);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold"
+                  >
+                    বন্ধ করুন
+                  </button>
+                </div>
+              </div>
+            ) : fraudData && "success" in fraudData ? (
+              <div className="space-y-4">
+                {/* Risk Level Badge */}
+                <div
+                  className={`p-3 rounded-2xl border flex items-center justify-between ${
+                    fraudData.riskLevel === "low"
+                      ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300"
+                      : fraudData.riskLevel === "medium"
+                      ? "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300"
+                      : fraudData.riskLevel === "high"
+                      ? "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-900 text-red-800 dark:text-red-300"
+                      : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    {fraudData.riskLevel === "low" ? (
+                      <ShieldCheck size={18} className="text-emerald-600" />
+                    ) : fraudData.riskLevel === "high" ? (
+                      <ShieldBan size={18} className="text-red-600" />
+                    ) : (
+                      <ShieldAlert size={18} className="text-amber-600" />
+                    )}
+                    <div>
+                      <span className="font-black text-xs block">
+                        {fraudData.riskLevel === "low"
+                          ? "কম ঝুঁকি (বিশ্বাসযোগ্য গ্রাহক)"
+                          : fraudData.riskLevel === "medium"
+                          ? "মাঝারি ঝুঁকি (সতর্ক থাকুন)"
+                          : fraudData.riskLevel === "high"
+                          ? "উচ্চ ঝুঁকি (অর্ডার বাতিলের প্রবণতা বেশি)"
+                          : "কোনো পূর্ব হিস্ট্রি পাওয়া যায়নি"}
+                      </span>
+                      <span className="text-[11px] opacity-80">
+                        সফলতার হার: {fraudData.deliveryRate !== null && fraudData.deliveryRate !== undefined ? `${fraudData.deliveryRate}%` : "নতুন গ্রাহক"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Stat Grid */}
+                <div className="grid grid-cols-2 gap-2 text-center">
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+                    <span className="text-[11px] text-slate-400 block font-semibold">মোট পার্সেল</span>
+                    <span className="text-base font-black text-slate-900 dark:text-white">
+                      {fraudData.totalParcels ?? 0} টি
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40">
+                    <span className="text-[11px] text-emerald-600 dark:text-emerald-400 block font-semibold">ডেলিভারি সম্পন্ন</span>
+                    <span className="text-base font-black text-emerald-600 dark:text-emerald-400">
+                      {fraudData.delivered ?? 0} টি
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-red-50/60 dark:bg-red-950/30 border border-red-100 dark:border-red-900/40">
+                    <span className="text-[11px] text-red-600 dark:text-red-400 block font-semibold">রিটার্ন / বাতিল</span>
+                    <span className="text-base font-black text-red-600 dark:text-red-400">
+                      {fraudData.cancelled ?? 0} টি
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40">
+                    <span className="text-[11px] text-blue-600 dark:text-blue-400 block font-semibold">সফলতার হার</span>
+                    <span className="text-base font-black text-blue-600 dark:text-blue-400">
+                      {fraudData.deliveryRate !== null && fraudData.deliveryRate !== undefined ? `${fraudData.deliveryRate}%` : "—"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Phone Blocking Action */}
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <span className="text-xs text-slate-500">
+                    {blockedPhoneSet.has(fraudModalPhone) ? "এই নম্বরটি ব্লক তালিকায় রয়েছে" : "অযাচিত অর্ডার প্রতিরোধে"}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleToggleBlockEntity("phone", fraudModalPhone, blockedPhoneSet.has(fraudModalPhone))
+                    }
+                    disabled={isBlockingEntity || isUnblockingEntity}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer active:scale-95 ${
+                      blockedPhoneSet.has(fraudModalPhone)
+                        ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200"
+                        : "bg-red-600 hover:bg-red-700 text-white shadow-sm"
+                    }`}
+                  >
+                    {blockedPhoneSet.has(fraudModalPhone) ? (
+                      <>
+                        <ShieldCheck size={12} />
+                        নম্বর আনব্লক করুন
+                      </>
+                    ) : (
+                      <>
+                        <ShieldBan size={12} />
+                        নম্বর ব্লক করুন
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
+
       {/* Manual Order Modal */}
       <ManualOrderModal
         isOpen={isManualOrderOpen}
@@ -2675,6 +3270,13 @@ export default function AdminOrdersPage() {
           refetchActive();
           refetchIncomplete();
         }}
+      />
+
+      {/* Steadfast 2x3" Label / Sticker Printer Modal */}
+      <SteadfastLabelPrinterModal
+        isOpen={isLabelPrinterOpen}
+        onClose={() => setIsLabelPrinterOpen(false)}
+        incomingLabels={labelPrinterIncoming}
       />
     </div>
   );
