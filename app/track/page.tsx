@@ -105,7 +105,7 @@ function TrackContent() {
             আপনার অর্ডারের <span className="text-gradient-blue">বর্তমান অবস্থা</span> জানুন
           </h1>
           <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-2 max-w-xl mx-auto font-medium">
-            অর্ডারের সময় প্রাপ্ত অর্ডার আইডি (যেমন: PC-1234) অথবা আপনার ১১ ডিজিটের মোবাইল নম্বর লিখুন।
+            অর্ডারের সময় প্রাপ্ত অর্ডার আইডি (যেমন: CZ-0001) অথবা আপনার ১১ ডিজিটের মোবাইল নম্বর লিখুন।
           </p>
         </div>
 
@@ -124,7 +124,7 @@ function TrackContent() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="অর্ডার আইডি (যেমন: PC-1234) বা মোবাইল নম্বর..."
+                placeholder="অর্ডার আইডি (যেমন: CZ-0001) বা মোবাইল নম্বর..."
                 className="w-full !pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition-colors text-sm font-medium"
               />
             </div>

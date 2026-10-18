@@ -10,9 +10,11 @@ export interface CreateOrderRequest {
   gpsCoordinates?: { lat: number; lng: number };
   quantity: number;
   size?: string;
+  unitPrice?: number;
   orderNotes?: string;
   userId?: string;
   productName?: string;
+  deviceId?: string;
 }
 
 export interface CreateOrderResponse {
@@ -29,6 +31,15 @@ export interface OrderItem {
   quantity: number;
   price: number;
   size?: string;
+}
+
+export interface BlockedEntityData {
+  _id?: string;
+  type: "ip" | "phone" | "device";
+  value: string;
+  reason?: string;
+  blockedBy?: string;
+  createdAt?: string;
 }
 
 export interface OrderData {
@@ -50,6 +61,7 @@ export interface OrderData {
   paymentMethod: string;
   status: "Pending" | "Confirmed" | "Scheduled" | "Processing" | "Hold" | "Shipped" | "Delivered" | "Cancelled";
   ipAddress?: string;
+  deviceId?: string;
   isGuestOrder: boolean;
   orderNotes?: string;
   statusHistory?: {
@@ -224,6 +236,18 @@ export const orderApi = apiSlice.injectEndpoints({
       ],
     }),
 
+    bulkUpdateOrderStatus: builder.mutation<
+      { success: boolean; message: string; modifiedCount: number },
+      { ids: string[]; status: string }
+    >({
+      query: (body) => ({
+        url: "/orders/admin/bulk-status",
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Order", "AdminStats"],
+    }),
+
     updateOrder: builder.mutation<
       { success: boolean; message: string; order: OrderData },
       UpdateOrderRequest
@@ -291,6 +315,59 @@ export const orderApi = apiSlice.injectEndpoints({
     getBlockedIps: builder.query<{ success: boolean; blockedIps: BlockedIpData[] }, void>({
       query: () => "/orders/admin/blocked-ips",
       providesTags: ["BlockedIp"],
+    }),
+
+    getBlockedEntities: builder.query<{ success: boolean; entities: BlockedEntityData[] }, void>({
+      query: () => "/orders/admin/blocked-entities",
+      providesTags: ["BlockedIp"],
+    }),
+
+    blockEntity: builder.mutation<
+      { success: boolean; message: string; entity?: BlockedEntityData },
+      { type: "ip" | "phone" | "device"; value: string; reason?: string }
+    >({
+      query: (body) => ({
+        url: "/orders/admin/block-entity",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["BlockedIp"],
+    }),
+
+    unblockEntity: builder.mutation<
+      { success: boolean; message: string },
+      { type: "ip" | "phone" | "device"; value: string }
+    >({
+      query: (body) => ({
+        url: "/orders/admin/unblock-entity",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["BlockedIp"],
+    }),
+
+    blockAllEntities: builder.mutation<
+      { success: boolean; message: string },
+      { ip?: string; phone?: string; deviceId?: string; reason?: string }
+    >({
+      query: (body) => ({
+        url: "/orders/admin/block-all",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["BlockedIp"],
+    }),
+
+    unblockAllEntities: builder.mutation<
+      { success: boolean; message: string },
+      { ip?: string; phone?: string; deviceId?: string }
+    >({
+      query: (body) => ({
+        url: "/orders/admin/unblock-all",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["BlockedIp"],
     }),
 
     blockIp: builder.mutation<
@@ -391,6 +468,7 @@ export interface IncompleteOrderData {
   deliveryCharge?: number;
   totalPrice: number;
   ipAddress?: string;
+  deviceId?: string;
   status: "Pending" | "Contacted" | "Converted" | "Cancelled";
   adminNotes?: string;
   orderNotes?: string;
@@ -425,8 +503,14 @@ export const {
   useExportOrdersCSVMutation,
   useExportOrdersExcelMutation,
   useGetBlockedIpsQuery,
+  useGetBlockedEntitiesQuery,
+  useBlockEntityMutation,
+  useUnblockEntityMutation,
+  useBlockAllEntitiesMutation,
+  useUnblockAllEntitiesMutation,
   useBlockIpMutation,
   useUnblockIpMutation,
+  useBulkUpdateOrderStatusMutation,
   useRecordIncompleteOrderMutation,
   useGetIncompleteOrdersQuery,
   useUpdateIncompleteOrderStatusMutation,

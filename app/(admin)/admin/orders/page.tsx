@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import AdminNav from "@/components/AdminNav";
 import ManualOrderModal from "@/components/ManualOrderModal";
@@ -15,8 +13,14 @@ import {
   OrderData,
   IncompleteOrderData,
   useGetBlockedIpsQuery,
+  useGetBlockedEntitiesQuery,
+  useBlockEntityMutation,
+  useUnblockEntityMutation,
+  useBlockAllEntitiesMutation,
+  useUnblockAllEntitiesMutation,
   useBlockIpMutation,
   useUnblockIpMutation,
+  useBulkUpdateOrderStatusMutation,
   useGetIncompleteOrdersQuery,
   useUpdateIncompleteOrderStatusMutation,
   useConvertIncompleteOrderMutation,
@@ -99,6 +103,8 @@ export default function AdminOrdersPage() {
   const [blockIpTarget, setBlockIpTarget] = useState<OrderData | null>(null);
   const [blockReason, setBlockReason] = useState<string>("স্প্যাম / অযাচিত অর্ডার");
   const [isManualOrderOpen, setIsManualOrderOpen] = useState<boolean>(false);
+  const [openBlockDropdownOrderId, setOpenBlockDropdownOrderId] = useState<string | null>(null);
+  const [bulkStatusTarget, setBulkStatusTarget] = useState<string | null>(null);
 
   // Incomplete Orders State
   const [convertingTarget, setConvertingTarget] = useState<IncompleteOrderData | null>(null);
@@ -212,13 +218,20 @@ export default function AdminOrdersPage() {
   const [exportExcel, { isLoading: isExporting }] = useExportOrdersExcelMutation();
   const [blockIpMutation, { isLoading: isBlockingIp }] = useBlockIpMutation();
   const [unblockIpMutation, { isLoading: isUnblockingIp }] = useUnblockIpMutation();
+  const [blockEntityMutation, { isLoading: isBlockingEntity }] = useBlockEntityMutation();
+  const [unblockEntityMutation, { isLoading: isUnblockingEntity }] = useUnblockEntityMutation();
+  const [blockAllEntitiesMutation, { isLoading: isBlockingAll }] = useBlockAllEntitiesMutation();
+  const [unblockAllEntitiesMutation, { isLoading: isUnblockingAll }] = useUnblockAllEntitiesMutation();
+  const [bulkUpdateOrderStatus, { isLoading: isBulkUpdatingStatus }] = useBulkUpdateOrderStatusMutation();
   const [updateIncompleteStatus, { isLoading: isUpdatingIncStatus }] = useUpdateIncompleteOrderStatusMutation();
   const [convertIncompleteOrder, { isLoading: isConvertingInc }] = useConvertIncompleteOrderMutation();
   const [deleteIncompleteOrderMutation, { isLoading: isDeletingInc }] = useDeleteIncompleteOrderMutation();
-  const { data: blockedIpsData } = useGetBlockedIpsQuery();
+  const { data: blockedEntitiesData } = useGetBlockedEntitiesQuery();
 
-  const blockedIpsList = blockedIpsData?.blockedIps || [];
-  const blockedIpSet = new Set(blockedIpsList.map((b) => b.ip));
+  const blockedEntitiesList = blockedEntitiesData?.entities || [];
+  const blockedIpSet = useMemo(() => new Set(blockedEntitiesList.filter((e) => e.type === "ip").map((e) => e.value)), [blockedEntitiesList]);
+  const blockedPhoneSet = useMemo(() => new Set(blockedEntitiesList.filter((e) => e.type === "phone").map((e) => e.value)), [blockedEntitiesList]);
+  const blockedDeviceSet = useMemo(() => new Set(blockedEntitiesList.filter((e) => e.type === "device").map((e) => e.value)), [blockedEntitiesList]);
 
   // Real-time socket notification & automatic refetch
   useAdminSocket({
@@ -577,6 +590,77 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const handleToggleBlockEntity = async (
+    type: "ip" | "phone" | "device",
+    value: string,
+    isCurrentlyBlocked: boolean
+  ) => {
+    if (!value) return;
+    try {
+      if (isCurrentlyBlocked) {
+        const res = await unblockEntityMutation({ type, value }).unwrap();
+        toast.success(res.message || `${type.toUpperCase()} সফলভাবে আনব্লক করা হয়েছে।`);
+      } else {
+        const res = await blockEntityMutation({
+          type,
+          value,
+          reason: blockReason || "স্প্যাম / অযাচিত অর্ডার",
+        }).unwrap();
+        toast.success(res.message || `${type.toUpperCase()} সফলভাবে ব্লক করা হয়েছে।`);
+      }
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "অপারেশন সম্পন্ন করতে সমস্যা হয়েছে।");
+    }
+  };
+
+  const handleBlockAll = async (ord: OrderData) => {
+    try {
+      const res = await blockAllEntitiesMutation({
+        ip: ord.ipAddress || undefined,
+        phone: ord.phoneNumber,
+        deviceId: ord.deviceId || undefined,
+        reason: blockReason || "স্প্যাম / অযাচিত অর্ডার",
+      }).unwrap();
+      toast.success(res.message || "সবগুলো সফলভাবে ব্লক করা হয়েছে।");
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "ব্লক করতে সমস্যা হয়েছে।");
+    }
+  };
+
+  const handleUnblockAll = async (ord: OrderData) => {
+    try {
+      const res = await unblockAllEntitiesMutation({
+        ip: ord.ipAddress || undefined,
+        phone: ord.phoneNumber,
+        deviceId: ord.deviceId || undefined,
+      }).unwrap();
+      toast.success(res.message || "সবগুলো সফলভাবে আনব্লক করা হয়েছে।");
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "আনব্লক করতে সমস্যা হয়েছে।");
+    }
+  };
+
+  const handleConfirmBulkStatus = async () => {
+    if (!bulkStatusTarget || selectedIds.length === 0) return;
+    try {
+      const res = await bulkUpdateOrderStatus({
+        ids: selectedIds,
+        status: bulkStatusTarget,
+      }).unwrap();
+      toast.success(res.message || `${selectedIds.length} টি অর্ডারের স্ট্যাটাস আপডেট হয়েছে।`);
+      setSelectedIds([]);
+      setBulkStatusTarget(null);
+      refetchActive();
+      refetchDeleted();
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || "বাল্ক স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।");
+    }
+  };
+
   const handleExportExcel = async (exportOnlySelected: boolean = false) => {
     try {
       const isCustomSelected = exportOnlySelected && selectedIds.length > 0;
@@ -734,14 +818,43 @@ export default function AdminOrdersPage() {
               </span>
             </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              {/* Bulk Status Select Dropdown */}
+              <div className="flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-blue-300 dark:border-blue-800 rounded-xl px-2.5 py-1.5 shadow-sm">
+                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                  বাল্ক স্ট্যাটাস:
+                </span>
+                <select
+                  value=""
+                  disabled={isBulkUpdatingStatus}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setBulkStatusTarget(e.target.value);
+                    }
+                  }}
+                  className="bg-transparent text-blue-600 dark:text-blue-400 font-bold text-xs focus:outline-none cursor-pointer"
+                >
+                  <option value="" disabled className="bg-white dark:bg-slate-900 text-slate-500">
+                    স্ট্যাটাস পরিবর্তন করুন...
+                  </option>
+                  <option value="Pending" className="bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400">Pending</option>
+                  <option value="Confirmed" className="bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400">Confirmed</option>
+                  <option value="Scheduled" className="bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400">Scheduled</option>
+                  <option value="Processing" className="bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400">Processing</option>
+                  <option value="Hold" className="bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400">Hold</option>
+                  <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
+                  <option value="Delivered" className="bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400">Delivered</option>
+                  <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled</option>
+                </select>
+              </div>
+
               <button
                 onClick={() => handleExportExcel(true)}
                 disabled={isExporting}
-                className="btn-gold flex-1 sm:flex-initial text-xs px-4 py-2 rounded-xl flex items-center justify-center gap-1.5 font-bold shadow-md cursor-pointer active:scale-95"
+                className="btn-gold text-xs px-4 py-2 rounded-xl flex items-center justify-center gap-1.5 font-bold shadow-md cursor-pointer active:scale-95"
               >
                 <Download size={14} />
-                {isExporting ? "এক্সপোর্ট হচ্ছে..." : `নির্বাচিত Excel ডাউনলোড (${selectedIds.length})`}
+                {isExporting ? "এক্সপোর্ট হচ্ছে..." : `Excel (${selectedIds.length})`}
               </button>
               <button
                 onClick={() => setSelectedIds([])}
@@ -785,7 +898,7 @@ export default function AdminOrdersPage() {
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="অর্ডার আইডি (PC-XXXX) বা গ্রাহকের নাম..."
+                placeholder="অর্ডার আইডি (CZ-XXXX) বা গ্রাহকের নাম..."
                 className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 transition-colors"
               />
             </div>
@@ -1186,24 +1299,222 @@ export default function AdminOrdersPage() {
                                 >
                                   <Eye size={13} />
                                 </button>
-                                <button
-                                  onClick={() => {
-                                    setBlockIpTarget(ord);
-                                    setBlockReason("স্প্যাম / অযাচিত অর্ডার");
-                                  }}
-                                  className={`p-1.5 rounded-lg border transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95 ${
-                                    ord.ipAddress && blockedIpSet.has(ord.ipAddress)
-                                      ? "bg-red-500/10 text-red-500 border-red-500/30 hover:bg-red-500/20"
-                                      : "bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800"
-                                  }`}
-                                  title={
-                                    ord.ipAddress && blockedIpSet.has(ord.ipAddress)
-                                      ? "আইপি ব্লকড (ম্যানেজ / আনব্লক করুন)"
-                                      : "আইপি ব্লক করুন"
-                                  }
-                                >
-                                  <ShieldBan size={13} />
-                                </button>
+                                <div className="relative inline-block text-left">
+                                  {/* Block Icon Button */}
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setOpenBlockDropdownOrderId(
+                                        openBlockDropdownOrderId === ord._id ? null : ord._id
+                                      );
+                                    }}
+                                    className={`p-1.5 rounded-lg border transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95 ${
+                                      (ord.ipAddress && blockedIpSet.has(ord.ipAddress)) ||
+                                      blockedPhoneSet.has(ord.phoneNumber) ||
+                                      (ord.deviceId && blockedDeviceSet.has(ord.deviceId))
+                                        ? "bg-red-500/15 text-red-500 border-red-500/40 hover:bg-red-500/25"
+                                        : "bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800"
+                                    }`}
+                                    title="ব্লকিং ড্রপডাউন (IP, Phone, Device)"
+                                  >
+                                    <ShieldBan size={13} />
+                                  </button>
+
+                                  {/* Block Dropdown Popover */}
+                                  {openBlockDropdownOrderId === ord._id && (
+                                    <>
+                                      <div
+                                        className="fixed inset-0 z-30"
+                                        onClick={() => setOpenBlockDropdownOrderId(null)}
+                                      />
+                                      <div
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="absolute right-0 top-full mt-1.5 z-40 w-72 sm:w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3.5 space-y-3 animate-scaleIn text-left"
+                                      >
+                                        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                                          <div className="flex items-center gap-2">
+                                            <ShieldBan size={16} className="text-red-500" />
+                                            <span className="font-bold text-slate-900 dark:text-white text-xs">
+                                              ব্লকিং ড্রপডাউন — {ord.orderId}
+                                            </span>
+                                          </div>
+                                          <button
+                                            type="button"
+                                            onClick={() => setOpenBlockDropdownOrderId(null)}
+                                            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg"
+                                          >
+                                            <X size={14} />
+                                          </button>
+                                        </div>
+
+                                        {/* IP Row */}
+                                        <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/60 space-y-1.5">
+                                          <div className="flex items-center justify-between">
+                                            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                                              আইপি অ্যাড্রেস:
+                                            </span>
+                                            {ord.ipAddress ? (
+                                              blockedIpSet.has(ord.ipAddress) ? (
+                                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 font-bold border border-red-200 dark:border-red-900">
+                                                  ব্লকড
+                                                </span>
+                                              ) : (
+                                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-900">
+                                                  সচল
+                                                </span>
+                                              )
+                                            ) : (
+                                              <span className="text-[10px] text-slate-400 italic">রেকর্ড নেই</span>
+                                            )}
+                                          </div>
+                                          <div className="flex items-center justify-between gap-2">
+                                            <span className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                                              {ord.ipAddress || "রেকর্ড নেই"}
+                                            </span>
+                                            <button
+                                              type="button"
+                                              disabled={!ord.ipAddress || isBlockingEntity || isUnblockingEntity}
+                                              onClick={() =>
+                                                handleToggleBlockEntity(
+                                                  "ip",
+                                                  ord.ipAddress!,
+                                                  Boolean(ord.ipAddress && blockedIpSet.has(ord.ipAddress))
+                                                )
+                                              }
+                                              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-colors ${
+                                                ord.ipAddress && blockedIpSet.has(ord.ipAddress)
+                                                  ? "bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
+                                                  : "bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400 border border-red-200 dark:border-red-800"
+                                              } disabled:opacity-40 disabled:cursor-not-allowed`}
+                                            >
+                                              {ord.ipAddress && blockedIpSet.has(ord.ipAddress) ? "আনব্লক" : "ব্লক"}
+                                            </button>
+                                          </div>
+                                        </div>
+
+                                        {/* Phone Row */}
+                                        <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/60 space-y-1.5">
+                                          <div className="flex items-center justify-between">
+                                            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                                              মোবাইল নম্বর:
+                                            </span>
+                                            {blockedPhoneSet.has(ord.phoneNumber) ? (
+                                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 font-bold border border-red-200 dark:border-red-900">
+                                                ব্লকড
+                                              </span>
+                                            ) : (
+                                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-900">
+                                                সচল
+                                              </span>
+                                            )}
+                                          </div>
+                                          <div className="flex items-center justify-between gap-2">
+                                            <span className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200">
+                                              {ord.phoneNumber}
+                                            </span>
+                                            <button
+                                              type="button"
+                                              disabled={isBlockingEntity || isUnblockingEntity}
+                                              onClick={() =>
+                                                handleToggleBlockEntity(
+                                                  "phone",
+                                                  ord.phoneNumber,
+                                                  blockedPhoneSet.has(ord.phoneNumber)
+                                                )
+                                              }
+                                              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-colors ${
+                                                blockedPhoneSet.has(ord.phoneNumber)
+                                                  ? "bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
+                                                  : "bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400 border border-red-200 dark:border-red-800"
+                                              } disabled:opacity-40 disabled:cursor-not-allowed`}
+                                            >
+                                              {blockedPhoneSet.has(ord.phoneNumber) ? "আনব্লক" : "ব্লক"}
+                                            </button>
+                                          </div>
+                                        </div>
+
+                                        {/* Device ID Row */}
+                                        <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/60 space-y-1.5">
+                                          <div className="flex items-center justify-between">
+                                            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                                              ডিভাইস আইডি:
+                                            </span>
+                                            {ord.deviceId ? (
+                                              blockedDeviceSet.has(ord.deviceId) ? (
+                                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 font-bold border border-red-200 dark:border-red-900">
+                                                  ব্লকড
+                                                </span>
+                                              ) : (
+                                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-900">
+                                                  সচল
+                                                </span>
+                                              )
+                                            ) : (
+                                              <span className="text-[10px] text-slate-400 italic">রেকর্ড নেই</span>
+                                            )}
+                                          </div>
+                                          <div className="flex items-center justify-between gap-2">
+                                            <span
+                                              className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200 truncate max-w-[130px]"
+                                              title={ord.deviceId || ""}
+                                            >
+                                              {ord.deviceId || "রেকর্ড নেই"}
+                                            </span>
+                                            <button
+                                              type="button"
+                                              disabled={!ord.deviceId || isBlockingEntity || isUnblockingEntity}
+                                              onClick={() =>
+                                                handleToggleBlockEntity(
+                                                  "device",
+                                                  ord.deviceId!,
+                                                  Boolean(ord.deviceId && blockedDeviceSet.has(ord.deviceId))
+                                                )
+                                              }
+                                              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-colors ${
+                                                ord.deviceId && blockedDeviceSet.has(ord.deviceId)
+                                                  ? "bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
+                                                  : "bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400 border border-red-200 dark:border-red-800"
+                                              } disabled:opacity-40 disabled:cursor-not-allowed`}
+                                            >
+                                              {ord.deviceId && blockedDeviceSet.has(ord.deviceId) ? "আনব্লক" : "ব্লক"}
+                                            </button>
+                                          </div>
+                                        </div>
+
+                                        {/* Block All / Unblock All Button */}
+                                        {(() => {
+                                          const hasAnyBlocked =
+                                            (ord.ipAddress && blockedIpSet.has(ord.ipAddress)) ||
+                                            blockedPhoneSet.has(ord.phoneNumber) ||
+                                            (ord.deviceId && blockedDeviceSet.has(ord.deviceId));
+
+                                          return hasAnyBlocked ? (
+                                            <button
+                                              type="button"
+                                              disabled={isBlockingAll || isUnblockingAll}
+                                              onClick={() => handleUnblockAll(ord)}
+                                              className="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors cursor-pointer disabled:opacity-50"
+                                            >
+                                              <ShieldCheck size={14} />
+                                              সবগুলো একসাথে আনব্লক করুন
+                                            </button>
+                                          ) : (
+                                            <button
+                                              type="button"
+                                              disabled={isBlockingAll || isUnblockingAll}
+                                              onClick={() => handleBlockAll(ord)}
+                                              className="w-full py-2 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors cursor-pointer disabled:opacity-50"
+                                            >
+                                              <ShieldBan size={14} />
+                                              সবগুলো একসাথে ব্লক করুন
+                                            </button>
+                                          );
+                                        })()}
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
                                 <button
                                   onClick={() => setSoftDeleteTarget(ord)}
                                   className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/50 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 transition-all inline-flex items-center gap-1 text-xs cursor-pointer active:scale-95"
@@ -2049,6 +2360,62 @@ export default function AdminOrdersPage() {
           </div>
         </div>
       )}
+      {/* Bulk Status Confirmation Modal */}
+      {bulkStatusTarget && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f172a] max-w-md w-full p-6 border border-blue-200 dark:border-blue-900 shadow-2xl relative rounded-3xl animate-scaleIn">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                <RefreshCw size={20} className={isBulkUpdatingStatus ? "animate-spin" : ""} />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">বাল্ক স্ট্যাটাস পরিবর্তন নিশ্চিতকরণ</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  নির্বাচিত {selectedIds.length} টি অর্ডার
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+              আপনি কি নিশ্চিতভাবে নির্বাচিত <strong>{selectedIds.length} টি</strong> অর্ডারের স্ট্যাটাস পরিবর্তন করে{" "}
+              <span className="font-black text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800">
+                {bulkStatusTarget}
+              </span>{" "}
+              করতে চান?
+            </p>
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setBulkStatusTarget(null)}
+                disabled={isBulkUpdatingStatus}
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 font-bold transition-colors cursor-pointer"
+              >
+                বাতিল
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmBulkStatus}
+                disabled={isBulkUpdatingStatus}
+                className="btn-gold px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+              >
+                {isBulkUpdatingStatus ? (
+                  <>
+                    <Loader2 size={13} className="animate-spin" />
+                    আপডেট হচ্ছে...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 size={13} />
+                    হ্যাঁ, আপডেট করুন
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Incomplete Order Conversion Modal */}
       {convertingTarget && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
