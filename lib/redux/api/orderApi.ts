@@ -92,6 +92,11 @@ export interface FraudScoreResponse {
   cancelled?: number;
   deliveryRate?: number | null;
   riskLevel?: "low" | "medium" | "high" | "unknown";
+  volumeRange?: string | null;
+  volumeBand?: string | null;
+  totalReports?: number;
+  cancellationRatio?: number | null;
+  returnRatio?: number | null;
   fraudReports?: any[];
   message?: string;
 }

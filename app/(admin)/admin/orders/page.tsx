@@ -3201,7 +3201,9 @@ export default function AdminOrdersPage() {
                 {/* Stat Grid */}
                 <div className="grid grid-cols-2 gap-2 text-center">
                   <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
-                    <span className="text-[11px] text-slate-400 block font-semibold">মোট পার্সেল</span>
+                    <span className="text-[11px] text-slate-400 block font-semibold">
+                      মোট পার্সেল {fraudData.volumeRange ? `(${fraudData.volumeRange})` : ""}
+                    </span>
                     <span className="text-base font-black text-slate-900 dark:text-white">
                       {fraudData.totalParcels ?? 0} টি
                     </span>
@@ -3225,6 +3227,14 @@ export default function AdminOrdersPage() {
                     </span>
                   </div>
                 </div>
+
+                {/* Additional Risk & Reports Notice if any */}
+                {(fraudData.totalReports ?? 0) > 0 && (
+                  <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2 font-medium">
+                    <AlertTriangle size={15} className="shrink-0 text-rose-500" />
+                    <span>স্টিডফাস্টে এই নম্বরের বিরুদ্ধে <strong>{fraudData.totalReports} টি</strong> অভিযোগ/রিপোর্ট রয়েছে!</span>
+                  </div>
+                )}
 
                 {/* Phone Blocking Action */}
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
