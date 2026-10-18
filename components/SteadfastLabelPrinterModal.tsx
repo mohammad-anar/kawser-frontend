@@ -16,6 +16,10 @@ import {
   FileText,
   Sliders,
   Sparkles,
+  AlignRight,
+  AlignCenter,
+  Maximize2,
+  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -51,8 +55,16 @@ export default function SteadfastLabelPrinterModal({
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [shopId, setShopId] = useState<string>(DEFAULT_SHOP_ID);
   const [manualCid, setManualCid] = useState<string>("");
-  const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
-  const [marginPreset, setMarginPreset] = useState<"1.5in" | "0.25in" | "0.15in">("1.5in");
+
+  // Paper Size & Orientation: Default to 50mm * 75mm Landscape for Mini Thermal Printer
+  const [paperSize, setPaperSize] = useState<
+    "50x75_landscape" | "50x75_portrait" | "printer_default_landscape" | "3x2_landscape" | "2x3_portrait"
+  >("50x75_landscape");
+
+  // Alignment: Center or Right Margin
+  const [alignmentMode, setAlignmentMode] = useState<"center" | "right_1_8" | "custom">("center");
+  const [customMargin, setCustomMargin] = useState<string>("1.8in");
+
   const [isPrinting, setIsPrinting] = useState<boolean>(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -186,10 +198,55 @@ export default function SteadfastLabelPrinterModal({
 
     setIsPrinting(true);
 
-    // Page dimensions
-    const pageWidth = orientation === "portrait" ? "2in" : "3in";
-    const pageHeight = orientation === "portrait" ? "3in" : "2in";
-    const marginLr = marginPreset;
+    // Page dimension & orientation rules
+    let pageSizeCss = "size: 75mm 50mm;";
+    let pageWidth = "75mm";
+    let pageHeight = "50mm";
+    let isMini = true;
+
+    if (paperSize === "50x75_landscape") {
+      pageSizeCss = "size: 75mm 50mm;";
+      pageWidth = "75mm";
+      pageHeight = "50mm";
+      isMini = true;
+    } else if (paperSize === "50x75_portrait") {
+      pageSizeCss = "size: 50mm 75mm;";
+      pageWidth = "50mm";
+      pageHeight = "75mm";
+      isMini = true;
+    } else if (paperSize === "printer_default_landscape") {
+      pageSizeCss = "size: landscape;";
+      pageWidth = "100%";
+      pageHeight = "100%";
+      isMini = false;
+    } else if (paperSize === "3x2_landscape") {
+      pageSizeCss = "size: 3in 2in;";
+      pageWidth = "3in";
+      pageHeight = "2in";
+      isMini = false;
+    } else if (paperSize === "2x3_portrait") {
+      pageSizeCss = "size: 2in 3in;";
+      pageWidth = "2in";
+      pageHeight = "3in";
+      isMini = false;
+    }
+
+    // Alignment rules
+    let alignCss = "justify-content: center; align-items: center;";
+    let contentAlign = "text-align: center;";
+
+    if (alignmentMode === "right_1_8") {
+      alignCss = "justify-content: center; align-items: flex-end; padding-right: 1.8in; padding-left: 0.1in;";
+      contentAlign = "text-align: right;";
+    } else if (alignmentMode === "custom") {
+      const marginVal = customMargin?.trim() || "1.8in";
+      alignCss = `justify-content: center; align-items: flex-end; padding-right: ${marginVal}; padding-left: 0.1in;`;
+      contentAlign = "text-align: right;";
+    }
+
+    // Font scaling for 50mm*75mm mini printer
+    const shopIdFontSize = isMini ? "16pt" : "20pt";
+    const cidFontSize = isMini ? "22pt" : "28pt";
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -199,17 +256,25 @@ export default function SteadfastLabelPrinterModal({
         <title>Steadfast Labels Print</title>
         <style>
           @page {
-            size: ${pageWidth} ${pageHeight};
+            ${pageSizeCss}
             margin: 0;
           }
           @media print {
             html, body {
-              margin: 0;
-              padding: 0;
-              background: #fff;
-              color: #000;
+              width: ${pageWidth} !important;
+              height: ${pageHeight} !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              background: #fff !important;
+              color: #000 !important;
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
+            }
+            .sticker-page {
+              page-break-after: always !important;
+              break-after: page !important;
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
             }
           }
           * {
@@ -218,38 +283,45 @@ export default function SteadfastLabelPrinterModal({
             padding: 0;
           }
           body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background: #fff;
             color: #000;
+            width: ${pageWidth};
+            height: ${pageHeight};
           }
           .sticker-page {
             width: ${pageWidth};
             height: ${pageHeight};
-            page-break-after: always;
-            break-after: page;
+            max-width: ${pageWidth};
+            max-height: ${pageHeight};
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 0 ${marginLr};
-            text-align: center;
+            ${alignCss}
             overflow: hidden;
+            box-sizing: border-box;
+          }
+          .sticker-content {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            ${contentAlign}
           }
           .shop-id {
-            font-size: ${orientation === "portrait" ? "18pt" : "16pt"};
+            font-size: ${shopIdFontSize};
             font-weight: 700;
             letter-spacing: 0.5px;
             color: #000;
-            margin-bottom: 6px;
-            line-height: 1.2;
+            margin-bottom: 3px;
+            line-height: 1.15;
             white-space: nowrap;
           }
           .consignment-id {
-            font-size: ${orientation === "portrait" ? "24pt" : "21pt"};
+            font-size: ${cidFontSize};
             font-weight: 900;
             letter-spacing: 0.5px;
             color: #000;
-            line-height: 1.2;
+            line-height: 1.15;
             white-space: nowrap;
           }
         </style>
@@ -259,8 +331,10 @@ export default function SteadfastLabelPrinterModal({
           .map(
             (item) => `
           <div class="sticker-page">
-            <div class="shop-id">ID: ${item.shopId || shopId || DEFAULT_SHOP_ID}</div>
-            <div class="consignment-id">#${item.consignmentId}</div>
+            <div class="sticker-content">
+              <div class="shop-id">ID: ${item.shopId || shopId || DEFAULT_SHOP_ID}</div>
+              <div class="consignment-id">#${item.consignmentId}</div>
+            </div>
           </div>
         `
           )
@@ -325,13 +399,13 @@ export default function SteadfastLabelPrinterModal({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <span>স্টিডফাস্ট স্টিকার / লেবেল প্রিন্টার</span>
-                <span className="text-[11px] font-mono bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded-full font-bold">
-                  2" × 3"
+                <span>মিনি থার্মাল স্টিকার প্রিন্টার</span>
+                <span className="text-[11px] font-mono bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 px-2.5 py-0.5 rounded-full font-bold">
+                  50mm × 75mm (34 dia)
                 </span>
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                শপ আইডি: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">ID: {shopId}</span> এবং কনসাইনমেন্ট নম্বর: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">#...</span>
+                শপ আইডি: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">ID: {shopId}</span> এবং কনসাইনমেন্ট: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">#...</span>
               </p>
             </div>
           </div>
@@ -345,8 +419,80 @@ export default function SteadfastLabelPrinterModal({
           </button>
         </div>
 
-        {/* Configuration Bar */}
-        <div className="py-3 px-4 my-3 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 shrink-0 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        {/* Quick Presets Bar (Fast 1-click toggling for mini printers) */}
+        <div className="mt-3 p-2.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/60 shrink-0 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-300 text-[11px]">
+            <Sparkles size={14} className="text-emerald-600" />
+            <span>মিনি প্রিন্টার প্রিসেট:</span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5">
+            {/* Preset 1: 50mm x 75mm Landscape Center (Default) */}
+            <button
+              type="button"
+              onClick={() => {
+                setPaperSize("50x75_landscape");
+                setAlignmentMode("center");
+                toast.success("50mm × 75mm ল্যান্ডস্কেপ সেন্টার (মিনি প্রিন্টার) সেট করা হয়েছে");
+              }}
+              className={`px-3 py-1.5 rounded-xl font-bold transition-all inline-flex items-center gap-1.5 cursor-pointer text-xs ${
+                paperSize === "50x75_landscape" && alignmentMode === "center"
+                  ? "bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-500/30"
+                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-emerald-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
+              }`}
+            >
+              <AlignCenter size={13} />
+              <span>50mm×75mm সেন্টার (ডিফল্ট)</span>
+              {paperSize === "50x75_landscape" && alignmentMode === "center" && (
+                <Check size={13} />
+              )}
+            </button>
+
+            {/* Preset 2: Right Margin 1.8in */}
+            <button
+              type="button"
+              onClick={() => {
+                setPaperSize("50x75_landscape");
+                setAlignmentMode("right_1_8");
+                setCustomMargin("1.8in");
+                toast.success("50mm × 75mm: ডান পাশ থেকে ১.৮\" মার্জিন সেট করা হয়েছে");
+              }}
+              className={`px-3 py-1.5 rounded-xl font-bold transition-all inline-flex items-center gap-1.5 cursor-pointer text-xs ${
+                alignmentMode === "right_1_8"
+                  ? "bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-500/30"
+                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-emerald-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
+              }`}
+            >
+              <AlignRight size={13} />
+              <span>ডান পাশ থেকে ১.৮" মার্জিন</span>
+              {alignmentMode === "right_1_8" && <Check size={13} />}
+            </button>
+
+            {/* Preset 3: Printer Default */}
+            <button
+              type="button"
+              onClick={() => {
+                setPaperSize("printer_default_landscape");
+                setAlignmentMode("center");
+                toast.success("প্রিন্টার ডিফল্ট সেটিং (ল্যান্ডস্কেপ) সেট করা হয়েছে");
+              }}
+              className={`px-3 py-1.5 rounded-xl font-bold transition-all inline-flex items-center gap-1.5 cursor-pointer text-xs ${
+                paperSize === "printer_default_landscape" && alignmentMode === "center"
+                  ? "bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-500/30"
+                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-emerald-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
+              }`}
+            >
+              <Maximize2 size={13} />
+              <span>প্রিন্টার ডিফল্ট সেটিং</span>
+              {paperSize === "printer_default_landscape" && alignmentMode === "center" && (
+                <Check size={13} />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Detailed Configuration Bar */}
+        <div className="py-3 px-4 my-2.5 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 shrink-0 grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs">
           {/* Shop ID */}
           <div>
             <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block mb-1">
@@ -364,40 +510,60 @@ export default function SteadfastLabelPrinterModal({
             </div>
           </div>
 
-          {/* Orientation */}
+          {/* Paper Size & Orientation */}
           <div>
             <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block mb-1">
-              সাইজ ও ওরিয়েন্টেশন:
+              পেপার সাইজ (Mini Printer):
             </label>
             <select
-              value={orientation}
-              onChange={(e) => setOrientation(e.target.value as "portrait" | "landscape")}
+              value={paperSize}
+              onChange={(e) => setPaperSize(e.target.value as any)}
               className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 font-bold text-slate-900 dark:text-white focus:outline-none cursor-pointer shadow-sm text-xs"
             >
-              <option value="portrait">2" × 3" ইঞ্চি (পোর্ট্রেট - স্ট্যান্ডার্ড)</option>
-              <option value="landscape">3" × 2" ইঞ্চি (ল্যান্ডস্কেপ)</option>
+              <option value="50x75_landscape">50mm × 75mm (ল্যান্ডস্কেপ - 34 dai)</option>
+              <option value="50x75_portrait">50mm × 75mm (পোর্ট্রেট - 34 dai)</option>
+              <option value="printer_default_landscape">প্রিন্টার ডিফল্ট সেটিং (ল্যান্ডস্কেপ)</option>
+              <option value="3x2_landscape">৩" × ২" ইঞ্চি (ল্যান্ডস্কেপ ফিক্সড)</option>
+              <option value="2x3_portrait">২" × ৩" ইঞ্চি (পোর্ট্রেট)</option>
             </select>
           </div>
 
-          {/* Left/Right Margin Preset */}
+          {/* Alignment / Positioning */}
           <div>
             <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block mb-1">
-              লেফট-রাইট মার্জিন:
+              পজিশন / অ্যালাইনমেন্ট:
             </label>
             <select
-              value={marginPreset}
-              onChange={(e) => setMarginPreset(e.target.value as any)}
+              value={alignmentMode}
+              onChange={(e) => setAlignmentMode(e.target.value as any)}
               className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 font-bold text-slate-900 dark:text-white focus:outline-none cursor-pointer shadow-sm text-xs"
             >
-              <option value="1.5in">1.5 ইঞ্চি (আপনার নির্দেশিত মার্জিন)</option>
-              <option value="0.25in">0.25 ইঞ্চি (স্টিকার ব্যালান্সড)</option>
-              <option value="0.15in">0.15 ইঞ্চি (ফুল উইডথ)</option>
+              <option value="center">সেন্টার (মাঝখানে - ল্যান্ডস্কেপ)</option>
+              <option value="right_1_8">ডান পাশ থেকে ১.৮" মার্জিন</option>
+              <option value="custom">কাস্টম মার্জিন...</option>
             </select>
+          </div>
+
+          {/* Custom Margin Input */}
+          <div>
+            <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block mb-1">
+              ডান মার্জিন (যেমন 1.8in বা 20mm):
+            </label>
+            <input
+              type="text"
+              value={alignmentMode === "right_1_8" ? "1.8in" : customMargin}
+              onChange={(e) => {
+                setAlignmentMode("custom");
+                setCustomMargin(e.target.value);
+              }}
+              placeholder="1.8in বা 20mm"
+              className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 font-bold text-slate-900 dark:text-white focus:outline-none shadow-sm text-xs"
+            />
           </div>
         </div>
 
         {/* Manual Add Consignment Form */}
-        <form onSubmit={handleAddManualCid} className="flex items-center gap-2 mb-3 shrink-0">
+        <form onSubmit={handleAddManualCid} className="flex items-center gap-2 mb-2.5 shrink-0">
           <div className="relative flex-1">
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-black text-slate-400 font-mono text-xs">
               #
@@ -420,7 +586,7 @@ export default function SteadfastLabelPrinterModal({
         </form>
 
         {/* Bulk Action Controls */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 py-2 px-3 bg-slate-100/70 dark:bg-slate-800/60 rounded-2xl mb-3 shrink-0 text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-2.5 py-2 px-3 bg-slate-100/70 dark:bg-slate-800/60 rounded-2xl mb-2.5 shrink-0 text-xs">
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -507,13 +673,21 @@ export default function SteadfastLabelPrinterModal({
                       )}
                     </div>
 
-                    {/* Sticker Visual Simulation (Matches User's Photo) */}
-                    <div className="bg-white text-black p-4 rounded-xl border border-slate-300 shadow-inner my-1 flex flex-col items-center justify-center min-h-[95px] text-center">
-                      <div className="font-bold text-sm tracking-wide text-slate-800">
-                        ID: {item.shopId || shopId || DEFAULT_SHOP_ID}
-                      </div>
-                      <div className="font-black text-xl tracking-wider text-black mt-0.5">
-                        #{item.consignmentId}
+                    {/* Sticker Visual Simulation (50mm * 75mm mini printer ratio) */}
+                    <div
+                      className={`bg-white text-black p-3.5 rounded-xl border border-slate-300 shadow-inner my-1 flex flex-col justify-center min-h-[85px] ${
+                        alignmentMode === "right_1_8" || alignmentMode === "custom"
+                          ? "items-end text-right pr-4"
+                          : "items-center text-center"
+                      }`}
+                    >
+                      <div className="inline-flex flex-col items-center">
+                        <div className="font-bold text-sm tracking-wide text-slate-800 font-sans">
+                          ID: {item.shopId || shopId || DEFAULT_SHOP_ID}
+                        </div>
+                        <div className="font-black text-xl tracking-wider text-black mt-0.5 font-sans">
+                          #{item.consignmentId}
+                        </div>
                       </div>
                     </div>
 
