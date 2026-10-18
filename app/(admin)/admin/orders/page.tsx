@@ -867,7 +867,7 @@ export default function AdminOrdersPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-[#080817] text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
       <AdminNav />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-8 space-y-6">
+      <main className="flex-1 max-w-[1750px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-6 space-y-5">
         {/* Title & Actions */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -1207,7 +1207,7 @@ export default function AdminOrdersPage() {
                     {activeTab === "deleted" ? "ডিলিট তারিখ ও সময়" : "তারিখ ও সময় (GMT+6)"}
                   </th>
                   <th className="py-3.5 px-4 font-semibold">গ্রাহক ও মোবাইল</th>
-                  <th className="py-3.5 px-4 font-semibold">
+                  <th className="py-3.5 px-3 font-semibold w-40 max-w-[170px]">
                     {activeTab === "incomplete" ? "ঠিকানা (ঐচ্ছিক)" : "ঠিকানা"}
                   </th>
                   <th className="py-3.5 px-4 font-semibold">সাইজ ও পরিমাণ</th>
@@ -1293,8 +1293,11 @@ export default function AdminOrdersPage() {
                             </button>
                           </div>
                         </td>
-                        <td className="py-3.5 px-4 max-w-[200px]">
-                          <span className={inc.address ? "text-slate-700 dark:text-slate-300" : "text-slate-400 italic text-xs"}>
+                        <td 
+                          className="py-3.5 px-3 w-40 max-w-[170px] truncate text-xs"
+                          title={inc.address || "ঠিকানা প্রদান করা হয়নি"}
+                        >
+                          <span className={`truncate block ${inc.address ? "text-slate-700 dark:text-slate-300" : "text-slate-400 italic text-xs"}`}>
                             {inc.address || "ঠিকানা প্রদান করা হয়নি"}
                           </span>
                         </td>
@@ -1468,10 +1471,15 @@ export default function AdminOrdersPage() {
                             </button>
                           </div>
                         </td>
-                        <td className="py-3.5 px-4 max-w-xs truncate text-xs text-slate-600 dark:text-slate-300">
-                          {ord.address}
-                          {ord.district ? `, ${ord.district}` : ""}
-                          {ord.thana ? ` (${ord.thana})` : ""}
+                        <td 
+                          className="py-3.5 px-3 w-40 max-w-[170px] truncate text-xs text-slate-600 dark:text-slate-300"
+                          title={`${ord.address || ""}${ord.district ? `, ${ord.district}` : ""}${ord.thana ? ` (${ord.thana})` : ""}`}
+                        >
+                          <span className="truncate block">
+                            {ord.address}
+                            {ord.district ? `, ${ord.district}` : ""}
+                            {ord.thana ? ` (${ord.thana})` : ""}
+                          </span>
                         </td>
                         <td className="py-3.5 px-4 text-xs">
                           <span className="font-bold text-slate-900 dark:text-white">{ord.quantity} টি</span>
