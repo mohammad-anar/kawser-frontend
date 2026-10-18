@@ -523,7 +523,9 @@ export default function AdminDashboardPage() {
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[11px] font-semibold">সাইজ</span>
-                  <span className="font-bold text-slate-900 dark:text-white text-xs">{selectedOrder.size || "স্ট্যান্ডার্ড"}</span>
+                  <span className="font-bold text-slate-900 dark:text-white text-xs">
+                    {selectedOrder.size?.includes("5.7") || selectedOrder.size?.includes("৫.৭") ? "৫.৭ ইঞ্চি (5.7 inch)" : "৬.৭ ইঞ্চি (6.7 inch)"}
+                  </span>
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[11px] font-semibold">পেমেন্ট</span>

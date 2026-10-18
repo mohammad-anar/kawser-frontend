@@ -30,7 +30,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
   const [createOrder, { isLoading: isCreating }] = useCreateOrderMutation();
   const [recordIncompleteOrder] = useRecordIncompleteOrderMutation();
 
-  const [selectedVariant, setSelectedVariant] = useState<"6.9 inch" | "6.7 inch" | "5.7 inch">("6.9 inch");
+  const [selectedVariant, setSelectedVariant] = useState<"6.7 inch" | "5.7 inch">("6.7 inch");
   const [form, setForm] = useState<FormData>({
     customerName: "",
     phoneNumber: "",
@@ -247,7 +247,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
       address: "",
       quantity: 1,
     });
-    setSelectedVariant("6.9 inch");
+    setSelectedVariant("6.7 inch");
     setErrors({});
     onClose();
   };
@@ -339,16 +339,16 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {/* Card 1: 6.9 inch (950 BDT) - Shown First */}
+                  {/* Card 1: 6.7 inch (950 BDT) - Shown First */}
                   <div
-                    onClick={() => setSelectedVariant("6.9 inch")}
+                    onClick={() => setSelectedVariant("6.7 inch")}
                     className={`relative p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
-                      selectedVariant === "6.9 inch" || selectedVariant === "6.7 inch"
+                      selectedVariant === "6.7 inch"
                         ? "border-blue-600 dark:border-blue-500 bg-gradient-to-br from-blue-50/90 to-indigo-50/50 dark:from-blue-950/70 dark:to-indigo-950/40 shadow-md ring-2 ring-blue-500/20"
                         : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-blue-300 dark:hover:border-slate-700"
                     }`}
                   >
-                    {(selectedVariant === "6.9 inch" || selectedVariant === "6.7 inch") && (
+                    {selectedVariant === "6.7 inch" && (
                       <span className="absolute -top-2 right-2 bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm">
                         ✓ সিলেক্টেড
                       </span>
@@ -357,17 +357,17 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                       <div className="w-13 h-13 rounded-xl overflow-hidden relative bg-slate-100 dark:bg-slate-800 border border-blue-200 dark:border-blue-700 shrink-0">
                         <Image
                           src="/images/products/IMG_7395.jpg"
-                          alt="6.9 inch Magic Condom"
+                          alt="6.7 inch Magic Condom"
                           fill
                           className="object-cover"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-black text-slate-900 dark:text-white text-xs sm:text-sm">
-                          ৬.৯ ইঞ্চি (6.9 inch)
+                          ৬.৭ ইঞ্চি (6.7 inch)
                         </p>
                         <p className="text-[11px] font-medium text-slate-600 dark:text-slate-300 mt-0.5 leading-tight">
-                          ৪.৫ - ৬ ইঞ্চি লিঙ্গের জন্য ৬.৯ ইঞ্চি
+                          ৪.৫ - ৬ ইঞ্চি লিঙ্গের জন্য ৬.৭ ইঞ্চি
                         </p>
                       </div>
                     </div>
@@ -504,7 +504,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                 <div className="flex items-center justify-between text-xs px-1">
                   <span className="text-slate-600 dark:text-slate-400 font-medium">
                     মোট বিল: <span className="font-black text-blue-600 dark:text-blue-400 text-sm">৳{total.toLocaleString()}</span>
-                    <span className="text-slate-400 ml-1">({selectedVariant === "5.7 inch" ? "৫.৭ ইঞ্চি" : "৬.৯ ইঞ্চি"})</span>
+                    <span className="text-slate-400 ml-1">({selectedVariant === "5.7 inch" ? "৫.৭ ইঞ্চি" : "৬.৭ ইঞ্চি"})</span>
                   </span>
                   <span className="text-emerald-600 dark:text-emerald-400 font-bold text-[11px] bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
                     🚚 ফ্রি ডেলিভারি + 🎁 জেল

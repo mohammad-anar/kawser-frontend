@@ -49,7 +49,7 @@ const DEFAULT_FORM: FormState = {
   district: "",
   thana: "",
   productName: "Top Notch Magic Condom",
-  size: "6.9 inch",
+  size: "6.7 inch",
   quantity: 1,
   unitPrice: 950,
   deliveryCharge: 0,
@@ -96,9 +96,9 @@ export default function ManualOrderModal({ isOpen, onClose, onSuccess }: ManualO
 
       // Auto recalculate total price when qty, unitPrice, size or deliveryCharge changes
       if (field === "size") {
-        if (String(value).includes("5.7")) {
+        if (String(value).includes("5.7") || String(value).includes("৫.৭")) {
           updated.unitPrice = 1199;
-        } else if (String(value).includes("6.7") || String(value).includes("6.9")) {
+        } else if (String(value).includes("6.7") || String(value).includes("৬.৭")) {
           updated.unitPrice = 950;
         }
         updated.totalPrice = updated.unitPrice * updated.quantity + updated.deliveryCharge;
@@ -379,10 +379,8 @@ export default function ManualOrderModal({ isOpen, onClose, onSuccess }: ManualO
                   onChange={(e) => handleFieldChange("size", e.target.value)}
                   className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500 cursor-pointer font-medium"
                 >
-                  <option value="6.9 inch">৬.৯ ইঞ্চি (6.9 inch) — ৳৯৫০</option>
                   <option value="6.7 inch">৬.৭ ইঞ্চি (6.7 inch) — ৳৯৫০</option>
-                  <option value="5.7 inch">৫.৭ ইঞ্চি (5.7 inch) — ৳১,১99</option>
-                  <option value="স্ট্যান্ডার্ড">স্ট্যান্ডার্ড</option>
+                  <option value="5.7 inch">৫.৭ ইঞ্চি (5.7 inch) — ৳১,১৯৯</option>
                 </select>
               </div>
 

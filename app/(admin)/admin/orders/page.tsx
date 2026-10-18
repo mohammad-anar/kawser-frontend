@@ -69,6 +69,7 @@ import {
   Truck,
   Copy,
   Printer,
+  Ruler,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminSocket } from "@/lib/useAdminSocket";
@@ -106,6 +107,7 @@ export default function AdminOrdersPage() {
   const [searchInput, setSearchInput] = useState<string>("");
   const [phoneFilter, setPhoneFilter] = useState<string>("");
   const [phoneInput, setPhoneInput] = useState<string>("");
+  const [sizeFilter, setSizeFilter] = useState<string>("all");
 
   const [selectedOrder, setSelectedOrder] = useState<OrderData | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -127,9 +129,9 @@ export default function AdminOrdersPage() {
     address: "",
     district: "",
     thana: "",
-    productName: "Love Lock Condom / Magic Condom",
+    productName: "চীন ড্রাগন সিলিকন ম্যাজিক কনডম (Top Notch Reusable)",
     quantity: 1,
-    size: "স্ট্যান্ডার্ড",
+    size: "6.7 inch",
     unitPrice: 950,
     deliveryCharge: 0,
     totalPrice: 950,
@@ -146,7 +148,7 @@ export default function AdminOrdersPage() {
     thana: "",
     productName: "",
     quantity: 1,
-    size: "স্ট্যান্ডার্ড",
+    size: "6.7 inch",
     unitPrice: 950,
     deliveryCharge: 0,
     totalPrice: 950,
@@ -166,6 +168,7 @@ export default function AdminOrdersPage() {
       page: activeTab === "active" ? currentPage : 1,
       limit: pageSize,
       status: statusFilter !== "all" ? statusFilter : undefined,
+      size: sizeFilter !== "all" ? sizeFilter : undefined,
       search: searchTerm || undefined,
       phone: phoneFilter || undefined,
       isDeleted: false,
@@ -184,6 +187,7 @@ export default function AdminOrdersPage() {
       page: activeTab === "deleted" ? currentPage : 1,
       limit: pageSize,
       status: statusFilter !== "all" ? statusFilter : undefined,
+      size: sizeFilter !== "all" ? sizeFilter : undefined,
       search: searchTerm || undefined,
       phone: phoneFilter || undefined,
       isDeleted: true,
@@ -203,6 +207,7 @@ export default function AdminOrdersPage() {
       limit: pageSize,
       search: searchTerm || undefined,
       status: statusFilter !== "all" ? statusFilter : undefined,
+      size: sizeFilter !== "all" ? sizeFilter : undefined,
     },
     { pollingInterval: 30000 }
   );
@@ -316,7 +321,7 @@ export default function AdminOrdersPage() {
       thana: "",
       productName: inc.productName || "চীন ড্রাগন সিলিকন ম্যাজিক কনডম (Top Notch Reusable)",
       quantity: qty,
-      size: inc.size || "স্ট্যান্ডার্ড",
+      size: (inc.size && (inc.size.includes("5.7") || inc.size.includes("৫.৭"))) ? "5.7 inch" : "6.7 inch",
       unitPrice: unitPrice,
       deliveryCharge: delivery,
       totalPrice: unitPrice * qty + delivery,
@@ -432,6 +437,7 @@ export default function AdminOrdersPage() {
     setPhoneInput("");
     setPhoneFilter("");
     setStatusFilter("all");
+    setSizeFilter("all");
     setCurrentPage(1);
   };
 
@@ -464,7 +470,7 @@ export default function AdminOrdersPage() {
       thana: ord.thana || "",
       productName: ord.productName || "চীন ড্রাগন সিলিকন ম্যাজিক কনডম (Top Notch Reusable)",
       quantity: ord.quantity || 1,
-      size: ord.size || "স্ট্যান্ডার্ড",
+      size: (ord.size && (ord.size.includes("5.7") || ord.size.includes("৫.৭"))) ? "5.7 inch" : "6.7 inch",
       unitPrice: ord.unitPrice || 950,
       deliveryCharge: ord.deliveryCharge || 0,
       totalPrice: ord.totalPrice || 950,
@@ -838,6 +844,7 @@ export default function AdminOrdersPage() {
       const blob = await exportExcel({
         ids: isCustomSelected ? selectedIds : undefined,
         status: !isCustomSelected && statusFilter !== "all" ? statusFilter : undefined,
+        size: !isCustomSelected && sizeFilter !== "all" ? sizeFilter : undefined,
         isDeleted: activeTab === "deleted",
       }).unwrap();
 
@@ -1096,6 +1103,45 @@ export default function AdminOrdersPage() {
             ))}
           </div>
 
+          {/* Size Filter Pills (6.7 inch and 5.7 inch only) */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none pt-2 border-t border-slate-100 dark:border-slate-800/80">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 shrink-0 flex items-center gap-1.5">
+              <Ruler size={14} className="text-blue-500" /> সাইজ ফিল্টার:
+            </span>
+            {[
+              { key: "all", label: "সব সাইজ (All)" },
+              { key: "6.7", label: "৬.৭ ইঞ্চি (6.7 inch)", price: "৳৯৫০" },
+              { key: "5.7", label: "৫.৭ ইঞ্চি (5.7 inch)", price: "৳১,১৯৯" },
+            ].map((sz) => (
+              <button
+                key={sz.key}
+                type="button"
+                onClick={() => {
+                  setSizeFilter(sz.key);
+                  setCurrentPage(1);
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                  sizeFilter === sz.key
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/25 ring-2 ring-blue-500/30"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700"
+                }`}
+              >
+                <span>{sz.label}</span>
+                {sz.price && (
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold ${
+                      sizeFilter === sz.key
+                        ? "bg-white/20 text-white"
+                        : "bg-slate-200 dark:bg-slate-700 text-blue-600 dark:text-blue-400"
+                    }`}
+                  >
+                    {sz.price}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+
           {/* Search Inputs & Page Size Controls */}
           <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-2.5 items-stretch md:items-center">
             {/* General Search Input */}
@@ -1145,7 +1191,7 @@ export default function AdminOrdersPage() {
               >
                 ফিল্টার করুন
               </button>
-              {(searchTerm || phoneFilter || statusFilter !== "all") && (
+              {(searchTerm || phoneFilter || statusFilter !== "all" || sizeFilter !== "all") && (
                 <button
                   type="button"
                   onClick={handleClearFilters}
@@ -1303,7 +1349,13 @@ export default function AdminOrdersPage() {
                         </td>
                         <td className="py-3.5 px-4">
                           <div className="font-semibold text-slate-800 dark:text-slate-200">{inc.quantity} টি</div>
-                          <div className="text-[11px] text-slate-500 dark:text-slate-400">{inc.size || "স্ট্যান্ডার্ড"}</div>
+                          <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold inline-flex items-center ${
+                            inc.size?.includes("5.7") || inc.size?.includes("৫.৭")
+                              ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30"
+                              : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30"
+                          }`}>
+                            {inc.size?.includes("5.7") || inc.size?.includes("৫.৭") ? "৫.৭ ইঞ্চি" : "৬.৭ ইঞ্চি"}
+                          </span>
                         </td>
                         <td className="py-3.5 px-4 font-black text-amber-600 dark:text-amber-400">
                           ৳{inc.totalPrice}
@@ -1483,7 +1535,13 @@ export default function AdminOrdersPage() {
                         </td>
                         <td className="py-3.5 px-4 text-xs">
                           <span className="font-bold text-slate-900 dark:text-white">{ord.quantity} টি</span>
-                          {ord.size && <span className="text-slate-500 dark:text-slate-400 ml-1">({ord.size})</span>}
+                          <span className={`ml-1.5 px-2 py-0.5 rounded-md text-[11px] font-bold inline-flex items-center ${
+                            ord.size?.includes("5.7") || ord.size?.includes("৫.৭")
+                              ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30"
+                              : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30"
+                          }`}>
+                            {ord.size?.includes("5.7") || ord.size?.includes("৫.৭") ? "৫.৭ ইঞ্চি" : "৬.৭ ইঞ্চি"}
+                          </span>
                         </td>
                         <td className="py-3.5 px-4 font-black text-blue-600 dark:text-blue-400">
                           ৳{ord.totalPrice}
@@ -2054,7 +2112,9 @@ export default function AdminOrdersPage() {
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[11px] font-semibold">সাইজ</span>
-                  <span className="font-bold text-slate-900 dark:text-white text-xs">{selectedOrder.size || "স্ট্যান্ডার্ড"}</span>
+                  <span className="font-bold text-slate-900 dark:text-white text-xs">
+                    {selectedOrder.size?.includes("5.7") || selectedOrder.size?.includes("৫.৭") ? "৫.৭ ইঞ্চি (5.7 inch)" : "৬.৭ ইঞ্চি (6.7 inch)"}
+                  </span>
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[11px] font-semibold">পেমেন্ট</span>
@@ -2348,13 +2408,20 @@ export default function AdminOrdersPage() {
                     <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">সাইজ</label>
                     <select
                       value={editForm.size}
-                      onChange={(e) => setEditForm({ ...editForm, size: e.target.value })}
-                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
+                      onChange={(e) => {
+                        const newSize = e.target.value;
+                        const newUnitPrice = newSize.includes("5.7") ? 1199 : 950;
+                        setEditForm({
+                          ...editForm,
+                          size: newSize,
+                          unitPrice: newUnitPrice,
+                          totalPrice: newUnitPrice * editForm.quantity + editForm.deliveryCharge,
+                        });
+                      }}
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500 font-medium"
                     >
-                      <option value="স্ট্যান্ডার্ড">স্ট্যান্ডার্ড</option>
-                      <option value="মিডিয়াম (52mm)">মিডিয়াম (52mm)</option>
-                      <option value="লার্জ (56mm)">লার্জ (56mm)</option>
-                      <option value="এক্সট্রা লার্জ">এক্সট্রা লার্জ</option>
+                      <option value="6.7 inch">৬.৭ ইঞ্চি (6.7 inch) — ৳৯৫০</option>
+                      <option value="5.7 inch">৫.৭ ইঞ্চি (5.7 inch) — ৳১,১৯৯</option>
                     </select>
                   </div>
                   <div>
@@ -2892,6 +2959,29 @@ export default function AdminOrdersPage() {
                     className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  সাইজ / ভ্যারিয়েন্ট
+                </label>
+                <select
+                  value={convertForm.size}
+                  onChange={(e) => {
+                    const newSize = e.target.value;
+                    const newUnitPrice = newSize.includes("5.7") ? 1199 : 950;
+                    setConvertForm({
+                      ...convertForm,
+                      size: newSize,
+                      unitPrice: newUnitPrice,
+                      totalPrice: newUnitPrice * convertForm.quantity + convertForm.deliveryCharge,
+                    });
+                  }}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 font-medium cursor-pointer"
+                >
+                  <option value="6.7 inch">৬.৭ ইঞ্চি (6.7 inch) — ৳৯৫০</option>
+                  <option value="5.7 inch">৫.৭ ইঞ্চি (5.7 inch) — ৳১,১৯৯</option>
+                </select>
               </div>
 
               <div className="grid grid-cols-3 gap-3">

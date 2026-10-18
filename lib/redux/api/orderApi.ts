@@ -180,6 +180,7 @@ export interface AdminOrdersParams {
   status?: string;
   search?: string;
   phone?: string;
+  size?: string;
   page?: number;
   limit?: number;
   isDeleted?: boolean;
@@ -240,6 +241,7 @@ export const orderApi = apiSlice.injectEndpoints({
         if (params.status && params.status !== "all") qp.set("status", params.status);
         if (params.search) qp.set("search", params.search);
         if (params.phone) qp.set("phone", params.phone);
+        if (params.size && params.size !== "all") qp.set("size", params.size);
         if (params.isDeleted !== undefined) qp.set("isDeleted", params.isDeleted.toString());
         if (params.page) qp.set("page", params.page.toString());
         if (params.limit) qp.set("limit", params.limit.toString());
@@ -329,7 +331,7 @@ export const orderApi = apiSlice.injectEndpoints({
 
     exportOrdersCSV: builder.mutation<
       Blob,
-      { ids?: string[]; status?: string; isDeleted?: boolean }
+      { ids?: string[]; status?: string; isDeleted?: boolean; size?: string }
     >({
       query: (body) => ({
         url: "/orders/admin/export",
@@ -341,7 +343,7 @@ export const orderApi = apiSlice.injectEndpoints({
 
     exportOrdersExcel: builder.mutation<
       Blob,
-      { ids?: string[]; status?: string; isDeleted?: boolean }
+      { ids?: string[]; status?: string; isDeleted?: boolean; size?: string }
     >({
       query: (body) => ({
         url: "/orders/admin/export",
@@ -449,7 +451,7 @@ export const orderApi = apiSlice.injectEndpoints({
         page: number;
         pages: number;
       },
-      { page?: number; limit?: number; search?: string; status?: string }
+      { page?: number; limit?: number; search?: string; status?: string; size?: string }
     >({
       query: (params) => ({
         url: "/orders/admin/incomplete",
