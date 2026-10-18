@@ -45,7 +45,7 @@ export function triggerTitleBlink(count: number = 1) {
     if (showAlt) {
       document.title = `🔔 (${blinkCount}) নতুন অর্ডার এসেছে!`;
     } else {
-      document.title = originalTitle || "SelfCareSolution";
+      document.title = originalTitle || "CareZoneBD";
     }
     showAlt = !showAlt;
   }, 900);

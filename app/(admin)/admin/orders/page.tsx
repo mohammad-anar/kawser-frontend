@@ -847,7 +847,7 @@ export default function AdminOrdersPage() {
       const dateStr = new Date().toISOString().slice(0, 10);
       const filename = isCustomSelected
         ? `selected-orders-${selectedIds.length}-${dateStr}.xlsx`
-        : `selfcaresolution-orders-${activeTab === "deleted" ? "trash-" : ""}${dateStr}.xlsx`;
+        : `carezonebd-orders-${activeTab === "deleted" ? "trash-" : ""}${dateStr}.xlsx`;
       link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
