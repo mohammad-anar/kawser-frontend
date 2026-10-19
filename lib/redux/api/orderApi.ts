@@ -59,7 +59,7 @@ export interface OrderData {
   deliveryCharge: number;
   totalPrice: number;
   paymentMethod: string;
-  status: "Pending" | "Confirmed" | "Scheduled" | "Processing" | "Hold" | "Shipped" | "Delivered" | "Cancelled";
+  status: "Pending" | "Confirmed" | "Scheduled" | "Processing" | "Hold" | "Shipped" | "Delivered" | "Partial Delivered" | "Cancelled";
   ipAddress?: string;
   deviceId?: string;
   isGuestOrder: boolean;

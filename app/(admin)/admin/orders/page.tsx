@@ -83,6 +83,7 @@ const STATUSES = [
   { key: "Hold", label: "হোল্ড" },
   { key: "Shipped", label: "শিপড" },
   { key: "Delivered", label: "ডেলিভার্ড" },
+  { key: "Partial Delivered", label: "আংশিক ডেলিভার্ড" },
   { key: "Cancelled", label: "বাতিল" },
 ];
 
@@ -94,6 +95,7 @@ const STATUS_COLORS: Record<string, string> = {
   Hold: "bg-orange-500/10 text-orange-500 border-orange-500/30",
   Shipped: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
   Delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+  "Partial Delivered": "bg-teal-500/10 text-teal-400 border-teal-500/30",
   Cancelled: "bg-red-500/10 text-red-400 border-red-500/30",
 };
 
@@ -1033,6 +1035,7 @@ export default function AdminOrdersPage() {
                   <option value="Hold" className="bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400">Hold</option>
                   <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
                   <option value="Delivered" className="bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400">Delivered</option>
+                  <option value="Partial Delivered" className="bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400">Partial Delivered</option>
                   <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled</option>
                 </select>
               </div>
@@ -1565,6 +1568,7 @@ export default function AdminOrdersPage() {
                               <option value="Hold" className="bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400">Hold</option>
                               <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
                               <option value="Delivered" className="bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400">Delivered</option>
+                              <option value="Partial Delivered" className="bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400">Partial Delivered</option>
                               <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled</option>
                             </select>
                           ) : (
@@ -2497,6 +2501,7 @@ export default function AdminOrdersPage() {
                       <option value="Hold" className="bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400">Hold</option>
                       <option value="Shipped" className="bg-white dark:bg-slate-900 text-cyan-600 dark:text-cyan-400">Shipped</option>
                       <option value="Delivered" className="bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400">Delivered</option>
+                      <option value="Partial Delivered" className="bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400">Partial Delivered</option>
                       <option value="Cancelled" className="bg-white dark:bg-slate-900 text-red-600 dark:text-red-400">Cancelled</option>
                     </select>
                   </div>

@@ -71,3 +71,46 @@ export const playOrderNotificationSound = () => {
     console.warn("[Audio] Could not play notification chime:", e);
   }
 };
+
+/**
+ * Plays a pleasant 2-tone melodic chime for order status transitions.
+ */
+export const playStatusChangeSound = () => {
+  if (typeof window === "undefined") return;
+
+  try {
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return;
+
+    const ctx = new AudioCtx();
+    if (ctx.state === "suspended") {
+      ctx.resume();
+    }
+
+    const now = ctx.currentTime;
+    const tones = [
+      { freq: 659.25, start: 0, duration: 0.12 }, // E5
+      { freq: 880.0, start: 0.08, duration: 0.28 }, // A5
+    ];
+
+    tones.forEach(({ freq, start, duration }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now + start);
+
+      gain.gain.setValueAtTime(0, now + start);
+      gain.gain.linearRampToValueAtTime(0.2, now + start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + start + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + start);
+      osc.stop(now + start + duration);
+    });
+  } catch (e) {
+    console.warn("[Audio] Could not play status sound:", e);
+  }
+};

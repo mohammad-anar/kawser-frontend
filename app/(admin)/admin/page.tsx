@@ -51,6 +51,7 @@ const STATUS_COLORS: Record<string, string> = {
   Hold: "bg-orange-500/10 text-orange-500 border-orange-500/30",
   Shipped: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
   Delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+  "Partial Delivered": "bg-teal-500/10 text-teal-400 border-teal-500/30",
   Cancelled: "bg-red-500/10 text-red-400 border-red-500/30",
 };
 
@@ -424,6 +425,7 @@ export default function AdminDashboardPage() {
                           <option value="Hold" className="text-orange-500">Hold</option>
                           <option value="Shipped">Shipped</option>
                           <option value="Delivered">Delivered</option>
+                          <option value="Partial Delivered">Partial Delivered</option>
                           <option value="Cancelled">Cancelled</option>
                         </select>
                       </td>

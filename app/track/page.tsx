@@ -84,7 +84,8 @@ function TrackContent() {
       if (stepKey === "Pending") return "completed";
       return "upcoming";
     }
-    const currentIndex = orderHierarchy.indexOf(currentStatus);
+    const normalizedStatus = currentStatus === "Partial Delivered" ? "Delivered" : currentStatus;
+    const currentIndex = orderHierarchy.indexOf(normalizedStatus);
     const stepIndex = orderHierarchy.indexOf(stepKey);
     if (stepIndex < currentIndex) return "completed";
     if (stepIndex === currentIndex) return "current";
