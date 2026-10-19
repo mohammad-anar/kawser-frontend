@@ -4,6 +4,21 @@ let socket: Socket | null = null;
 
 export const getSocketUrl = (): string => {
   if (typeof window === "undefined") return "http://localhost:8000";
+
+  const isProduction =
+    window.location.hostname !== "localhost" &&
+    window.location.hostname !== "127.0.0.1";
+
+  if (isProduction) {
+    const configured =
+      process.env.NEXT_PUBLIC_SOCKET_URL ||
+      process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, "");
+    if (configured && !configured.includes("localhost") && !configured.includes("127.0.0.1")) {
+      return configured;
+    }
+    return "https://kawser-backend-wvmd.onrender.com";
+  }
+
   return (
     process.env.NEXT_PUBLIC_SOCKET_URL ||
     process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, "") ||
