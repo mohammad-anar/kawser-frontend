@@ -40,7 +40,7 @@ const DEFAULT_FORM: FormState = {
   phoneNumber: "",
   address: "",
   productName: "Top Notch Magic Condom",
-  size: "6.7 inch",
+  size: "5.7 inch",
   unitPrice: 950,
   totalPrice: 950,
   orderNotes: "",
@@ -55,20 +55,123 @@ const normalizePhone = (value: string): string => {
 const normalizeBengaliDigits = (str: string): string =>
   str.replace(/[০-৯]/g, (d) => String(d.codePointAt(0)! - 0x09e6));
 
-const localParseText = (text: string): Partial<FormState> => {
-  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+const localParseText = (rawInput: string): Partial<FormState> => {
+  // 1. Clean WhatsApp headers and timestamps
+  const rawLines = rawInput
+    .split("\n")
+    .map((l) => l.replace(/^\[\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)[^\]]*\]\s*(?:[^:]*:\s*)?/i, "").trim())
+    .filter(Boolean);
+
+  const lines = rawLines.filter((l) => {
+    if (/^(whatsapp|facebook|messenger)$/i.test(l)) return false;
+    if (/^[📌🔴⚠️]/.test(l)) return false;
+    if (/তারিখ পিকাপ/i.test(l)) return false;
+    return true;
+  });
+
+  const fullCleanText = lines.join("\n");
   const result: Partial<FormState> = {};
-  const noteLine = lines.find((l) => /^(note|নোট)\s*:/i.test(l));
-  if (noteLine) result.orderNotes = noteLine.replace(/^(note|নোট)\s*:\s*/i, "").trim();
-  const mainLines = lines.filter((l) => !/^(note|নোট)\s*:/i.test(l));
-  if (mainLines[0]) result.customerName = mainLines[0];
-  if (mainLines[1]) result.phoneNumber = normalizePhone(mainLines[1]);
-  if (mainLines[2]) result.address = mainLines[2];
-  if (mainLines[3]) {
-    const normalized = normalizeBengaliDigits(mainLines[3]);
-    const amount = parseFloat(normalized.replace(/[^\d.]/g, ""));
-    if (!isNaN(amount) && amount > 0) { result.unitPrice = amount; result.totalPrice = amount; }
+
+  // 2. Detect Size: p2 thakle size 6.7 inch, and p1 thakle ba p2 na thakle size 5.7 inch
+  if (/\b(?:p2|p-2)\b/i.test(fullCleanText) || /(?:৬\.৭|6\.7)/.test(fullCleanText)) {
+    result.size = "6.7 inch";
+  } else {
+    result.size = "5.7 inch";
   }
+
+  const usedIndices = new Set<number>();
+
+  // 3. Extract Notes
+  const noteIdx = lines.findIndex((l) => /^(?:note|notes|নোট|মন্তব্য)\s*[:ঃ-]?/i.test(l));
+  if (noteIdx !== -1) {
+    result.orderNotes = lines[noteIdx].replace(/^(?:note|notes|নোট|মন্তব্য)\s*[:ঃ-]?\s*/i, "").trim();
+    usedIndices.add(noteIdx);
+  }
+
+  // 4. Extract Phone Number FIRST (11 digits or more)
+  const phoneIdx = lines.findIndex((l) => {
+    if (/^(?:phone|mobile|cell|contact|ফোন|মোবাইল|নম্বর)\s*[:ঃ-]?/i.test(l)) return true;
+    const norm = normalizeBengaliDigits(l).replace(/\D/g, "");
+    return /^(?:88)?01[3-9]\d{8,}$/.test(norm);
+  });
+  if (phoneIdx !== -1) {
+    const rawPhone = lines[phoneIdx].replace(/^(?:phone|mobile|cell|contact|ফোন|মোবাইল|নম্বর)\s*[:ঃ-]?\s*/i, "");
+    result.phoneNumber = normalizePhone(rawPhone);
+    usedIndices.add(phoneIdx);
+  }
+
+  // 5. Extract Price / Amount (3 digits or under 1500)
+  const priceIdx = lines.findIndex((l, i) => {
+    if (usedIndices.has(i)) return false;
+    if (/^(?:price|amount|প্রাইজ|দাম|মূল্য)\s*[:ঃ-]?/i.test(l)) return true;
+    const norm = normalizeBengaliDigits(l).trim();
+    if (/^\d+\s*(?:taka|টাকা|tk)?$/i.test(norm)) {
+      const val = parseFloat(norm.replace(/[^\d.]/g, ""));
+      return !isNaN(val) && val >= 50 && val <= 1500;
+    }
+    return false;
+  });
+  if (priceIdx !== -1) {
+    const rawPrice = lines[priceIdx].replace(/^(?:price|amount|প্রাইজ|দাম|মূল্য)\s*[:ঃ-]?\s*/i, "");
+    const norm = normalizeBengaliDigits(rawPrice);
+    const num = parseFloat(norm.replace(/[^\d.]/g, ""));
+    if (!isNaN(num) && num > 0) {
+      result.unitPrice = num;
+      result.totalPrice = num;
+      usedIndices.add(priceIdx);
+    }
+  }
+
+  // 6. Extract Address components (district, thana, village, etc. combined into single string)
+  const addrParts: string[] = [];
+  lines.forEach((l, i) => {
+    if (usedIndices.has(i)) return;
+    if (/^(?:গ্রাম|মহল্লা|রোড|পাড়া|পাড়া|বাড়ি|বাড়ি)\s*[:ঃ-]/i.test(l)) {
+      addrParts.push(l);
+      usedIndices.add(i);
+    } else if (/^(?:থানা|উপজেলা)\s*[:ঃ-]/i.test(l)) {
+      addrParts.push(l);
+      usedIndices.add(i);
+    } else if (/^(?:জেলা)\s*[:ঃ-]/i.test(l)) {
+      addrParts.push(l);
+      usedIndices.add(i);
+    } else if (/^(?:বিভাগ)\s*[:ঃ-]/i.test(l)) {
+      addrParts.push(l);
+      usedIndices.add(i);
+    } else if (/^(?:ঠিকানা|address)\s*[:ঃ,-]/i.test(l)) {
+      addrParts.push(l.replace(/^(?:ঠিকানা|address)\s*[:ঃ,-]\s*/i, "").trim());
+      usedIndices.add(i);
+    }
+  });
+
+  if (addrParts.length > 0) {
+    result.address = addrParts.join(", ");
+  }
+
+  // 7. Extract Name
+  const nameIdx = lines.findIndex((l, i) => !usedIndices.has(i) && /^(?:name|নাম|গ্রাহকের\s*নাম)\s*[:ঃ-]/i.test(l));
+  if (nameIdx !== -1) {
+    result.customerName = lines[nameIdx].replace(/^(?:name|নাম|গ্রাহকের\s*নাম)\s*[:ঃ-]\s*/i, "").trim();
+    usedIndices.add(nameIdx);
+  }
+
+  // 8. Remaining lines for positional fallback
+  const remaining: string[] = [];
+  lines.forEach((l, i) => {
+    if (usedIndices.has(i)) return;
+    if (/\b(?:p1|p2|p-1|p-2)\b/i.test(l)) return;
+    if (/^(?:size|সাইজ)\s*[:ঃ-]?/i.test(l)) return;
+    remaining.push(l);
+  });
+
+  if (!result.customerName && remaining.length > 0) {
+    result.customerName = remaining.shift();
+  }
+
+  if (!result.address && remaining.length > 0) {
+    result.address = remaining.join(", ");
+  }
+
   return result;
 };
 
@@ -105,10 +208,14 @@ export default function ManualOrderModal({ isOpen, onClose, onSuccess }: ManualO
       const res = await parseOrderText({ text: quickText }).unwrap();
       if (res.success && res.data) {
         const d = res.data;
+        const detectedSize =
+          d.size ||
+          (/\b(?:p2|p-2)\b/i.test(quickText) || /(?:৬\.৭|6\.7)/.test(quickText) ? "6.7 inch" : "5.7 inch");
         applyParsed({
           customerName: d.customerName || "",
           phoneNumber: d.phoneNumber || "",
           address: d.address || "",
+          size: detectedSize,
           unitPrice: d.amount || DEFAULT_FORM.unitPrice,
           totalPrice: d.amount || DEFAULT_FORM.totalPrice,
           orderNotes: d.orderNotes || "",
@@ -217,14 +324,13 @@ export default function ManualOrderModal({ isOpen, onClose, onSuccess }: ManualO
               <span className="ml-auto text-[10px] normal-case font-normal bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-300 px-2 py-0.5 rounded-full border border-violet-200 dark:border-violet-800">Gemini AI</span>
             </div>
             <p className="text-[11px] text-violet-700 dark:text-violet-400/80 leading-relaxed">
-              যেকোনো ফরম্যাটে লিখুন — <strong>নাম, মোবাইল, ঠিকানা, টাকার পরিমাণ</strong>।
-              নোট থাকলে: <code className="bg-violet-100 dark:bg-violet-900/40 px-1 rounded font-mono">Note: ...</code>
+              হোয়াটসঅ্যাপ বা যেকোনো ফরম্যাটের চ্যাট কপি করে পেস্ট করুন — <strong>নাম, মোবাইল, ঠিকানা (জেলা/থানা/গ্রাম), সাইজ (p1=5.7, p2=6.7), মূল্য ও নোট</strong> স্বয়ংক্রিয়ভাবে ফর্ম পূরণ হবে।
             </p>
             <textarea
               rows={5}
               value={quickText}
               onChange={(e) => setQuickText(e.target.value)}
-              placeholder={"তানভীর হাসান\n01711223344\nবাড়ি ১২, রোড ৪, উত্তরা, ঢাকা\n950\nNote: সন্ধ্যায় ডেলিভারি দিন"}
+              placeholder={"নাম: গোলাম রসুল\nমোবাইল নাম্বার: 01927028674\nজেলা: ফরিদপুর\nথানা: ফরিদপুর\nগ্রাম: মিয়াপাড়া\nপ্রাইজ: ৯৫০\np1\nনোট: সন্ধ্যায় ডেলিভারি"}
               className="w-full px-3 py-2.5 bg-white dark:bg-slate-900 border border-violet-200 dark:border-violet-800/60 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-violet-500 resize-none font-mono transition-colors"
             />
             <div className="flex gap-2">
@@ -247,10 +353,36 @@ export default function ManualOrderModal({ isOpen, onClose, onSuccess }: ManualO
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">সাইজ</label>
-                <input type="text" value={formData.size} onChange={(e) => handleFieldChange("size", e.target.value)}
-                  placeholder="যেমন: 6.7 inch"
-                  className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500 transition-colors" />
+                <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  সাইজ নির্বাচন
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleFieldChange("size", "5.7 inch")}
+                    className={`py-2 px-2.5 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                      formData.size === "5.7 inch"
+                        ? "bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-500/25 ring-2 ring-blue-500/20"
+                        : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-400"
+                    }`}
+                  >
+                    <span>৫.৭ ইঞ্চি (p1/5.7)</span>
+                    {formData.size === "5.7 inch" && (
+                      <span className="text-[9px] bg-white/20 px-1 py-0.2 rounded-full font-semibold">ডিফল্ট</span>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleFieldChange("size", "6.7 inch")}
+                    className={`py-2 px-2.5 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                      formData.size === "6.7 inch"
+                        ? "bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-500/25 ring-2 ring-blue-500/20"
+                        : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-400"
+                    }`}
+                  >
+                    <span>৬.৭ ইঞ্চি (p2/6.7)</span>
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">মূল্য (৳)</label>

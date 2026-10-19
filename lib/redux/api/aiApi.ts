@@ -6,6 +6,7 @@ export interface ParseOrderResponse {
     customerName: string;
     phoneNumber: string;
     address: string;
+    size?: string;
     amount: number;
     orderNotes: string;
   };
