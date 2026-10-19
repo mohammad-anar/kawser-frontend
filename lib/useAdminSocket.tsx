@@ -244,43 +244,44 @@ export function useAdminSocket({
 
       const style = getStatusStyle(status);
 
-      toast.custom(
-        (t) => (
-          <div className="bg-[#0f172a] border border-slate-700/80 shadow-2xl shadow-blue-500/10 rounded-2xl p-4 text-white flex items-start gap-3 w-full max-w-md animate-fadeIn">
-            <div
-              className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 text-xl font-bold ${style.bg}`}
-            >
-              {style.icon}
+        toast.custom(
+          (t) => (
+            <div className="bg-[#0f172a] border border-slate-700/80 shadow-2xl shadow-blue-500/10 rounded-2xl p-4 text-white flex items-start gap-3 w-full max-w-md animate-fadeIn">
+              <div
+                className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 text-xl font-bold ${style.bg}`}
+              >
+                {style.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-extrabold text-sm text-white flex items-center gap-1.5">
+                    অর্ডার স্ট্যাটাস পরিবর্তিত হয়েছে
+                  </span>
+                  <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-800 text-blue-400 border border-slate-700">
+                    {data.orderId}
+                  </span>
+                </div>
+                {data.customerName && (
+                  <p className="text-xs text-slate-300 mt-1 truncate font-medium">
+                    গ্রাহক: <span className="text-white font-semibold">{data.customerName}</span>
+                  </p>
+                )}
+                <div className="mt-2 flex items-center gap-2 flex-wrap">
+                  <span className="text-[11px] text-slate-400">বর্তমান স্ট্যাটাস:</span>
+                  <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold shadow-sm ${style.badge}`}>
+                    {style.label}
+                  </span>
+                </div>
+                <div className="text-[10px] text-slate-400 mt-2 pt-1.5 border-t border-slate-800/80 flex items-center justify-between">
+                  <span>সোর্স:</span>
+                  <span className="text-slate-300 font-semibold">{data.source || "Steadfast Courier"}</span>
+                </div>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-extrabold text-sm text-white flex items-center gap-1.5">
-                  অর্ডার স্ট্যাটাস পরিবর্তিত হয়েছে
-                </span>
-                <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-800 text-blue-400 border border-slate-700">
-                  {data.orderId}
-                </span>
-              </div>
-              {data.customerName && (
-                <p className="text-xs text-slate-300 mt-1 truncate font-medium">
-                  গ্রাহক: <span className="text-white font-semibold">{data.customerName}</span>
-                </p>
-              )}
-              <div className="mt-2 flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] text-slate-400">বর্তমান স্ট্যাটাস:</span>
-                <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold shadow-sm ${style.badge}`}>
-                  {style.label}
-                </span>
-              </div>
-              <div className="text-[10px] text-slate-400 mt-2 pt-1.5 border-t border-slate-800/80 flex items-center justify-between">
-                <span>সোর্স:</span>
-                <span className="text-slate-300 font-semibold">{data.source || "Steadfast Courier"}</span>
-              </div>
-            </div>
-          </div>
-        ),
-        { duration: 7000 }
-      );
+          ),
+          { duration: 7000 }
+        );
+      }
 
       if (onOrderStatusUpdatedRef.current) {
         onOrderStatusUpdatedRef.current(data);
