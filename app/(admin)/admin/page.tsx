@@ -86,7 +86,7 @@ export default function AdminDashboardPage() {
       refetchStats();
       refetchOrders();
     },
-    enableNotification: true,
+    enableNotification: false, // AdminNav already handles notifications globally
   });
 
   useEffect(() => {

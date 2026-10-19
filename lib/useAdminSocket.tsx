@@ -18,6 +18,7 @@ export interface NewOrderPayload {
 
 interface UseAdminSocketOptions {
   onNewOrder?: (order: NewOrderPayload) => void;
+  onOrderStatusUpdated?: (data: any) => void;
   enableNotification?: boolean;
 }
 
@@ -69,16 +70,28 @@ export function triggerTitleBlink(count: number = 1) {
   window.addEventListener("click", stopBlinking, { once: true });
 }
 
+// Global deduplication trackers to ensure only 1 toast/sound fires across all components
+let lastStatusToastKey = "";
+let lastStatusToastTime = 0;
+let lastNewOrderToastKey = "";
+let lastNewOrderToastTime = 0;
+
 export function useAdminSocket({
   onNewOrder,
+  onOrderStatusUpdated,
   enableNotification = true,
 }: UseAdminSocketOptions = {}) {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const onNewOrderRef = useRef(onNewOrder);
+  const onOrderStatusUpdatedRef = useRef(onOrderStatusUpdated);
 
   useEffect(() => {
     onNewOrderRef.current = onNewOrder;
   }, [onNewOrder]);
+
+  useEffect(() => {
+    onOrderStatusUpdatedRef.current = onOrderStatusUpdated;
+  }, [onOrderStatusUpdated]);
 
   useEffect(() => {
     const socket = getSocket();
@@ -93,14 +106,23 @@ export function useAdminSocket({
     };
 
     const handleNewOrder = (order: NewOrderPayload) => {
-      // Play audio notification chime
-      playOrderNotificationSound();
+      if (!order || !order.orderId) return;
 
-      // Trigger document title blinking
-      triggerTitleBlink(1);
+      const now = Date.now();
+      const key = order.orderId;
+      const isDuplicate = key === lastNewOrderToastKey && now - lastNewOrderToastTime < 2000;
 
-      // Show rich Sonner toast
-      if (enableNotification) {
+      if (!isDuplicate && enableNotification) {
+        lastNewOrderToastKey = key;
+        lastNewOrderToastTime = now;
+
+        // Play audio notification chime
+        playOrderNotificationSound();
+
+        // Trigger document title blinking
+        triggerTitleBlink(1);
+
+        // Show rich Sonner toast
         toast.custom(
           (t) => (
             <div className="bg-[#121228] border border-yellow-500/40 shadow-2xl shadow-yellow-500/10 rounded-2xl p-4 text-white flex items-start gap-3 w-full max-w-md animate-fadeIn">
@@ -147,8 +169,16 @@ export function useAdminSocket({
     }) => {
       if (!data?.orderId || !data?.newStatus) return;
 
-      // Play soft notification sound
-      playStatusChangeSound();
+      const now = Date.now();
+      const key = `${data.orderId}_${data.newStatus}`;
+      const isDuplicate = key === lastStatusToastKey && now - lastStatusToastTime < 2000;
+
+      if (!isDuplicate && enableNotification) {
+        lastStatusToastKey = key;
+        lastStatusToastTime = now;
+
+        // Play soft notification sound
+        playStatusChangeSound();
 
       const status = data.newStatus;
       const getStatusStyle = (st: string) => {
@@ -252,14 +282,14 @@ export function useAdminSocket({
         { duration: 7000 }
       );
 
-      if (onNewOrderRef.current) {
-        onNewOrderRef.current({} as any);
+      if (onOrderStatusUpdatedRef.current) {
+        onOrderStatusUpdatedRef.current(data);
       }
     };
 
-    const handleBulkStatusUpdated = () => {
-      if (onNewOrderRef.current) {
-        onNewOrderRef.current({} as any);
+    const handleBulkStatusUpdated = (bulkData: any) => {
+      if (onOrderStatusUpdatedRef.current) {
+        onOrderStatusUpdatedRef.current(bulkData || { bulk: true });
       }
     };
 

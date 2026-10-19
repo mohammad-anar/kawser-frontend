@@ -274,7 +274,10 @@ export default function AdminOrdersPage() {
       refetchDeleted();
       refetchIncomplete();
     },
-    enableNotification: true,
+    onOrderStatusUpdated: () => {
+      refetchActive();
+    },
+    enableNotification: false, // AdminNav already handles notifications globally
   });
 
   useEffect(() => {
@@ -1627,7 +1630,7 @@ export default function AdminOrdersPage() {
                                     </button>
                                   </div>
                                 )}
-                                <div>
+                                <div className="flex items-center gap-1.5 flex-wrap">
                                   <span
                                     className={`inline-block text-[10px] font-bold px-1.5 py-0.5 rounded ${
                                       ord.steadfast.status?.toLowerCase().includes("deliver")
@@ -1639,6 +1642,16 @@ export default function AdminOrdersPage() {
                                   >
                                     {ord.steadfast.status || "ইন-কুরিয়ার"}
                                   </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSendSingleSteadfast(ord)}
+                                    disabled={sendingOrderId === ord._id}
+                                    className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 hover:bg-emerald-50 dark:bg-slate-800 dark:hover:bg-emerald-950/60 text-slate-600 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 transition-colors font-medium inline-flex items-center gap-1 cursor-pointer"
+                                    title="স্টিডফাস্টে পুনরায় পাঠান"
+                                  >
+                                    <RefreshCw size={9} className={sendingOrderId === ord._id ? "animate-spin" : ""} />
+                                    <span>{sendingOrderId === ord._id ? "পাঠানো হচ্ছে..." : "পুনরায় পাঠান"}</span>
+                                  </button>
                                 </div>
                               </div>
                             ) : (

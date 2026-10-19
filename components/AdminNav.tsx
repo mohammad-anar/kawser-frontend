@@ -46,16 +46,36 @@ export default function AdminNav() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Load saved notifications from localStorage on mount
+  // Load saved notifications from localStorage on mount and sanitize corrupted items
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
         const saved = localStorage.getItem("pc_admin_notifications");
         if (saved) {
-          setNotifications(JSON.parse(saved));
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            const valid = parsed
+              .filter((n) => n && (n.orderId || n.id))
+              .map((n) => ({
+                id: n.id || `notif_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+                orderId: n.orderId || "N/A",
+                customerName: n.customerName || "গ্রাহক",
+                phoneNumber: n.phoneNumber || "",
+                quantity: Number(n.quantity) || 1,
+                totalPrice: Number(n.totalPrice) || 0,
+                status: n.status || "Pending",
+                createdAt: n.createdAt || new Date().toISOString(),
+                read: Boolean(n.read),
+              }));
+            setNotifications(valid);
+            localStorage.setItem("pc_admin_notifications", JSON.stringify(valid.slice(0, 50)));
+          }
         }
       } catch (e) {
         console.error("Failed to load notifications from localStorage", e);
+        try {
+          localStorage.removeItem("pc_admin_notifications");
+        } catch {}
       }
     }
   }, []);
@@ -76,14 +96,16 @@ export default function AdminNav() {
   const { isConnected } = useAdminSocket({
     enableNotification: true,
     onNewOrder: (order: NewOrderPayload) => {
+      if (!order || !order.orderId) return;
+
       const newNotif: AdminNotification = {
         id: `notif_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
         orderId: order.orderId,
-        customerName: order.customerName,
-        phoneNumber: order.phoneNumber,
-        quantity: order.quantity,
-        totalPrice: order.totalPrice,
-        status: order.status,
+        customerName: order.customerName || "নতুন গ্রাহক",
+        phoneNumber: order.phoneNumber || "",
+        quantity: Number(order.quantity) || 1,
+        totalPrice: Number(order.totalPrice) || 0,
+        status: order.status || "Pending",
         createdAt: order.createdAt || new Date().toISOString(),
         read: false,
       };
@@ -322,7 +344,7 @@ export default function AdminNav() {
 
                         <div className="flex items-center justify-between mt-1.5 pt-1 border-t border-slate-100 dark:border-slate-800 text-[10px]">
                           <span className="text-emerald-600 dark:text-emerald-400 font-bold">
-                            ৳{notif.totalPrice.toLocaleString()}
+                            ৳{(Number(notif.totalPrice) || 0).toLocaleString()}
                           </span>
                           <span className="text-slate-400 dark:text-slate-500 flex items-center gap-1">
                             <Clock size={10} /> {formatTimeAgo(notif.createdAt)}
