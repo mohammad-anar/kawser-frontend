@@ -18,10 +18,14 @@ import {
   Clock,
   Check,
   KeyRound,
+  Volume2,
+  VolumeX,
+  Play,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { logout } from "@/lib/redux/slices/authSlice";
 import { useAdminSocket, NewOrderPayload } from "@/lib/useAdminSocket";
+import { playOrderNotificationSound, setOrderNotificationSoundEnabled, unlockAudioForAutoplay } from "@/lib/socket";
 import ThemeToggle from "./ThemeToggle";
 
 export interface AdminNotification {
@@ -44,11 +48,22 @@ export default function AdminNav() {
 
   const [notifications, setNotifications] = useState<AdminNotification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOrderSoundEnabled, setIsOrderSoundEnabled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Load saved notifications from localStorage on mount and sanitize corrupted items
   useEffect(() => {
     if (typeof window !== "undefined") {
+      // Restore sound preference
+      try {
+        const savedSound = localStorage.getItem("pc_admin_sound_enabled");
+        if (savedSound === "true") {
+          setIsOrderSoundEnabled(true);
+          setOrderNotificationSoundEnabled(true);
+        }
+      } catch {}
+
+      // Restore notifications
       try {
         const saved = localStorage.getItem("pc_admin_notifications");
         if (saved) {
@@ -246,6 +261,40 @@ export default function AdminNav() {
             }`}
           />
           <span>{isConnected ? "লাইভ" : "কানেক্টিং..."}</span>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              const enabled = !isOrderSoundEnabled;
+              setIsOrderSoundEnabled(enabled);
+              setOrderNotificationSoundEnabled(enabled);
+              // Persist preference across reloads
+              try { localStorage.setItem("pc_admin_sound_enabled", String(enabled)); } catch {}
+              // On enabling, unlock audio autoplay in this user-gesture context
+              if (enabled) {
+                unlockAudioForAutoplay();
+              }
+            }}
+            aria-label={isOrderSoundEnabled ? "Turn order sound off" : "Turn order sound on"}
+            aria-pressed={isOrderSoundEnabled}
+            title={isOrderSoundEnabled ? "Turn order sound off" : "Turn order sound on"}
+            className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-[11px] font-semibold transition-colors cursor-pointer"
+          >
+            {isOrderSoundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+            <span className="hidden sm:inline">Sound {isOrderSoundEnabled ? "On" : "Off"}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => playOrderNotificationSound(true)}
+            aria-label="Test order notification sound"
+            title="Test sound"
+            className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-[11px] font-semibold transition-colors cursor-pointer"
+          >
+            <Play size={14} />
+            <span className="hidden sm:inline">Test Sound</span>
+          </button>
         </div>
 
         {/* Interactive Notification Dropdown */}

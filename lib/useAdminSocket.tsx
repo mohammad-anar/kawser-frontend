@@ -75,6 +75,7 @@ let lastStatusToastKey = "";
 let lastStatusToastTime = 0;
 let lastNewOrderToastKey = "";
 let lastNewOrderToastTime = 0;
+const soundedNewOrderIds = new Set<string>();
 
 export function useAdminSocket({
   onNewOrder,
@@ -112,18 +113,21 @@ export function useAdminSocket({
       const key = order.orderId;
       const isDuplicate = key === lastNewOrderToastKey && now - lastNewOrderToastTime < 2000;
 
-      if (!isDuplicate && enableNotification) {
-        lastNewOrderToastKey = key;
-        lastNewOrderToastTime = now;
+      if (enableNotification) {
+        if (!soundedNewOrderIds.has(key)) {
+          soundedNewOrderIds.add(key);
+          playOrderNotificationSound();
+        }
 
-        // Play audio notification chime
-        playOrderNotificationSound();
+        if (!isDuplicate) {
+          lastNewOrderToastKey = key;
+          lastNewOrderToastTime = now;
 
-        // Trigger document title blinking
-        triggerTitleBlink(1);
+          // Trigger document title blinking
+          triggerTitleBlink(1);
 
-        // Show rich Sonner toast
-        toast.custom(
+          // Show rich Sonner toast
+          toast.custom(
           (t) => (
             <div className="bg-[#121228] border border-yellow-500/40 shadow-2xl shadow-yellow-500/10 rounded-2xl p-4 text-white flex items-start gap-3 w-full max-w-md animate-fadeIn">
               <div className="w-10 h-10 rounded-xl bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center text-yellow-400 shrink-0 text-xl font-black">
@@ -149,8 +153,9 @@ export function useAdminSocket({
               </div>
             </div>
           ),
-          { duration: 8000 }
-        );
+            { duration: 8000 }
+          );
+        }
       }
 
       // Execute custom callback (e.g. refetch RTK Query)
