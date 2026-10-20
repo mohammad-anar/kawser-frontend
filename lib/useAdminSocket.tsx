@@ -237,6 +237,20 @@ export function useAdminSocket({
               icon: "✅",
               label: "কনফার্মড (Confirmed)",
             };
+          case "Returned":
+            return {
+              bg: "bg-violet-500/20 border-violet-500/40 text-violet-300",
+              badge: "bg-violet-600 text-white",
+              icon: "🔄",
+              label: "ফেরত (Returned)",
+            };
+          case "Manual":
+            return {
+              bg: "bg-slate-500/20 border-slate-500/40 text-slate-300",
+              badge: "bg-slate-600 text-white",
+              icon: "✍️",
+              label: "ম্যানুয়াল (Manual)",
+            };
           default:
             return {
               bg: "bg-slate-500/20 border-slate-500/40 text-slate-300",

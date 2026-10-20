@@ -53,6 +53,8 @@ const STATUS_COLORS: Record<string, string> = {
   Delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
   "Partial Delivered": "bg-teal-500/10 text-teal-400 border-teal-500/30",
   Cancelled: "bg-red-500/10 text-red-400 border-red-500/30",
+  Returned: "bg-violet-500/10 text-violet-400 border-violet-500/30",
+  Manual: "bg-slate-500/10 text-slate-400 border-slate-500/30",
 };
 
 export default function AdminDashboardPage() {
@@ -427,6 +429,8 @@ export default function AdminDashboardPage() {
                           <option value="Delivered">Delivered</option>
                           <option value="Partial Delivered">Partial Delivered</option>
                           <option value="Cancelled">Cancelled</option>
+                          <option value="Returned" className="text-violet-500">Returned (ফেরত)</option>
+                          <option value="Manual" className="text-slate-500">Manual (ম্যানুয়াল)</option>
                         </select>
                       </td>
                       <td className="py-3.5 px-4 text-right">
