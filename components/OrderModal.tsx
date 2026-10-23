@@ -6,6 +6,7 @@ import { X, Loader2, CheckCircle, AlertCircle, ShoppingBag } from "lucide-react"
 import { useCreateOrderMutation, useRecordIncompleteOrderMutation } from "@/lib/redux/api/orderApi";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { getDeviceId } from "@/lib/deviceId";
+import { trackMetaPurchase } from "@/lib/metaPixel";
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -56,6 +57,19 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
       }));
     }
   }, [isOpen, user]);
+
+  // Backup trigger: ensure Meta Purchase is tracked whenever order success screen is displayed
+  useEffect(() => {
+    if (success?.orderId && success?.total) {
+      trackMetaPurchase({
+        orderId: success.orderId,
+        totalPrice: success.total,
+        quantity: form.quantity,
+        variant: selectedVariant,
+        customerPhone: form.phoneNumber,
+      });
+    }
+  }, [success, form.quantity, selectedVariant, form.phoneNumber]);
 
   // Converts Bengali/Devanagari digits to ASCII digits
   const normalizeBanglaPhone = (value: string): string =>
@@ -177,52 +191,13 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
       }
 
       // ===== Meta Pixel: Purchase Event =====
-      if (typeof window !== "undefined" && typeof window.fbq === "function") {
-        const rawTotal = res?.totalPrice;
-        const orderTotal = typeof rawTotal === "number" ? rawTotal : Number(rawTotal);
-
-        if (isNaN(orderTotal) || orderTotal <= 0) {
-          console.warn("[Meta Pixel] Purchase event skipped: Missing or invalid res.totalPrice", rawTotal);
-        } else {
-          const orderId = res.orderId;
-          const purchaseDedupeKey = orderId ? `fb_purchase_${orderId}` : null;
-          let alreadyTracked = false;
-
-          if (purchaseDedupeKey) {
-            try {
-              alreadyTracked = Boolean(sessionStorage.getItem(purchaseDedupeKey));
-              if (!alreadyTracked) {
-                sessionStorage.setItem(purchaseDedupeKey, "true");
-              }
-            } catch {
-              // Ignore storage access errors in private/restricted browsing mode
-            }
-          }
-
-          if (!alreadyTracked) {
-            const dynamicProductName = res.productName || `Top Notch Magic Condom (${selectedVariant})`;
-            const dynamicContentId =
-              dynamicProductName
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/^-+|-+$/g, "") || "love-lock-magic-condom";
-
-            window.fbq(
-              "track",
-              "Purchase",
-              {
-                value: orderTotal,
-                currency: "BDT",
-                content_name: dynamicProductName,
-                content_ids: [dynamicContentId],
-                content_type: "product",
-                num_items: form.quantity,
-              },
-              orderId ? { eventID: orderId } : undefined
-            );
-          }
-        }
-      }
+      trackMetaPurchase({
+        orderId: res.orderId,
+        totalPrice: res.totalPrice,
+        quantity: form.quantity,
+        variant: selectedVariant,
+        customerPhone: form.phoneNumber,
+      });
       // ===== End Meta Pixel =====
 
       setSuccess({ orderId: res.orderId, total: res.totalPrice });
