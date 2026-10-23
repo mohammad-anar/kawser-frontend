@@ -134,7 +134,6 @@ export function trackMetaPurchase({
   const testEventCode = getMetaTestEventCode();
   if (testEventCode) {
     eventOptions.test_event_code = testEventCode;
-    customData.test_event_code = testEventCode;
   }
 
   try {
