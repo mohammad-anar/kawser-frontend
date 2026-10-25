@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://carezonebd.store"),
+  metadataBase: new URL("https://www.carezonebd.site"),
   title: {
     default: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Magic Condom Price in BD ৳৮৯৯ | Care Zone BD",
     template: "%s | Care Zone BD",
@@ -29,6 +29,8 @@ export const metadata: Metadata = {
     "কেয়ার জোন বিডি",
     "carezonebd",
     "care zone bd",
+    "carezonebd.site",
+    "www.carezonebd.site",
     "carezonebd.store",
     "ম্যাজিক কনডম",
     "ম্যাজিক কনডম বাংলাদেশ",
@@ -61,7 +63,7 @@ export const metadata: Metadata = {
     "discreet packaging condom",
     "cash on delivery condom bd",
   ],
-  authors: [{ name: "Care Zone BD", url: "https://carezonebd.store" }],
+  authors: [{ name: "Care Zone BD", url: "https://www.carezonebd.site" }],
   creator: "Care Zone BD",
   publisher: "Care Zone BD",
   formatDetection: {
@@ -73,7 +75,7 @@ export const metadata: Metadata = {
     title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | মাত্র ৳৮৯৯ | Care Zone BD",
     description:
       "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৮৯৯। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য। সারাদেশে ফ্রি ডেলিভারি ও ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
-    url: "https://carezonebd.store",
+    url: "https://www.carezonebd.site",
     siteName: "Care Zone BD",
     images: [
       {
@@ -105,10 +107,10 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://carezonebd.store",
+    canonical: "https://www.carezonebd.site",
     languages: {
-      "bn-BD": "https://carezonebd.store",
-      "en-US": "https://carezonebd.store",
+      "bn-BD": "https://www.carezonebd.site",
+      "en-US": "https://www.carezonebd.site",
     },
   },
   icons: {
@@ -129,23 +131,23 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://carezonebd.store/#website",
-      url: "https://carezonebd.store",
+      "@id": "https://www.carezonebd.site/#website",
+      url: "https://www.carezonebd.site",
       name: "Care Zone BD",
       description: "বাংলাদেশের বিশ্বস্ত অনলাইন শপ - অরিজিনাল টপ নচ ম্যাজিক কনডম ও পার্সোনাল কেয়ার সামগ্রী",
       inLanguage: ["bn", "en"],
       publisher: {
-        "@id": "https://carezonebd.store/#org",
+        "@id": "https://www.carezonebd.site/#org",
       },
     },
     {
       "@type": "Organization",
-      "@id": "https://carezonebd.store/#org",
+      "@id": "https://www.carezonebd.site/#org",
       name: "Care Zone BD",
-      url: "https://carezonebd.store",
+      url: "https://www.carezonebd.site",
       logo: {
         "@type": "ImageObject",
-        url: "https://carezonebd.store/logo.jpeg",
+        url: "https://www.carezonebd.site/logo.jpeg",
         width: 200,
         height: 100,
       },
@@ -160,32 +162,32 @@ const jsonLd = {
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://carezonebd.store/#breadcrumbs",
+      "@id": "https://www.carezonebd.site/#breadcrumbs",
       itemListElement: [
         {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://carezonebd.store",
+          item: "https://www.carezonebd.site",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "টপ নচ ম্যাজিক কনডম",
-          item: "https://carezonebd.store/#product",
+          item: "https://www.carezonebd.site/#product",
         },
       ],
     },
     {
       "@type": "Product",
-      "@id": "https://carezonebd.store/#product",
+      "@id": "https://www.carezonebd.site/#product",
       name: "Top Notch Magic Condom (China) - অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম",
       image: [
-        "https://carezonebd.store/images/products/IMG_7393.jpg",
-        "https://carezonebd.store/images/products/IMG_7395.jpg",
-        "https://carezonebd.store/images/products/IMG_7386.jpg",
-        "https://carezonebd.store/images/products/IMG_7387.jpg",
-        "https://carezonebd.store/images/products/product-5.jpeg",
+        "https://www.carezonebd.site/images/products/IMG_7393.jpg",
+        "https://www.carezonebd.site/images/products/IMG_7395.jpg",
+        "https://www.carezonebd.site/images/products/IMG_7386.jpg",
+        "https://www.carezonebd.site/images/products/IMG_7387.jpg",
+        "https://www.carezonebd.site/images/products/product-5.jpeg",
       ],
       description:
         "উচ্চমানের মেডিকেল-গ্রেড TPE সিলিকন দিয়ে তৈরি রিইউজেবল ম্যাজিক কনডম। পুরুত্ব ৬ মিমি, দৈর্ঘ্য ৬.৭ ইঞ্চি। ডটেড সারফেস ও ডাবল লক রিং সিস্টেম সহ ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল।",
@@ -221,7 +223,7 @@ const jsonLd = {
         price: "899",
         priceCurrency: "BDT",
         availability: "https://schema.org/InStock",
-        url: "https://carezonebd.store",
+        url: "https://www.carezonebd.site",
         priceValidUntil: "2027-12-31",
         itemCondition: "https://schema.org/NewCondition",
         seller: { "@type": "Organization", name: "Care Zone BD" },
@@ -247,7 +249,7 @@ const jsonLd = {
     },
     {
       "@type": "FAQPage",
-      "@id": "https://carezonebd.store/#faq",
+      "@id": "https://www.carezonebd.site/#faq",
       mainEntity: [
         {
           "@type": "Question",

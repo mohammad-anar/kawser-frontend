@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Care Zone BD একাউন্টে লগইন করে পূর্ববর্তী অর্ডার ও প্রোফাইল বিস্তারিত দেখুন।",
   alternates: {
-    canonical: "https://carezonebd.store/login",
+    canonical: "https://www.carezonebd.site/login",
   },
   robots: {
     index: false,
