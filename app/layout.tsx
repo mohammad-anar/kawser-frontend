@@ -123,6 +123,9 @@ export const metadata: Metadata = {
     ],
     shortcut: "/favicon.ico",
   },
+  verification: {
+    google: "wyk6_CuTJ1hYv3fh7x5ehNmIjmsUrHTOgczR71JxaI4",
+  },
   category: "Intimate Care & Health",
 };
 

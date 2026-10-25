@@ -285,7 +285,7 @@ export default function ManualOrderModal({ isOpen, onClose, onSuccess }: ManualO
         deliveryCharge: 0,
         totalPrice: Number(formData.totalPrice),
         paymentMethod: "Cash on Delivery",
-        status: "Pending",
+        status: "Manual",
         orderNotes: formData.orderNotes.trim(),
       }).unwrap();
       toast.success(res.message || "ম্যানুয়াল অর্ডার সফলভাবে তৈরি হয়েছে!");
