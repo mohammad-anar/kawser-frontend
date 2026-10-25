@@ -138,9 +138,9 @@ export default function AdminOrdersPage() {
     productName: "চীন ড্রাগন সিলিকন ম্যাজিক কনডম (Top Notch Reusable)",
     quantity: 1,
     size: "6.7 inch",
-    unitPrice: 950,
+    unitPrice: 899,
     deliveryCharge: 0,
-    totalPrice: 950,
+    totalPrice: 899,
     paymentMethod: "Cash on Delivery",
     orderNotes: "",
   });
@@ -155,9 +155,9 @@ export default function AdminOrdersPage() {
     productName: "",
     quantity: 1,
     size: "6.7 inch",
-    unitPrice: 950,
+    unitPrice: 899,
     deliveryCharge: 0,
-    totalPrice: 950,
+    totalPrice: 899,
     paymentMethod: "Cash on Delivery",
     status: "Pending",
     orderNotes: "",
@@ -320,7 +320,7 @@ export default function AdminOrdersPage() {
   const handleOpenConvert = (inc: IncompleteOrderData) => {
     setConvertingTarget(inc);
     const qty = inc.quantity || 1;
-    const unitPrice = inc.unitPrice || 950;
+    const unitPrice = inc.unitPrice || 899;
     const delivery = 0;
     setConvertForm({
       customerName: inc.customerName || "",
@@ -480,9 +480,9 @@ export default function AdminOrdersPage() {
       productName: ord.productName || "চীন ড্রাগন সিলিকন ম্যাজিক কনডম (Top Notch Reusable)",
       quantity: ord.quantity || 1,
       size: (ord.size && (ord.size.includes("5.7") || ord.size.includes("৫.৭"))) ? "5.7 inch" : "6.7 inch",
-      unitPrice: ord.unitPrice || 950,
+      unitPrice: ord.unitPrice || 899,
       deliveryCharge: ord.deliveryCharge || 0,
-      totalPrice: ord.totalPrice || 950,
+      totalPrice: ord.totalPrice || 899,
       paymentMethod: ord.paymentMethod || "Cash on Delivery",
       status: ord.status || "Pending",
       orderNotes: ord.orderNotes || "",
@@ -1122,7 +1122,7 @@ export default function AdminOrdersPage() {
             </span>
             {[
               { key: "all", label: "সব সাইজ (All)" },
-              { key: "6.7", label: "৬.৭ ইঞ্চি (6.7 inch)", price: "৳৯৫০" },
+              { key: "6.7", label: "৬.৭ ইঞ্চি (6.7 inch)", price: "৳৮৯৯" },
               { key: "5.7", label: "৫.৭ ইঞ্চি (5.7 inch)", price: "৳১,১৯৯" },
             ].map((sz) => (
               <button
@@ -2435,7 +2435,7 @@ export default function AdminOrdersPage() {
                       value={editForm.size}
                       onChange={(e) => {
                         const newSize = e.target.value;
-                        const newUnitPrice = newSize.includes("5.7") ? 1199 : 950;
+                        const newUnitPrice = newSize.includes("5.7") ? 1199 : 899;
                         setEditForm({
                           ...editForm,
                           size: newSize,
@@ -2445,7 +2445,7 @@ export default function AdminOrdersPage() {
                       }}
                       className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500 font-medium"
                     >
-                      <option value="6.7 inch">৬.৭ ইঞ্চি (6.7 inch) — ৳৯৫০</option>
+                      <option value="6.7 inch">৬.৭ ইঞ্চি (6.7 inch) — ৳৮৯৯</option>
                       <option value="5.7 inch">৫.৭ ইঞ্চি (5.7 inch) — ৳১,১৯৯</option>
                     </select>
                   </div>
@@ -2997,7 +2997,7 @@ export default function AdminOrdersPage() {
                   value={convertForm.size}
                   onChange={(e) => {
                     const newSize = e.target.value;
-                    const newUnitPrice = newSize.includes("5.7") ? 1199 : 950;
+                    const newUnitPrice = newSize.includes("5.7") ? 1199 : 899;
                     setConvertForm({
                       ...convertForm,
                       size: newSize,
@@ -3007,7 +3007,7 @@ export default function AdminOrdersPage() {
                   }}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 font-medium cursor-pointer"
                 >
-                  <option value="6.7 inch">৬.৭ ইঞ্চি (6.7 inch) — ৳৯৫০</option>
+                  <option value="6.7 inch">৬.৭ ইঞ্চি (6.7 inch) — ৳৮৯৯</option>
                   <option value="5.7 inch">৫.৭ ইঞ্চি (5.7 inch) — ৳১,১৯৯</option>
                 </select>
               </div>

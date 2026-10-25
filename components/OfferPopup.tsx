@@ -66,7 +66,7 @@ export default function OfferPopup({ onClaimOffer }: OfferPopupProps) {
         <div className="my-4 p-3.5 bg-gradient-to-br from-blue-50 via-emerald-50/50 to-blue-50 dark:from-blue-950/70 dark:via-emerald-950/40 dark:to-blue-950/70 border-2 border-emerald-300 dark:border-emerald-700/80 rounded-2xl space-y-2 text-left shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-600 dark:text-slate-300 font-bold">স্পেশাল অফার প্রাইজ:</span>
-            <span className="text-blue-700 dark:text-blue-300 font-black text-xl">৳৯৫০</span>
+            <span className="text-blue-700 dark:text-blue-300 font-black text-xl">৳৮৯৯</span>
           </div>
           <div className="flex items-center justify-between border-t border-emerald-200/60 dark:border-emerald-800/60 pt-2">
             <span className="text-xs text-slate-800 dark:text-slate-200 font-bold flex items-center gap-1">🚚 সারাদেশে ডেলিভারি:</span>

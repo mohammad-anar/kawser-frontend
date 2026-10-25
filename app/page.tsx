@@ -340,7 +340,7 @@ export default function Home() {
               <div className="bg-white dark:bg-slate-900/90 border-2 border-blue-200 dark:border-blue-800 rounded-2xl px-5 py-3 shadow-md shadow-blue-100/50 dark:shadow-none flex flex-col justify-center">
                 <span className="text-slate-500 dark:text-slate-400 text-xs block font-semibold">বর্তমান অফার প্রাইজ:</span>
                 <div className="flex items-baseline gap-2.5 mt-0.5">
-                  <span className="text-3xl font-black text-blue-600 dark:text-blue-400">৳৯৫০</span>
+                  <span className="text-3xl font-black text-blue-600 dark:text-blue-400">৳৮৯৯</span>
                   <span className="text-sm text-slate-400 line-through">৳১,৯৫০</span>
                   <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700">
                     ৫০% ছাড়
@@ -378,7 +378,7 @@ export default function Home() {
                 className="btn-gold py-4 px-8 rounded-xl text-base sm:text-lg font-black flex items-center justify-center gap-2.5 shadow-xl pulse-gold cursor-pointer"
               >
                 <ShoppingBag size={20} />
-                <span>অর্ডার করতে চাই — ৳৯৫০</span>
+                <span>অর্ডার করতে চাই — ৳৮৯৯</span>
               </button>
             </div>
           </div>
@@ -425,7 +425,7 @@ export default function Home() {
               onClick={() => setModalOpen(true)}
               className="btn-gold py-3.5 px-8 rounded-xl text-sm sm:text-base font-black inline-flex items-center gap-2 shadow-lg pulse-gold cursor-pointer"
             >
-              <ShoppingBag size={18} /> অর্ডার করতে চাই (৳৯৫০)
+              <ShoppingBag size={18} /> অর্ডার করতে চাই (৳৮৯৯)
             </button>
           </div>
         </div>
@@ -589,7 +589,7 @@ export default function Home() {
                     onClick={() => setModalOpen(true)}
                     className="btn-gold w-full py-3.5 rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg pulse-gold cursor-pointer"
                   >
-                    <ShoppingBag size={17} /> অর্ডার কনফার্ম করুন (৳৯৫০)
+                    <ShoppingBag size={17} /> অর্ডার কনফার্ম করুন (৳৮৯৯)
                   </button>
                   <p className="text-center text-[11px] text-slate-500 dark:text-slate-400 mt-2">
                     🔒 পণ্য দেখে পেমেন্ট • ১০০% তথ্য গোপনীয়
@@ -790,7 +790,7 @@ export default function Home() {
           </h2>
 
           <p className="text-sm sm:text-base text-blue-100 max-w-xl mx-auto">
-            বর্তমান স্পেশাল অফারে মাত্র ৳৯৫০ টাকায় টপ নচ ম্যাজিক কনডম অর্ডার করুন। সাথে পাচ্ছেন ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি এবং সারাদেশে ফ্রি হোম ডেলিভারি! কোনো অগ্রিম টাকা দিতে হবে না, পণ্য হাতে পেয়ে দেখে মূল্য পরিশোধ করুন।
+            বর্তমান স্পেশাল অফারে মাত্র ৳৮৯৯ টাকায় টপ নচ ম্যাজিক কনডম অর্ডার করুন। সাথে পাচ্ছেন ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি এবং সারাদেশে ফ্রি হোম ডেলিভারি! কোনো অগ্রিম টাকা দিতে হবে না, পণ্য হাতে পেয়ে দেখে মূল্য পরিশোধ করুন।
           </p>
 
           <div className="pt-2">
@@ -798,7 +798,7 @@ export default function Home() {
               onClick={() => setModalOpen(true)}
               className="bg-white text-blue-700 hover:bg-blue-50 font-black py-4 px-10 rounded-2xl text-base sm:text-lg shadow-2xl shadow-blue-900/30 pulse-blue inline-flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
             >
-              <ShoppingBag size={20} /> অফারটি নিন — মাত্র ৳৯৫০
+              <ShoppingBag size={20} /> অফারটি নিন — মাত্র ৳৮৯৯
             </button>
           </div>
 
