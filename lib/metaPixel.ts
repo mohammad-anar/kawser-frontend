@@ -13,7 +13,7 @@ declare global {
 }
 
 export const META_PIXEL_ID =
-  process.env.NEXT_PUBLIC_META_PIXEL_ID || "1915312895890100";
+  process.env.NEXT_PUBLIC_META_PIXEL_ID || "1402967271819010";
 
 /**
  * Retrieve test event code from URL query param, localStorage, or environment variable
