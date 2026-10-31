@@ -115,14 +115,22 @@ export function trackMetaPurchase({
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")}`;
 
-  const customData: Record<string, any> = {
-    value: numericTotal,
-    currency: "BDT",
+  // Meta blocks 'currency' & 'value' on restricted pixels (adult/health category).
+  // We split into two payloads:
+  //   - restrictedData: safe params accepted even on restricted pixels
+  //   - fullData: all params, used only for trackCustom (which is NOT category-restricted)
+  const restrictedData: Record<string, any> = {
     content_name: compliantContentName,
     content_category: "Health & Personal Care",
     content_ids: [compliantContentId],
     content_type: "product",
     num_items: quantity,
+  };
+
+  const fullData: Record<string, any> = {
+    ...restrictedData,
+    value: numericTotal,
+    currency: "BDT",
   };
 
   // Event options with eventID for deduplication with Server-side Conversions API (CAPI)
@@ -137,11 +145,14 @@ export function trackMetaPurchase({
   }
 
   try {
-    // Standard Purchase event (will be recorded once category review is approved)
-    window.fbq("track", "Purchase", customData, eventOptions);
+    // Standard Purchase event — send restricted-safe params only to avoid
+    // "[Meta Pixel] - Parameter 'currency' is invalid for event 'Purchase'" warning.
+    // value/currency will come from Server-side CAPI once set up.
+    window.fbq("track", "Purchase", restrictedData, eventOptions);
 
-    // Custom conversion event (Bypasses Meta's 'certain standard events may be blocked' restriction)
-    window.fbq("trackCustom", "OrderPlaced", customData, eventOptions);
+    // Custom conversion event — NOT subject to category restriction,
+    // so we can safely pass full data including value & currency.
+    window.fbq("trackCustom", "OrderPlaced", fullData, eventOptions);
 
     // Save deduplication key only after successful fbq call
     if (purchaseDedupeKey) {
@@ -153,15 +164,14 @@ export function trackMetaPurchase({
     }
 
     console.log(
-      "%c[Meta Pixel] Purchase Event Fired Successfully!",
+      "%c[Meta Pixel] Purchase Events Fired!",
       "background: #1877f2; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold;",
       {
+        "track(Purchase)": { ...restrictedData, note: "currency/value omitted (category restriction)" },
+        "trackCustom(OrderPlaced)": { value: numericTotal, currency: "BDT" },
         orderId,
-        value: numericTotal,
-        currency: "BDT",
         eventID: eventOptions.eventID,
         testEventCode: testEventCode || "None (Production live mode)",
-        compliantContentName,
       }
     );
     return true;
