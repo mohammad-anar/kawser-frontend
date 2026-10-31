@@ -31,7 +31,7 @@ export default function FloatingBuyBar({ onOrderClick }: FloatingBuyBarProps) {
             ফ্রি ডেলিভারি & জেল
           </span>
         </div>
-        <p className="text-blue-600 dark:text-blue-400 font-black text-lg leading-tight mt-0.5">৳৮৯৯</p>
+        <p className="text-blue-600 dark:text-blue-400 font-black text-lg leading-tight mt-0.5">৳৯৫০</p>
       </div>
       <button
         onClick={onOrderClick}

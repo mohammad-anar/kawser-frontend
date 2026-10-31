@@ -41,8 +41,8 @@ const DEFAULT_FORM: FormState = {
   address: "",
   productName: "Top Notch Magic Condom",
   size: "6.7 inch",
-  unitPrice: 899,
-  totalPrice: 899,
+  unitPrice: 950,
+  totalPrice: 950,
   orderNotes: "",
 };
 
@@ -247,8 +247,8 @@ export default function ManualOrderModal({ isOpen, onClose, onSuccess }: ManualO
       if (field === "unitPrice") {
         updated.totalPrice = Number(value) || 0;
       } else if (field === "size") {
-        const defaultForSize = value === "6.7 inch" ? 899 : 1199;
-        if (!prev.unitPrice || prev.unitPrice === 950 || prev.unitPrice === 899 || prev.unitPrice === 1199) {
+        const defaultForSize = value === "6.7 inch" ? 950 : 1199;
+        if (!prev.unitPrice || prev.unitPrice === 950 || prev.unitPrice === 1199) {
           updated.unitPrice = defaultForSize;
           updated.totalPrice = defaultForSize;
         }
@@ -338,7 +338,7 @@ export default function ManualOrderModal({ isOpen, onClose, onSuccess }: ManualO
               rows={5}
               value={quickText}
               onChange={(e) => setQuickText(e.target.value)}
-              placeholder={"নাম: গোলাম রসুল\nমোবাইল নাম্বার: 01927028674\nজেলা: ফরিদপুর\nথানা: ফরিদপুর\nগ্রাম: মিয়াপাড়া\nপ্রাইজ: ৮৯৯\np1\nনোট: সন্ধ্যায় ডেলিভারি"}
+              placeholder={"নাম: গোলাম রসুল\nমোবাইল নাম্বার: 01927028674\nজেলা: ফরিদপুর\nথানা: ফরিদপুর\nগ্রাম: মিয়াপাড়া\nপ্রাইজ: ৯৫০\np1\nনোট: সন্ধ্যায় ডেলিভারি"}
               className="w-full px-3 py-2.5 bg-white dark:bg-slate-900 border border-violet-200 dark:border-violet-800/60 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-violet-500 resize-none font-mono transition-colors"
             />
             <div className="flex gap-2">

@@ -19,11 +19,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.carezonebd.site"),
   title: {
-    default: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Magic Condom Price in BD ৳৮৯৯ | Care Zone BD",
+    default: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Magic Condom Price in BD ৳৯৫০ | Care Zone BD",
     template: "%s | Care Zone BD",
   },
   description:
-    "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৮৯৯। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল। সারাদেশে ফ্রি হোম ডেলিভারি এবং সাথে ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি।",
+    "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৯৫০। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল। সারাদেশে ফ্রি হোম ডেলিভারি এবং সাথে ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি।",
   keywords: [
     // Primary Bangla Keywords
     "কেয়ার জোন বিডি",
@@ -81,9 +81,9 @@ export const metadata: Metadata = {
     email: false,
   },
   openGraph: {
-    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | মাত্র ৳৮৯৯ | Care Zone BD",
+    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | মাত্র ৳৯৫০ | Care Zone BD",
     description:
-      "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৮৯৯। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য। সারাদেশে ফ্রি ডেলিভারি ও ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
+      "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৯৫০। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য। সারাদেশে ফ্রি ডেলিভারি ও ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
     url: "https://www.carezonebd.site",
     siteName: "Care Zone BD",
     images: [
@@ -101,7 +101,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Care Zone BD",
-    description: "বাংলাদেশে অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম মাত্র ৳৮৯৯। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি ও সাথে ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
+    description: "বাংলাদেশে অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম মাত্র ৳৯৫০। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি ও সাথে ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -232,7 +232,7 @@ const jsonLd = {
       ],
       offers: {
         "@type": "Offer",
-        price: "899",
+        price: "950",
         priceCurrency: "BDT",
         availability: "https://schema.org/InStock",
         url: "https://www.carezonebd.site",

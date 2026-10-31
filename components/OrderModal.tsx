@@ -44,7 +44,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const isSubmittedRef = useRef<boolean>(false);
 
-  const unitPrice = selectedVariant === "5.7 inch" ? 1199 : 899;
+  const unitPrice = selectedVariant === "5.7 inch" ? 1199 : 950;
   const total = unitPrice * form.quantity;
 
   // Pre-fill from logged-in user
@@ -314,7 +314,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {/* Card 1: 6.7 inch (899 BDT) - Shown First */}
+                  {/* Card 1: 6.7 inch (950 BDT) - Shown First */}
                   <div
                     onClick={() => setSelectedVariant("6.7 inch")}
                     className={`relative p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
@@ -350,7 +350,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                     <div className="mt-2.5 pt-2 border-t border-slate-200/70 dark:border-slate-800/80 flex items-center justify-between">
                       <div>
                         <span className="text-[11px] text-slate-400 line-through mr-1">৳১,৬০০</span>
-                        <span className="text-base font-black text-blue-600 dark:text-blue-400">৳৮৯৯</span>
+                        <span className="text-base font-black text-blue-600 dark:text-blue-400">৳৯৫০</span>
                       </div>
                       <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
                         🎁 ১০০ml জেল ফ্রি
