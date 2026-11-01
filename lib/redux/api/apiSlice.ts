@@ -10,10 +10,10 @@ const getApiBaseUrl = (): string => {
       if (configured && !configured.includes("localhost") && !configured.includes("127.0.0.1")) {
         return configured;
       }
-      return "https://kawser-backend-wvmd.onrender.com/api";
+      return "https://api.carezonebd.site/api";
     }
   }
-  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+  return process.env.NEXT_PUBLIC_API_URL || "https://api.carezonebd.site/api";
 };
 
 const API_BASE_URL = getApiBaseUrl();

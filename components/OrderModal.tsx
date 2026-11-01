@@ -124,7 +124,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
           productName: `Top Notch Magic Condom (${selectedVariant})`,
           deviceId,
         });
-        const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"}/orders/incomplete`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL || "https://api.carezonebd.site/api"}/orders/incomplete`;
         if (typeof navigator !== "undefined" && navigator.sendBeacon) {
           const blob = new Blob([payload], { type: "application/json" });
           navigator.sendBeacon(url, blob);

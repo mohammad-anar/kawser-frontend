@@ -5,7 +5,7 @@ let orderNotificationSoundEnabled = false;
 let audioUnlocked = false;
 
 export const getSocketUrl = (): string => {
-  if (typeof window === "undefined") return "http://localhost:8000";
+  if (typeof window === "undefined") return "https://api.carezonebd.site";
 
   const isProduction =
     window.location.hostname !== "localhost" &&
@@ -18,13 +18,13 @@ export const getSocketUrl = (): string => {
     if (configured && !configured.includes("localhost") && !configured.includes("127.0.0.1")) {
       return configured;
     }
-    return "https://kawser-backend-wvmd.onrender.com";
+    return "https://api.carezonebd.site";
   }
 
   return (
     process.env.NEXT_PUBLIC_SOCKET_URL ||
     process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, "") ||
-    "http://localhost:8000"
+    "https://api.carezonebd.site"
   );
 };
 
