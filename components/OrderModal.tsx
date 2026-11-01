@@ -342,7 +342,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                           ৬.৭ ইঞ্চি (6.7 inch)
                         </p>
                         <p className="text-[11px] font-medium text-slate-600 dark:text-slate-300 mt-0.5 leading-tight">
-                          ৪.৫ - ৬ ইঞ্চি লিঙ্গের জন্য ৬.৭ ইঞ্চি
+                          ৪.৫ - ৬ ইঞ্চি সাইজের জন্য ৬.৭ ইঞ্চি (পারফেক্ট ফিট)
                         </p>
                       </div>
                     </div>
@@ -386,7 +386,7 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                           ৫.৭ ইঞ্চি (5.7 inch)
                         </p>
                         <p className="text-[11px] font-medium text-slate-600 dark:text-slate-300 mt-0.5 leading-tight">
-                          ২.৫ ইঞ্চি থেকে ৪ ইঞ্চি লিঙ্গের জন্য ৫.৭ ইঞ্চি
+                          ২.৫ - ৪ ইঞ্চি সাইজের জন্য ৫.৭ ইঞ্চি (পারফেক্ট ফিট)
                         </p>
                       </div>
                     </div>

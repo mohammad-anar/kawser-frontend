@@ -72,19 +72,19 @@ const WHY_POINTS = [
     highlight: "৭০০–৮০০ বার ব্যবহারযোগ্য",
   },
   {
-    text: "মিলনের স্থায়িত্ব ৩০–৪০ মিনিট পর্যন্ত বাড়িয়ে দিতে সক্ষম।",
-    highlight: "৩০–৪০ মিনিট বৃদ্ধি",
+    text: "অতিরিক্ত কমফোর্ট ও আত্মবিশ্বাস এনে দেয়, সঙ্গীর সাথে মুহূর্তগুলোকে করে দীর্ঘস্থায়ী।",
+    highlight: "দীর্ঘস্থায়ী আনন্দ",
   },
   {
-    text: "সামনের অংশে ১–১.৫ ইঞ্চি ভরাট ডিজাইন — পুরুষাঙ্গকে বড় ও আকর্ষণীয় দেখায়।",
-    highlight: "১–১.৫ ইঞ্চি ভরাট ডিজাইন",
+    text: "সামনের অংশে ১–১.৫ ইঞ্চি ভরাট সফট ডিজাইন — দেয় আকর্ষণীয় অনুভূতি ও বাড়তি আরাম।",
+    highlight: "১–১.৫ ইঞ্চি ভরাট সফট কুশন",
   },
   {
-    text: "সব সাইজের পুরুষাঙ্গের জন্য উপযোগী — ছোট বা বড়, সবার জন্য নিখুঁত ফিট।",
+    text: "উচ্চ স্থিতিস্থাপক আল্ট্রা-স্ট্রেচেবল ম্যাটেরিয়াল — সবার জন্য আরামদায়ক ও নিখুঁত ফিট।",
     highlight: "সব সাইজে নিখুঁত ফিট",
   },
   {
-    text: "উচ্চমানের TPE সিলিকন রাবার — যত টানবেন তত লম্বা, ছিঁড়ে যাওয়ার ভয় নেই।",
+    text: "উচ্চমানের প্রিমিয়াম TPE সফট সিলিকন — অতি নমনীয় ও টেকসই, ছিঁড়ে যাওয়ার ভয় নেই।",
     highlight: "হাই-গ্রেড TPE সিলিকন",
   },
 ];
@@ -93,7 +93,7 @@ const QA_ITEMS = [
   {
     question: "কিভাবে ব্যাবহার করবো ?",
     answer:
-      "কনডমের সোজা ফুটাতে আপনার পুরুষাঙ্গে টা ঢুকাবেন আর নিচের ফুটাতে আপনার পুরুষাঙ্গের থলিটা ঢুকিয়ে রাখতে পারবেন এর ফলে আপনার মিলন শেষ হয়ে গেলও আপনার পুরুষাঙ্গে থেকে কনডম টি খুলে জাবে না। এর ফলে যতক্ষণ ইচ্ছা আপনার পার্টনারের সাথে সাথে মিলন চালিয়ে যেতে পারবেন। কনডমটি ব্যবহারের পর ভালো ভাবে সাবান এবং পানি দিয়ে ধুয়ে রেখে দিতে হবে।",
+      "কনডমের মূল অংশে সহজে পরিধান করে নিচের আরামদায়ক সাপোর্ট রিং দিয়ে সেট করে নিন। ফলে ব্যবহারের সময় এটি কোনোভাবেই খুলে পড়ার সুযোগ থাকে না এবং পার্টনারের সাথে নিশ্চিন্ত ও অবিস্মরণীয় মুহূর্ত উপভোগ করা যায়। ব্যবহারের পর সাবান ও সাধারণ পানি দিয়ে ধুয়ে রেখে দিন।",
     icon: "💡",
   },
   {
@@ -319,13 +319,13 @@ export default function Home() {
 
             {/* Sub-headline */}
             <p className="text-base sm:text-lg text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
-              যাদের গোপনাঙ্গ ছোট ও চিকন। ইনস্ট্যান্ট মোটা ও লম্বা করতে চান, ভালো কার্যকরী তাৎক্ষণিক সমাধান। সময় বাড়বে ৪৮ মিনিট।
+              দাম্পত্য জীবনে বাড়তি আনন্দ ও আত্মবিশ্বাসের জন্য প্রিমিয়াম আল্ট্রা-সফট সিলিকন ম্যাজিক স্লিভ। আরামদায়ক ফিটিং এবং দীর্ঘস্থায়ী ভালোবাসার সেরা অনুভূতি।
             </p>
 
             {/* Key Feature Pills */}
             <div className="flex flex-wrap items-center gap-2 pt-1 text-xs font-semibold text-slate-700 dark:text-slate-300">
               <span className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-slate-800/80 border border-blue-200 dark:border-slate-700 flex items-center gap-1.5">
-                🛡️ ১০০% মেডিকেল গ্রেড সিলিকন
+                🛡️ ১০০% প্রিমিয়াম সফট সিলিকন
               </span>
               <span className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-slate-800/80 border border-blue-200 dark:border-slate-700 flex items-center gap-1.5">
                 💧 ধুয়ে ৭০০-৮০০ বার ব্যবহারযোগ্য
@@ -487,7 +487,7 @@ export default function Home() {
               পণ্যের বিভিন্ন অ্যাঙ্গেলের <span className="text-gradient-blue">বাস্তব ছবি</span>
             </h2>
             <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-medium">
-              স্লাইডার থেকে প্রতিটি ছবির নিখুঁত ফিনিশিং ও মেডিকেল সিলিকন কোয়ালিটি দেখে নিন
+              স্লাইডার থেকে প্রতিটি ছবির নিখুঁত ফিনিশিং ও প্রিমিয়াম সিলিকন কোয়ালিটি দেখে নিন
             </p>
           </div>
 
@@ -568,7 +568,7 @@ export default function Home() {
                 <div className="space-y-2.5 pt-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
                   <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700">
                     <Check className="text-emerald-600 dark:text-emerald-400 shrink-0" size={16} />
-                    <span><strong>পুরুত্ব:</strong> ৬ মিমি হাই ডেনসিটি মেডিকেল সিলিকন</span>
+                    <span><strong>পুরুত্ব:</strong> ৬ মিমি হাই ডেনসিটি প্রিমিয়াম সফট সিলিকন</span>
                   </div>
                   <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700">
                     <Check className="text-emerald-600 dark:text-emerald-400 shrink-0" size={16} />
@@ -576,7 +576,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700">
                     <Check className="text-emerald-600 dark:text-emerald-400 shrink-0" size={16} />
-                    <span><strong>সময় বৃদ্ধি:</strong> মিলনের সময় ৩০–৪০ মিনিট বৃদ্ধি</span>
+                    <span><strong>স্থায়িত্ব:</strong> দীর্ঘস্থায়ী ও অবিস্মরণীয় পারফরম্যান্স</span>
                   </div>
                   <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700">
                     <Check className="text-emerald-600 dark:text-emerald-400 shrink-0" size={16} />
@@ -620,7 +620,7 @@ export default function Home() {
                 <div className="space-y-3 text-sm sm:text-base text-slate-700 dark:text-slate-300">
                   <div className="p-3 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex items-start gap-3 shadow-xs">
                     <span className="text-blue-600 dark:text-blue-400 text-lg">👉</span>
-                    <span><strong>Top Notch কোয়ালিটি পাবেন:</strong> উচ্চমানের সফট মেডিকেল-গ্রেড সিলিকন।</span>
+                    <span><strong>Top Notch কোয়ালিটি পাবেন:</strong> উচ্চমানের সফট প্রিমিয়াম সিলিকন।</span>
                   </div>
                   <div className="p-3 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex items-start gap-3 shadow-xs">
                     <span className="text-blue-600 dark:text-blue-400 text-lg">👉</span>

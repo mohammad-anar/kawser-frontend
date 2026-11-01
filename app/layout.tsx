@@ -135,7 +135,7 @@ export const metadata: Metadata = {
   verification: {
     google: "wyk6_CuTJ1hYv3fh7x5ehNmIjmsUrHTOgczR71JxaI4",
   },
-  category: "Intimate Care & Health",
+  category: "Personal Care & Lifestyle",
 };
 
 const jsonLd = {
@@ -202,7 +202,7 @@ const jsonLd = {
         "https://www.carezonebd.site/images/products/product-5.jpeg",
       ],
       description:
-        "উচ্চমানের মেডিকেল-গ্রেড TPE সিলিকন দিয়ে তৈরি রিইউজেবল ম্যাজিক কনডম। পুরুত্ব ৬ মিমি, দৈর্ঘ্য ৬.৭ ইঞ্চি। ডটেড সারফেস ও ডাবল লক রিং সিস্টেম সহ ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল।",
+        "উচ্চমানের প্রিমিয়াম সফট TPE সিলিকন দিয়ে তৈরি রিইউজেবল ম্যাজিক কনডম। পুরুত্ব ৬ মিমি, দৈর্ঘ্য ৬.৭ ইঞ্চি। ডটেড সারফেস ও ডাবল লক রিং সিস্টেম সহ ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল।",
       brand: { "@type": "Brand", name: "Top Notch" },
       category: "Intimate Care / Personal Wellness",
       sku: "SC-TNC-01",
@@ -268,7 +268,7 @@ const jsonLd = {
           name: "কিভাবে ব্যবহার করবেন?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "কনডমের সামনের ফুটোতে পুরুষাঙ্গ ঢুকিয়ে নিচের ফুটোতে পুরুষাঙ্গের থলিটি আটকে রাখবেন। ব্যবহারের পর ভালো ভাবে সাবান এবং পানি দিয়ে ধুয়ে রেখে দিতে হবে।",
+            text: "সামনের অংশ দিয়ে সহজে পরিধান করে নিচের আরামদায়ক সাপোর্ট রিং দিয়ে লক করে রাখবেন। ব্যবহারের পর সাবান ও পানি দিয়ে ধুয়ে সংরক্ষণ করুন।",
           },
         },
         {
