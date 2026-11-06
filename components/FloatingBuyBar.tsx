@@ -26,7 +26,7 @@ export default function FloatingBuyBar({ onOrderClick }: FloatingBuyBarProps) {
     <div className="floating-bar md:hidden">
       <div className="flex-1">
         <div className="flex items-center gap-1.5 flex-wrap">
-          <p className="text-slate-900 dark:text-white font-bold text-xs leading-tight">Top Notch Magic Condom</p>
+          <p className="text-slate-900 dark:text-white font-bold text-xs leading-tight">Top Notch Silicone Sleeve</p>
           <span className="bg-emerald-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-xs">
             ফ্রি ডেলিভারি & জেল
           </span>

@@ -10,10 +10,10 @@ const getApiBaseUrl = (): string => {
       if (configured && !configured.includes("localhost") && !configured.includes("127.0.0.1")) {
         return configured;
       }
-      return "https://api.carezonebd.site/api";
+      return "https://api.carezonebd.tech/api";
     }
   }
-  return process.env.NEXT_PUBLIC_API_URL || "https://api.carezonebd.site/api";
+  return process.env.NEXT_PUBLIC_API_URL || "https://api.carezonebd.tech/api";
 };
 
 const API_BASE_URL = getApiBaseUrl();

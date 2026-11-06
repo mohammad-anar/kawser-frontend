@@ -5,7 +5,7 @@ let orderNotificationSoundEnabled = false;
 let audioUnlocked = false;
 
 export const getSocketUrl = (): string => {
-  if (typeof window === "undefined") return "https://api.carezonebd.site";
+  if (typeof window === "undefined") return "https://api.carezonebd.tech";
 
   const isProduction =
     window.location.hostname !== "localhost" &&
@@ -18,13 +18,13 @@ export const getSocketUrl = (): string => {
     if (configured && !configured.includes("localhost") && !configured.includes("127.0.0.1")) {
       return configured;
     }
-    return "https://api.carezonebd.site";
+    return "https://api.carezonebd.tech";
   }
 
   return (
     process.env.NEXT_PUBLIC_SOCKET_URL ||
     process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, "") ||
-    "https://api.carezonebd.site"
+    "https://api.carezonebd.tech"
   );
 };
 
@@ -32,10 +32,11 @@ export const getSocket = (): Socket => {
   if (!socket) {
     const url = getSocketUrl();
     socket = io(url, {
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       autoConnect: true,
-      reconnectionAttempts: 10,
-      reconnectionDelay: 2000,
+      reconnectionAttempts: 20,
+      reconnectionDelay: 1000,
+      withCredentials: false,
     });
   }
   return socket;

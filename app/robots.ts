@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/cart", "/checkout", "/account", "/api/", "/admin/", "/admin"],
       },
     ],
-    sitemap: "https://www.carezonebd.site/sitemap.xml",
+    sitemap: "https://www.carezonebd.tech/sitemap.xml",
   };
 }

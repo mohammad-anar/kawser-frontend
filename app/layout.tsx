@@ -17,20 +17,20 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.carezonebd.site"),
+  metadataBase: new URL("https://www.carezonebd.tech"),
   title: {
-    default: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Magic Condom Price in BD ৳৯৫০ | Care Zone BD",
+    default: "টপ নচ প্রিমিয়াম সিলিকন স্লিভ | Top Notch Silicone Sleeve BD ৳৯৫০ | Care Zone BD",
     template: "%s | Care Zone BD",
   },
   description:
-    "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৯৫০। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল। সারাদেশে ফ্রি হোম ডেলিভারি এবং সাথে ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি।",
+    "বাংলাদেশে অরিজিনাল টপ নচ প্রিমিয়াম সফট সিলিকন স্লিভ মাত্র ৳৯৫০। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল। সারাদেশে ফ্রি হোম ডেলিভারি এবং সাথে ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি।",
   keywords: [
     // Primary Bangla Keywords
     "কেয়ার জোন বিডি",
     "carezonebd",
     "care zone bd",
-    "carezonebd.site",
-    "www.carezonebd.site",
+    "carezonebd.tech",
+    "www.carezonebd.tech",
     "carezonebd.store",
     "ম্যাজিক কনডম",
     "ম্যাজিক কনডম বিডি",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     "ক্যাশ অন ডেলিভারি কনডম",
     "গোপনীয় প্যাকেজিং কনডম",
     "সেরা কনডম বাংলাদেশ",
-    "মিলনের সময় বাড়ানোর কনডম",
+    "প্রিমিয়াম সিলিকন পার্সোনাল কেয়ার স্লিভ",
     "পুরুষদের পার্সোনাল কেয়ার",
     // Primary English / Banglish Keywords
     "magic condom",
@@ -67,12 +67,12 @@ export const metadata: Metadata = {
     "silicone condom sleeve",
     "washable condom bangladesh",
     "buy condom online bangladesh",
-    "delay condom bangladesh",
+    "silicone sleeve bangladesh",
     "dotted condom bd",
     "discreet packaging condom",
     "cash on delivery condom bd",
   ],
-  authors: [{ name: "Care Zone BD", url: "https://www.carezonebd.site" }],
+  authors: [{ name: "Care Zone BD", url: "https://www.carezonebd.tech" }],
   creator: "Care Zone BD",
   publisher: "Care Zone BD",
   formatDetection: {
@@ -81,10 +81,10 @@ export const metadata: Metadata = {
     email: false,
   },
   openGraph: {
-    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | মাত্র ৳৯৫০ | Care Zone BD",
+    title: "টপ নচ প্রিমিয়াম সিলিকন স্লিভ বাংলাদেশ | মাত্র ৳৯৫০ | Care Zone BD",
     description:
-      "বাংলাদেশে অরিজিনাল টপ নচ ম্যাজিক কনডম মাত্র ৳৯৫০। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য। সারাদেশে ফ্রি ডেলিভারি ও ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
-    url: "https://www.carezonebd.site",
+      "বাংলাদেশে অরিজিনাল টপ নচ প্রিমিয়াম সফট সিলিকন স্লিভ মাত্র ৳৯৫০। রিইউজেবল সফট সিলিকন, ৭০০-৮০০ বার ব্যবহারযোগ্য। সারাদেশে ফ্রি ডেলিভারি ও ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
+    url: "https://www.carezonebd.tech",
     siteName: "Care Zone BD",
     images: [
       {
@@ -100,8 +100,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "টপ নচ ম্যাজিক কনডম বাংলাদেশ | Care Zone BD",
-    description: "বাংলাদেশে অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম মাত্র ৳৯৫০। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি ও সাথে ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
+    title: "টপ নচ প্রিমিয়াম সিলিকন স্লিভ | Care Zone BD",
+    description: "বাংলাদেশে অরিজিনাল রিইউজেবল প্রিমিয়াম সিলিকন স্লিভ মাত্র ৳৯৫০। সারাদেশে ফ্রি ক্যাশ অন ডেলিভারি ও সাথে ১০০ মিলি জেল সম্পূর্ণ ফ্রি।",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -116,10 +116,10 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://www.carezonebd.site",
+    canonical: "https://www.carezonebd.tech",
     languages: {
-      "bn-BD": "https://www.carezonebd.site",
-      "en-US": "https://www.carezonebd.site",
+      "bn-BD": "https://www.carezonebd.tech",
+      "en-US": "https://www.carezonebd.tech",
     },
   },
   icons: {
@@ -143,23 +143,23 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://www.carezonebd.site/#website",
-      url: "https://www.carezonebd.site",
+      "@id": "https://www.carezonebd.tech/#website",
+      url: "https://www.carezonebd.tech",
       name: "Care Zone BD",
-      description: "বাংলাদেশের বিশ্বস্ত অনলাইন শপ - অরিজিনাল টপ নচ ম্যাজিক কনডম ও পার্সোনাল কেয়ার সামগ্রী",
+      description: "বাংলাদেশের বিশ্বস্ত অনলাইন শপ - অরিজিনাল টপ নচ প্রিমিয়াম সিলিকন স্লিভ ও পার্সোনাল কেয়ার সামগ্রী",
       inLanguage: ["bn", "en"],
       publisher: {
-        "@id": "https://www.carezonebd.site/#org",
+        "@id": "https://www.carezonebd.tech/#org",
       },
     },
     {
       "@type": "Organization",
-      "@id": "https://www.carezonebd.site/#org",
+      "@id": "https://www.carezonebd.tech/#org",
       name: "Care Zone BD",
-      url: "https://www.carezonebd.site",
+      url: "https://www.carezonebd.tech",
       logo: {
         "@type": "ImageObject",
-        url: "https://www.carezonebd.site/logo.jpeg",
+        url: "https://www.carezonebd.tech/logo.jpeg",
         width: 200,
         height: 100,
       },
@@ -174,35 +174,35 @@ const jsonLd = {
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://www.carezonebd.site/#breadcrumbs",
+      "@id": "https://www.carezonebd.tech/#breadcrumbs",
       itemListElement: [
         {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://www.carezonebd.site",
+          item: "https://www.carezonebd.tech",
         },
         {
           "@type": "ListItem",
           position: 2,
-          name: "টপ নচ ম্যাজিক কনডম",
-          item: "https://www.carezonebd.site/#product",
+          name: "টপ নচ প্রিমিয়াম সিলিকন স্লিভ",
+          item: "https://www.carezonebd.tech/#product",
         },
       ],
     },
     {
       "@type": "Product",
-      "@id": "https://www.carezonebd.site/#product",
-      name: "Top Notch Magic Condom (China) - অরিজিনাল রিইউজেবল সিলিকন ম্যাজিক কনডম",
+      "@id": "https://www.carezonebd.tech/#product",
+      name: "Top Notch Silicone Sleeve (China) - অরিজিনাল রিইউজেবল সিলিকন স্লিভ",
       image: [
-        "https://www.carezonebd.site/images/products/IMG_7393.jpg",
-        "https://www.carezonebd.site/images/products/IMG_7395.jpg",
-        "https://www.carezonebd.site/images/products/IMG_7386.jpg",
-        "https://www.carezonebd.site/images/products/IMG_7387.jpg",
-        "https://www.carezonebd.site/images/products/product-5.jpeg",
+        "https://www.carezonebd.tech/images/products/IMG_7393.jpg",
+        "https://www.carezonebd.tech/images/products/IMG_7395.jpg",
+        "https://www.carezonebd.tech/images/products/IMG_7386.jpg",
+        "https://www.carezonebd.tech/images/products/IMG_7387.jpg",
+        "https://www.carezonebd.tech/images/products/product-5.jpeg",
       ],
       description:
-        "উচ্চমানের প্রিমিয়াম সফট TPE সিলিকন দিয়ে তৈরি রিইউজেবল ম্যাজিক কনডম। পুরুত্ব ৬ মিমি, দৈর্ঘ্য ৬.৭ ইঞ্চি। ডটেড সারফেস ও ডাবল লক রিং সিস্টেম সহ ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল।",
+        "উচ্চমানের প্রিমিয়াম সফট TPE সিলিকন দিয়ে তৈরি রিইউজেবল সিলিকন স্লিভ। পুরুত্ব ৬ মিমি, দৈর্ঘ্য ৬.৭ ইঞ্চি। ডটেড সারফেস ও ডাবল লক রিং সিস্টেম সহ ৭০০-৮০০ বার ব্যবহারযোগ্য ও ওয়াশেবল।",
       brand: { "@type": "Brand", name: "Top Notch" },
       category: "Intimate Care / Personal Wellness",
       sku: "SC-TNC-01",
@@ -235,7 +235,7 @@ const jsonLd = {
         price: "950",
         priceCurrency: "BDT",
         availability: "https://schema.org/InStock",
-        url: "https://www.carezonebd.site",
+        url: "https://www.carezonebd.tech",
         priceValidUntil: "2027-12-31",
         itemCondition: "https://schema.org/NewCondition",
         seller: { "@type": "Organization", name: "Care Zone BD" },
@@ -261,7 +261,7 @@ const jsonLd = {
     },
     {
       "@type": "FAQPage",
-      "@id": "https://www.carezonebd.site/#faq",
+      "@id": "https://www.carezonebd.tech/#faq",
       mainEntity: [
         {
           "@type": "Question",
@@ -273,7 +273,7 @@ const jsonLd = {
         },
         {
           "@type": "Question",
-          name: "ম্যাজিক কনডমের সুবিধা কি কি?",
+          name: "টপ নচ সিলিকন স্লিভের সুবিধা কি কি?",
           acceptedAnswer: {
             "@type": "Answer",
             text: "টপ নচ কোয়ালিটি পাবেন, ৭০০-৮০০ বার রিইউজেবল, এক মাসের মধ্যে ছিঁড়ে গেলে ৫০% ডিসকাউন্টে নতুন পাবেন।",

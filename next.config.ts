@@ -6,11 +6,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'carezonebd.site',
+        hostname: 'carezonebd.tech',
       },
       {
         protocol: 'https',
-        hostname: 'www.carezonebd.site',
+        hostname: 'www.carezonebd.tech',
       },
       {
         protocol: 'https',

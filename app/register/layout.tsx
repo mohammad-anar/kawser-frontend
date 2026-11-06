@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Care Zone BD-এ নতুন একাউন্ট খুলুন এবং সহজ ও দ্রুত অর্ডারের সুবিধা উপভোগ করুন।",
   alternates: {
-    canonical: "https://www.carezonebd.site/register",
+    canonical: "https://www.carezonebd.tech/register",
   },
   robots: {
     index: false,

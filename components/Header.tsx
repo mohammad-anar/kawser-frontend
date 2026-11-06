@@ -101,7 +101,7 @@ export default function Header({ onOrderClick }: HeaderProps) {
                 src="/logo.jpeg"
                 width={60}
                 height={60}
-                alt="Care Zone BD - টপ নচ ম্যাজিক কনডম বাংলাদেশ"
+                alt="Care Zone BD - টপ নচ প্রিমিয়াম সিলিকন স্লিভ বাংলাদেশ"
                 priority
                 className="h-auto w-full object-contain"
               />

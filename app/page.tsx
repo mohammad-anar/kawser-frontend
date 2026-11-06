@@ -37,7 +37,7 @@ import {
 const SLIDE_IMAGES = [
   {
     src: "/images/products/IMG_7393.jpg",
-    title: "টপ নচ প্রিমিয়াম ম্যাজিক কনডম",
+    title: "টপ নচ প্রিমিয়াম সিলিকন স্লিভ",
     subtitle: "অরিজিনাল চায়না ইম্পোর্টেড প্যাকেজিং",
   },
   {
@@ -68,7 +68,7 @@ const WHY_POINTS = [
     highlight: "৬ মিলিমিটার & ৬.৭ ইঞ্চি",
   },
   {
-    text: "একটি কনডম ৭০০–৮০০ বার পর্যন্ত ব্যবহারযোগ্য — দীর্ঘস্থায়ী ও অর্থসাশ্রয়ী।",
+    text: "একটি স্লিভ ৭০০–৮০০ বার পর্যন্ত ওয়াশেবল ও ব্যবহারযোগ্য — দীর্ঘস্থায়ী ও অর্থসাশ্রয়ী।",
     highlight: "৭০০–৮০০ বার ব্যবহারযোগ্য",
   },
   {
@@ -93,7 +93,7 @@ const QA_ITEMS = [
   {
     question: "কিভাবে ব্যাবহার করবো ?",
     answer:
-      "কনডমের মূল অংশে সহজে পরিধান করে নিচের আরামদায়ক সাপোর্ট রিং দিয়ে সেট করে নিন। ফলে ব্যবহারের সময় এটি কোনোভাবেই খুলে পড়ার সুযোগ থাকে না এবং পার্টনারের সাথে নিশ্চিন্ত ও অবিস্মরণীয় মুহূর্ত উপভোগ করা যায়। ব্যবহারের পর সাবান ও সাধারণ পানি দিয়ে ধুয়ে রেখে দিন।",
+      "স্লিভের মূল অংশে সহজে পরিধান করে নিচের আরামদায়ক সাপোর্ট রিং দিয়ে সেট করে নিন। ফলে ব্যবহারের সময় এটি নিখুঁত গ্রিপ বজায় রাখে এবং পার্টনারের সাথে নিশ্চিন্ত কমফোর্ট উপভোগ করা যায়। ব্যবহারের পর সাবান ও সাধারণ পানি দিয়ে ধুয়ে শুকিয়ে রেখে দিন।",
     icon: "💡",
   },
   {
@@ -268,7 +268,7 @@ export default function Home() {
             loop
             muted
             playsInline
-            aria-label="Care Zone BD Top Notch Magic Condom Preview Video"
+            aria-label="Care Zone BD Top Notch Silicone Sleeve Preview Video"
           >
             <source src="/images/video.mp4" type="video/mp4" />
           </video>
@@ -307,14 +307,14 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-full px-4 py-1.5 shadow-sm">
               <Award size={15} className="text-blue-600 dark:text-blue-400" />
               <span className="text-blue-700 dark:text-blue-300 text-xs font-extrabold tracking-wide">
-                🔥 অরিজিনাল লাভ লক কনডম — ২৫,০০০+ পুরুষের আস্থা ও সন্তুষ্টি
+                🔥 অরিজিনাল লাভ লক সিলিকন স্লিভ — ২৫,০০০+ গ্রাহকের আস্থা ও সন্তুষ্টি
               </span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-[1.25] tracking-tight">
-              টপ নচ ম্যাজিক কনডম — আপনার রাতকে করুন{" "}
-              <span className="text-gradient-blue">অবিস্মরণীয় ও দীর্ঘস্থায়ী</span>
+              টপ নচ ম্যাজিক স্লিভ — সঙ্গীর সাথে মুহূর্তগুলোকে করুন{" "}
+              <span className="text-gradient-blue">অবিস্মরণীয় ও আনন্দময়</span>
             </h1>
 
             {/* Sub-headline */}
@@ -395,7 +395,7 @@ export default function Home() {
               🔥 এই বছরের সেরা অফার
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
-              কেন নিবেন এই <span className="text-gradient-blue">ম্যাজিক কনডম?</span>
+              কেন নিবেন এই <span className="text-gradient-blue">ম্যাজিক স্লিভ?</span>
             </h2>
             <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-medium">
               ১০০% খাঁটি ও কার্যকর বৈশিষ্ট্যসমূহ এক নজরে দেখে নিন
@@ -790,7 +790,7 @@ export default function Home() {
           </h2>
 
           <p className="text-sm sm:text-base text-blue-100 max-w-xl mx-auto">
-            বর্তমান স্পেশাল অফারে মাত্র ৳৯৫০ টাকায় টপ নচ ম্যাজিক কনডম অর্ডার করুন। সাথে পাচ্ছেন ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি এবং সারাদেশে ফ্রি হোম ডেলিভারি! কোনো অগ্রিম টাকা দিতে হবে না, পণ্য হাতে পেয়ে দেখে মূল্য পরিশোধ করুন।
+            বর্তমান স্পেশাল অফারে মাত্র ৳৯৫০ টাকায় অরিজিনাল টপ নচ ম্যাজিক স্লিভ অর্ডার করুন। সাথে পাচ্ছেন ১০০ মিলি বোতল জেল সম্পূর্ণ ফ্রি এবং সারাদেশে ফ্রি হোম ডেলিভারি! কোনো অগ্রিম টাকা দিতে হবে না, পণ্য হাতে পেয়ে দেখে মূল্য পরিশোধ করুন।
           </p>
 
           <div className="pt-2">
